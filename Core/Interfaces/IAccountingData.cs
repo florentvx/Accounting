@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Accounting
+namespace Core.Interfaces
 {
-    public class Class1
+    public interface IAccountingData
     {
     }
 }
