@@ -33,5 +33,18 @@ namespace Core
             Account account = new Account(name, currency);
             _Accounts.Add(account);
         }
+
+        public List<string> GetAccountList()
+        {
+            return Accounts.Select(x => x.AccountName).ToList();
+        }
+
+        public Account TotalAccount()
+        {
+            double total = 0;
+            foreach (var x in _Accounts)
+                total += x.Amount;
+            return new Account("Total", Ccy, total);
+        }
     }
 }
