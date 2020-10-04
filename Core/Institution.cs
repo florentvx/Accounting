@@ -66,13 +66,10 @@ namespace Core
             return TotalAccount("Total");
         }
 
-        public void Modify(string accountName, string columnName, object value)
+        public void ModifyAmount(string accountName, object value)
         {
-            if (columnName == "Amount")
-            {
-                Account acc = GetAccount(accountName);
-                acc.Amount = Convert.ToDouble(value);
-            }
+            Account acc = GetAccount(accountName);
+            acc.Amount = Convert.ToDouble(value);
         }
     }
 }

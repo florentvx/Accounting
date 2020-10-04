@@ -23,6 +23,7 @@ namespace Design
     public class DataGridViewAccounting: DataGridView
     {
         public IInstitution InstitutionShowed;
+        public ICategory CategoryShowed;
 
         private void SetUpTable()
         {
@@ -30,6 +31,10 @@ namespace Design
             for (int i = 0; i < ColumnCount; i++)
                 Columns[i].Name = DataGridViewAccountingStatics.ColumnNames[i];
             AllowUserToAddRows = false;
+            foreach (DataGridViewColumn column in Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
         }
 
         public DataGridViewAccounting() : base()
@@ -52,6 +57,7 @@ namespace Design
                 AddRow(item);
             AddRow(instit.TotalAccount(), isTotal: true);
             InstitutionShowed = instit;
+            CategoryShowed = null;
         }
 
         public void ShowInstitution(IAccountingData iad, string catName, string instName)
@@ -76,6 +82,8 @@ namespace Design
             foreach (IInstitution item in cat.Institutions)
                 AddRow(item);
             AddRow(cat.TotalInstitution(), isTotal: true);
+            InstitutionShowed = null;
+            CategoryShowed = cat;
         }
 
         public void ShowCategory(IAccountingData iad, string catName)
@@ -87,18 +95,22 @@ namespace Design
 
         public void CellValueChanged_Event(int rowIndex, int columnIndex)
         {
-            switch (columnIndex)
+            if (CategoryShowed == null)
             {
-                case DataGridViewAccountingStatics.Column_Amount:
-                    var value = Rows[rowIndex].Cells[columnIndex].Value;
-                    InstitutionShowed.Modify(Rows[rowIndex].Cells[0].Value.ToString(),
-                                                Columns[columnIndex].Name,
-                                                value);
-                    break;
+                switch (columnIndex)
+                {
+                    case DataGridViewAccountingStatics.Column_Amount:
+                        var value = Rows[rowIndex].Cells[columnIndex].Value;
+                        InstitutionShowed.ModifyAmount(Rows[rowIndex].Cells[0].Value.ToString(),
+                                                    value);
+                        break;
+                }
+                ShowInstitution(InstitutionShowed);
             }
-            ShowInstitution(InstitutionShowed);
-
+            else
+            {
+                ShowCategory(CategoryShowed);
+            }
         }
-
     }
 }

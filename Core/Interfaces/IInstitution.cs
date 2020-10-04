@@ -13,6 +13,6 @@ namespace Core.Interfaces
         IEnumerable<IAccount> Accounts { get; }
         IAccount TotalAccount();
         IAccount TotalAccount(string overrideAccountName);
-        void Modify(string accountName, string columnName, object value);
+        void ModifyAmount(string accountName, object value);
     }
 }
