@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces
 {
-    public interface IAccountingData
+    public interface IAccount
     {
-        Category GetCategory(string catName);
-        IInstitution GetInstitution(string catName, string instName);
+        string AccountName { get; }
+        Currency Ccy { get; }
+        double Amount { get; }
     }
 }

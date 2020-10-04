@@ -35,7 +35,7 @@ namespace Core
             return _Data[catName];
         }
 
-        public Institution GetInstitution(string catName, string institName)
+        public IInstitution GetInstitution(string catName, string institName)
         {
             return _Data[catName].GetInstitution(institName);
         }

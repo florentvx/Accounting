@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Interfaces;
 
 namespace Core
 {
-    public class Account
+    public class Account : IAccount
     {
-        public string AccountName;
+        string _AccountName;
         Currency _Ccy;
         double _Amount;
+
+        public string AccountName {
+            get { return _AccountName; }
+            set { _AccountName = value; }
+        }
 
         public Currency Ccy {
             get { return _Ccy; }
@@ -25,11 +31,10 @@ namespace Core
 
         public Account(string name, Currency ccy, double amount = 0)
         {
-            AccountName = name;
+            _AccountName = name;
             _Ccy = ccy;
             _Amount = amount;
         }
-
         
     }
 }

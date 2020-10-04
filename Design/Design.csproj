@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7F24D92D-BDE7-418F-87E7-3404D759875C}</ProjectGuid>
+    <ProjectGuid>{97E83D37-E39A-4948-AC33-A27D33064B07}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Core</RootNamespace>
-    <AssemblyName>Core</AssemblyName>
+    <RootNamespace>Design</RootNamespace>
+    <AssemblyName>Design</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,6 +32,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,17 +42,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account.cs" />
-    <Compile Include="AccountingData.cs" />
-    <Compile Include="Category.cs" />
-    <Compile Include="Currency.cs" />
-    <Compile Include="Institution.cs" />
-    <Compile Include="Interfaces\IAccount.cs" />
-    <Compile Include="Interfaces\IAccountingData.cs" />
-    <Compile Include="Interfaces\ICategory.cs" />
-    <Compile Include="Interfaces\IInstitution.cs" />
-    <Compile Include="Interfaces\IView.cs" />
+    <Compile Include="DataGridViewRowAccounting.cs" />
+    <Compile Include="DataGridViewAccounting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataGridViewAccounting.resx">
+      <DependentUpon>DataGridViewAccounting.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{7F24D92D-BDE7-418F-87E7-3404D759875C}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

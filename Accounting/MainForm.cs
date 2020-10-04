@@ -19,81 +19,6 @@ namespace Accounting
             OnLoad();
         }
 
-        private void SetUpTable()
-        {
-            dataGridView1.ColumnCount = 4;
-            dataGridView1.Columns[0].Name = "Account Name";
-            dataGridView1.Columns[1].Name = "Currency";
-            dataGridView1.Columns[2].Name = "Amount";
-            dataGridView1.Columns[3].Name = "Converted Amount";
-        }
-
-        #region Show Institution
-
-        private void AddRow(Account item, bool isTotal = false)
-        {
-            DataGridViewRow dgvr = new DataGridViewRow();
-            dgvr.CreateCells(dataGridView1);
-            string amount = item.Amount.ToString();
-            if (isTotal)
-                amount = "";
-            var titles = new object[] {
-                item.AccountName, item.Ccy.ToString(), amount, item.Amount
-            };
-            dgvr.SetValues(titles);
-            if (isTotal)
-            {
-                dgvr.ReadOnly = isTotal;
-                for (int i = 0; i < dgvr.Cells.Count; i++)
-                {
-                    dgvr.Cells[i].Style.BackColor = Color.LightGray;
-                }   
-            }
-            dataGridView1.Rows.Add(dgvr);
-        }
-
-        private void ShowInstitution(Institution instit)
-        {
-            dataGridView1.Rows.Clear();
-            foreach (Account item in instit.Accounts)
-                AddRow(item);            
-            AddRow(instit.TotalAccount(), isTotal: true);
-        }
-
-        private void ShowInstitution(string catName, string institName)
-        {
-            ShowInstitution(Data.GetInstitution(catName, institName));
-        }
-
-        #endregion
-
-        #region Show Category
-
-        private void AddRow(Institution item)
-        {
-            Account sum = item.TotalAccount();
-            dataGridView1.Rows.Add(
-                    item.InstitutionName,
-                    item.Ccy.ToString(),
-                    sum.Amount,
-                    sum.Amount);
-        }
-
-        private void ShowCategory(Category cat)
-        {
-            dataGridView1.Rows.Clear();
-            foreach (Institution item in cat.Institutions)
-                AddRow(item);
-            AddRow(cat.TotalInstitution(),isTotal: true);
-        }
-
-        private void ShowCategory(string catName)
-        {
-            ShowCategory(Data.GetCategory(catName));
-        }
-
-        #endregion
-
         private void LoadAccounts()
         {
             TreeView.Nodes.Clear();
@@ -113,7 +38,7 @@ namespace Accounting
                 }
                 TreeView.Nodes.Add(treeNodeC);
             }
-            ShowCategory(Data.GetFirstCategory());
+            dataGridViewAccounting.ShowCategory(Data.GetFirstCategory());
         }
 
         private void LoadTestData()
@@ -131,10 +56,8 @@ namespace Accounting
 
         private void OnLoad()
         {
-            SetUpTable();
             LoadTestData();
             LoadAccounts();
-            dataGridView1.AllowUserToAddRows = false;
         }
 
         private void TreeView_AfterSelect(object sender, TreeViewEventArgs e)
@@ -143,12 +66,12 @@ namespace Accounting
             string[] split = fullPath.Split('\\');
             if (split.Count() == 1)
             {
-                ShowCategory(split[0]);
+                dataGridViewAccounting.ShowCategory(Data, split[0]);
                 e.Node.Expand();
             }
             if (split.Count() == 2)
             {
-                ShowInstitution(split[0], split[1]);
+                dataGridViewAccounting.ShowInstitution(Data, split[0], split[1]);
                 e.Node.Expand();
             }
         }
@@ -159,10 +82,15 @@ namespace Accounting
             LoadAccounts();
         }
 
-        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex == dataGridView1.RowCount - 1)
-                dataGridView1.ClearSelection();
+            if (e.RowIndex == dataGridViewAccounting.RowCount - 1)
+                dataGridViewAccounting.ClearSelection();
+        }
+
+        private void DataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            dataGridViewAccounting.CellValueChanged_Event(e.RowIndex, e.ColumnIndex);
         }
     }
 }

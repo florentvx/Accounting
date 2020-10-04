@@ -93,6 +93,10 @@
       <Project>{7f24d92d-bde7-418f-87e7-3404d759875c}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Design\Design.csproj">
+      <Project>{97E83D37-E39A-4948-AC33-A27D33064B07}</Project>
+      <Name>Design</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

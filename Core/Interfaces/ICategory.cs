@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces
 {
-    public interface IAccountingData
+    public interface ICategory
     {
-        Category GetCategory(string catName);
-        IInstitution GetInstitution(string catName, string instName);
+        IEnumerable<IInstitution> Institutions { get; }
+        IAccount TotalInstitution();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Accounting
+﻿using Design;
+
+namespace Accounting
 {
     partial class MainForm
     {
@@ -32,9 +34,13 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TreeView = new System.Windows.Forms.TreeView();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridViewAccounting = new Design.DataGridViewAccounting();
+            //this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            //this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            //this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            //this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -71,22 +77,23 @@
             this.TreeView.TabIndex = 1;
             this.TreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView_AfterSelect);
             // 
-            // dataGridView1
+            // dataGridViewAccounting
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(276, 43);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(641, 343);
-            this.dataGridView1.TabIndex = 2;
-            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
+            this.dataGridViewAccounting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewAccounting.Location = new System.Drawing.Point(276, 43);
+            this.dataGridViewAccounting.Name = "dataGridView1";
+            this.dataGridViewAccounting.RowTemplate.Height = 24;
+            this.dataGridViewAccounting.Size = new System.Drawing.Size(641, 343);
+            this.dataGridViewAccounting.TabIndex = 2;
+            this.dataGridViewAccounting.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellClick);
+            this.dataGridViewAccounting.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellValueChanged);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(929, 398);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.dataGridViewAccounting);
             this.Controls.Add(this.TreeView);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -94,7 +101,7 @@
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -104,7 +111,7 @@
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.TreeView TreeView;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private DataGridViewAccounting dataGridViewAccounting;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
     }

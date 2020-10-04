@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,15 @@ using System.Threading.Tasks;
 
 namespace Core
 {
-    public class Institution
+    public class Institution : IInstitution
     {
-        public string InstitutionName;
+        string _InstitutionName;
         Currency _Ccy;
+
+        public string InstitutionName
+        {
+            get { return _InstitutionName; }
+        }
 
         public Currency Ccy {
             get { return _Ccy; }
@@ -17,11 +23,11 @@ namespace Core
         }
 
         List<Account> _Accounts;
-        public List<Account> Accounts { get { return _Accounts; } }
+        public IEnumerable<IAccount> Accounts { get { return _Accounts; } }
 
         public Institution(string name, Currency ccy)
         {
-            InstitutionName = name;
+            _InstitutionName = name;
             Ccy = ccy;
             _Accounts = new List<Account> { };
         }
@@ -39,12 +45,34 @@ namespace Core
             return Accounts.Select(x => x.AccountName).ToList();
         }
 
-        public Account TotalAccount()
+        private Account GetAccount(string accountName)
+        {
+            foreach (Account item in Accounts)
+                if (item.AccountName == accountName)
+                    return item;
+            throw new Exception($"Account Name [{accountName}] not found in Insitution [{InstitutionName}]");
+        }
+
+        public IAccount TotalAccount(string overrideAccountName)
         {
             double total = 0;
             foreach (var x in _Accounts)
                 total += x.Amount;
-            return new Account("Total", Ccy, total);
+            return new Account(overrideAccountName, Ccy, total);
+        }
+
+        public IAccount TotalAccount()
+        {
+            return TotalAccount("Total");
+        }
+
+        public void Modify(string accountName, string columnName, object value)
+        {
+            if (columnName == "Amount")
+            {
+                Account acc = GetAccount(accountName);
+                acc.Amount = Convert.ToDouble(value);
+            }
         }
     }
 }
