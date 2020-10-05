@@ -57,5 +57,10 @@ namespace Core
                 total += item.TotalAccount().Amount;
             return new Account("Total", Ccy, total);
         }
+
+        public void ModifyCcy(object value)
+        {
+            Ccy = CurrencyFunctions.ToCurrency(value);
+        }
     }
 }

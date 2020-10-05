@@ -130,8 +130,15 @@ namespace Design
                 }
                 ShowInstitution(InstitutionShowed);
             }
-            else
+            else if (CategoryShowed != null && IsLastRow)
             {
+                switch (e.ColumnIndex)
+                {
+                    case DataGridViewAccountingStatics.Column_Currency:
+                        var valueCcy = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                        CategoryShowed.ModifyCcy(valueCcy);
+                        break;
+                }
                 ShowCategory(CategoryShowed);
             }
         }

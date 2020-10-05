@@ -10,5 +10,6 @@ namespace Core.Interfaces
     {
         IEnumerable<IInstitution> Institutions { get; }
         IAccount TotalInstitution();
+        void ModifyCcy(object value);
     }
 }
