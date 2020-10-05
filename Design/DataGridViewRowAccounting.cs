@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using Core.Interfaces;
+using Core;
 
 namespace Design
 {
@@ -15,15 +16,24 @@ namespace Design
             if (isTotal)
                 amount = "";
             var titles = new object[] {
-                account.AccountName, account.Ccy.ToString(), amount, account.Amount
+                account.AccountName, account.Ccy, amount, account.Amount
             };
+
             SetValues(titles);
+            if (!account.IsCalculatedAccount || isTotal)    
+                Cells[DataGridViewAccountingStatics.Column_Currency] = 
+                    new DataGridViewComboBoxCellAccounting(account.Ccy);
+            if (account.IsCalculatedAccount)
+                Cells[DataGridViewAccountingStatics.Column_Amount].ReadOnly = true;
+            Cells[DataGridViewAccountingStatics.Column_ConvertedAmount].ReadOnly = true;
+
             if (isTotal)
             {
-                ReadOnly = isTotal;
                 for (int i = 0; i < Cells.Count; i++)
                 {
                     Cells[i].Style.BackColor = Color.LightGray;
+                    if (i != DataGridViewAccountingStatics.Column_Currency)
+                        Cells[i].ReadOnly = true;
                 }
             }
         }

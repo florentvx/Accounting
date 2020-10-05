@@ -58,7 +58,7 @@ namespace Core
             double total = 0;
             foreach (var x in _Accounts)
                 total += x.Amount;
-            return new Account(overrideAccountName, Ccy, total);
+            return new Account(overrideAccountName, Ccy, total, isCalculatedAccount: true);
         }
 
         public IAccount TotalAccount()
@@ -70,6 +70,17 @@ namespace Core
         {
             Account acc = GetAccount(accountName);
             acc.Amount = Convert.ToDouble(value);
+        }
+
+        public void ModifyCcy(string accountName, object value, bool IsLastRow)
+        {
+            if (IsLastRow)
+                Ccy = CurrencyFunctions.ToCurrency(value);
+            else
+            {
+                Account acc = GetAccount(accountName);
+                acc.Ccy = CurrencyFunctions.ToCurrency(value);
+            }
         }
     }
 }

@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataGridViewComboBoxCellAccounting.cs" />
     <Compile Include="DataGridViewRowAccounting.cs" />
     <Compile Include="DataGridViewAccounting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

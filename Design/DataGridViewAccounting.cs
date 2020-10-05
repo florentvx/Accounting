@@ -58,6 +58,7 @@ namespace Design
             AddRow(instit.TotalAccount(), isTotal: true);
             InstitutionShowed = instit;
             CategoryShowed = null;
+            Rows[0].Cells[0].Selected = false;
         }
 
         public void ShowInstitution(IAccountingData iad, string catName, string instName)
@@ -84,6 +85,7 @@ namespace Design
             AddRow(cat.TotalInstitution(), isTotal: true);
             InstitutionShowed = null;
             CategoryShowed = cat;
+            Rows[0].Cells[0].Selected = false;
         }
 
         public void ShowCategory(IAccountingData iad, string catName)
@@ -93,16 +95,37 @@ namespace Design
 
         #endregion
 
-        public void CellValueChanged_Event(int rowIndex, int columnIndex)
+        private void ShowActive()
         {
+            if (InstitutionShowed != null)
+                ShowInstitution(InstitutionShowed);
+            if (CategoryShowed != null)
+                ShowCategory(CategoryShowed);
+            if (InstitutionShowed == null && CategoryShowed == null)
+                throw new Exception("Nothing to be showed!");
+        }
+
+        protected override void OnCellValueChanged(DataGridViewCellEventArgs e)
+        {
+            bool IsLastRow = e.RowIndex == Rows.Count - 1;
             if (CategoryShowed == null)
             {
-                switch (columnIndex)
+                switch (e.ColumnIndex)
                 {
                     case DataGridViewAccountingStatics.Column_Amount:
-                        var value = Rows[rowIndex].Cells[columnIndex].Value;
-                        InstitutionShowed.ModifyAmount(Rows[rowIndex].Cells[0].Value.ToString(),
-                                                    value);
+                        if (!IsLastRow)
+                        {
+                            var valueAmount = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                            InstitutionShowed.ModifyAmount(Rows[e.RowIndex].Cells[0].Value.ToString(),
+                                                        valueAmount);
+                        }
+                        break;
+
+                    case DataGridViewAccountingStatics.Column_Currency:
+                        var valueCcy = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                        InstitutionShowed.ModifyCcy(Rows[e.RowIndex].Cells[0].Value.ToString(),
+                                                    valueCcy,
+                                                    IsLastRow);
                         break;
                 }
                 ShowInstitution(InstitutionShowed);
@@ -110,6 +133,41 @@ namespace Design
             else
             {
                 ShowCategory(CategoryShowed);
+            }
+        }
+
+        protected override void OnCellMouseClick(DataGridViewCellMouseEventArgs e)
+        {
+            DataGridViewCell cell = Rows[e.RowIndex].Cells[e.ColumnIndex];
+
+            bool IsLastRow = cell.RowIndex == Rows.Count - 1;
+            switch (cell.ColumnIndex)
+            {
+                case DataGridViewAccountingStatics.Column_Amount:
+                    if (InstitutionShowed != null && !IsLastRow)
+                    {
+                        cell.Selected = true;
+                        BeginEdit(true);
+                    }
+                    else
+                    {
+                        cell.Selected = false;
+                    }
+                    break;
+
+                case DataGridViewAccountingStatics.Column_Currency:
+                    if (InstitutionShowed != null || IsLastRow)
+                    {
+                        cell.Selected = true;
+                        BeginEdit(true);
+                        if (cell.Value.ToString() != cell.EditedFormattedValue.ToString())
+                            ShowActive();
+                    }
+                    break;
+
+                default:
+                    cell.Selected = false;
+                    break;
             }
         }
     }

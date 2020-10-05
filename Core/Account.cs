@@ -12,6 +12,7 @@ namespace Core
         string _AccountName;
         Currency _Ccy;
         double _Amount;
+        bool _IsCalculatedAccount;
 
         public string AccountName {
             get { return _AccountName; }
@@ -29,11 +30,17 @@ namespace Core
             set { _Amount = value; }
         }
 
-        public Account(string name, Currency ccy, double amount = 0)
+        public bool IsCalculatedAccount
+        {
+            get { return _IsCalculatedAccount; }
+        }
+
+        public Account(string name, Currency ccy, double amount = 0, bool isCalculatedAccount = false)
         {
             _AccountName = name;
             _Ccy = ccy;
             _Amount = amount;
+            _IsCalculatedAccount = isCalculatedAccount;
         }
         
     }

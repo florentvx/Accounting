@@ -85,8 +85,6 @@ namespace Accounting
             this.dataGridViewAccounting.RowTemplate.Height = 24;
             this.dataGridViewAccounting.Size = new System.Drawing.Size(641, 343);
             this.dataGridViewAccounting.TabIndex = 2;
-            this.dataGridViewAccounting.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellClick);
-            this.dataGridViewAccounting.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellValueChanged);
             // 
             // MainForm
             // 
