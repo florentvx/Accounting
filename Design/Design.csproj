@@ -46,6 +46,7 @@
     <Compile Include="DataGridViewRowAccounting.cs" />
     <Compile Include="DataGridViewAccounting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TreeViewAccounting.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DataGridViewAccounting.resx">

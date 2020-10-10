@@ -11,34 +11,13 @@ namespace Accounting
     public partial class MainForm : Form, IView
     {
         AccountingData Data;
+        Presenter MainPresenter;
 
         public MainForm()
         {
             //XmlConfigurator.Configure();
             InitializeComponent();
             OnLoad();
-        }
-
-        private void LoadAccounts()
-        {
-            TreeView.Nodes.Clear();
-            var add = Data.GetSummary();
-            foreach (var itemC in add)
-            {
-                TreeNode treeNodeC = new TreeNode(itemC.Key);
-                foreach (var itemI in itemC.Value)
-                {
-                    TreeNode treeNodeI = new TreeNode(itemI.Key);
-                    foreach (string itemA in itemI.Value)
-                    {
-                        TreeNode treeNodeA = new TreeNode(itemA);
-                        treeNodeI.Nodes.Add(treeNodeA);
-                    }
-                    treeNodeC.Nodes.Add(treeNodeI);
-                }
-                TreeView.Nodes.Add(treeNodeC);
-            }
-            dataGridViewAccounting.ShowCategory(Data.GetFirstCategory());
         }
 
         private void LoadTestData()
@@ -57,29 +36,64 @@ namespace Accounting
         private void OnLoad()
         {
             LoadTestData();
-            LoadAccounts();
+            MainPresenter = new Presenter(this, Data);
+            MainPresenter.LoadAccounts();
         }
+
+        #region Interface
+
+        public void Reset()
+        {
+            TreeViewAccounting.Reset();
+        }
+
+        public void ShowActive()
+        {
+            dataGridViewAccounting.ShowActive();
+        }
+
+        public void ShowCategory(ICategory cat)
+        {
+            dataGridViewAccounting.ShowCategory(cat);
+        }
+
+        public void ShowInstitution(IInstitution cat)
+        {
+            dataGridViewAccounting.ShowInstitution(cat);
+        }
+
+        public void SetUpTree(Dictionary<string, Dictionary<string, List<string>>> sum)
+        {
+            TreeViewAccounting.SetUpTree(sum);
+        }
+
+        #endregion
 
         private void TreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            string fullPath = e.Node.FullPath;
-            string[] split = fullPath.Split('\\');
-            if (split.Count() == 1)
-            {
-                dataGridViewAccounting.ShowCategory(Data, split[0]);
-                e.Node.Expand();
-            }
-            if (split.Count() == 2)
-            {
-                dataGridViewAccounting.ShowInstitution(Data, split[0], split[1]);
-                e.Node.Expand();
-            }
+            MainPresenter.TreeView_AfterSelect(sender, e);
         }
 
         private void NewToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             Data.Reset();
-            LoadAccounts();
+            MainPresenter.LoadAccounts();
+        }
+
+        private void TreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            MainPresenter.TreeView_AfterLabelEdit(e);
+            TreeViewAccounting.LabelEdit = false;
+        }
+
+        private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            MainPresenter.TreeView_NodeMouseClick(e);
+        }
+
+        public void TreeView_NodeMouseRightClick(TreeNodeMouseClickEventArgs e)
+        {
+            TreeViewAccounting.NodeMouseRightClick(e);
         }
     }
 }

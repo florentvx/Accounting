@@ -31,7 +31,7 @@ namespace Core
             _Institutions.Add(instit.InstitutionName, instit);
         }
 
-        public IInstitution GetInstitution(string name)
+        public Institution GetInstitution(string name)
         {
             return _Institutions[name];
         }
@@ -56,6 +56,31 @@ namespace Core
             foreach (var item in Institutions)
                 total += item.TotalAccount().Amount;
             return new Account("Total", Ccy, total);
+        }
+
+        public bool ChangeName(string before, string after, NodeType nodeTag)
+        {
+            if (nodeTag == NodeType.Institution)
+            {
+                if (_Institutions.ContainsKey(before))
+                {
+                    _Institutions[after] = _Institutions[before];
+                    _Institutions[after].InstitutionName = after;
+                    _Institutions.Remove(before);
+                    return true;
+                }
+                return false;
+                
+            }
+            else
+            {
+                foreach (Institution item in _Institutions.Values)
+                {
+                    if (item.ChangeName(before, after, nodeTag))
+                        return true;
+                }
+                return false;
+            }
         }
 
         public void ModifyCcy(object value)

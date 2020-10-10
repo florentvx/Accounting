@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,7 +50,9 @@
     <Compile Include="Interfaces\IAccountingData.cs" />
     <Compile Include="Interfaces\ICategory.cs" />
     <Compile Include="Interfaces\IInstitution.cs" />
+    <Compile Include="Interfaces\ISummary.cs" />
     <Compile Include="Interfaces\IView.cs" />
+    <Compile Include="Interfaces\NodeType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

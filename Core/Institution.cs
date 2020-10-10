@@ -15,6 +15,7 @@ namespace Core
         public string InstitutionName
         {
             get { return _InstitutionName; }
+            set { _InstitutionName = value; }
         }
 
         public Currency Ccy {
@@ -45,7 +46,7 @@ namespace Core
             return Accounts.Select(x => x.AccountName).ToList();
         }
 
-        private Account GetAccount(string accountName)
+        public Account GetAccount(string accountName)
         {
             foreach (Account item in Accounts)
                 if (item.AccountName == accountName)
@@ -81,6 +82,21 @@ namespace Core
                 Account acc = GetAccount(accountName);
                 acc.Ccy = CurrencyFunctions.ToCurrency(value);
             }
+        }
+
+        public bool ChangeName(string before, string after, NodeType nodeTag)
+        {
+            if (nodeTag != NodeType.Account)
+                throw new Exception($"Node Tag Unknown! [{nodeTag}]");
+            foreach (Account item in Accounts)
+            {
+                if(item.AccountName == before)
+                {
+                    item.AccountName = after;
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -10,5 +10,8 @@ namespace Core.Interfaces
     {
         Category GetCategory(string catName);
         IInstitution GetInstitution(string catName, string instName);
+        Dictionary<string, Dictionary<string, List<string>>> GetSummary();
+        ICategory GetFirstCategory();
+        void ChangeName(string before, string after, NodeType nodeType);
     }
 }

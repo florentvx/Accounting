@@ -33,12 +33,8 @@ namespace Accounting
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.TreeView = new System.Windows.Forms.TreeView();
+            this.TreeViewAccounting = new Design.TreeViewAccounting();
             this.dataGridViewAccounting = new Design.DataGridViewAccounting();
-            //this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            //this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            //this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            //this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).BeginInit();
             this.SuspendLayout();
@@ -69,19 +65,22 @@ namespace Accounting
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
             // 
-            // TreeView
+            // TreeViewAccounting
             // 
-            this.TreeView.Location = new System.Drawing.Point(12, 43);
-            this.TreeView.Name = "TreeView";
-            this.TreeView.Size = new System.Drawing.Size(244, 343);
-            this.TreeView.TabIndex = 1;
-            this.TreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView_AfterSelect);
+            this.TreeViewAccounting.Location = new System.Drawing.Point(12, 43);
+            this.TreeViewAccounting.Name = "TreeViewAccounting";
+            this.TreeViewAccounting.Size = new System.Drawing.Size(244, 343);
+            this.TreeViewAccounting.TabIndex = 1;
+            this.TreeViewAccounting.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.TreeView_AfterLabelEdit);
+            this.TreeViewAccounting.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView_AfterSelect);
+            this.TreeViewAccounting.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeMouseClick);
             // 
             // dataGridViewAccounting
             // 
+            this.dataGridViewAccounting.AllowUserToAddRows = false;
             this.dataGridViewAccounting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewAccounting.Location = new System.Drawing.Point(276, 43);
-            this.dataGridViewAccounting.Name = "dataGridView1";
+            this.dataGridViewAccounting.Name = "dataGridViewAccounting";
             this.dataGridViewAccounting.RowTemplate.Height = 24;
             this.dataGridViewAccounting.Size = new System.Drawing.Size(641, 343);
             this.dataGridViewAccounting.TabIndex = 2;
@@ -92,7 +91,7 @@ namespace Accounting
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(929, 398);
             this.Controls.Add(this.dataGridViewAccounting);
-            this.Controls.Add(this.TreeView);
+            this.Controls.Add(this.TreeViewAccounting);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
@@ -108,7 +107,7 @@ namespace Accounting
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.TreeView TreeView;
+        private TreeViewAccounting TreeViewAccounting;
         private DataGridViewAccounting dataGridViewAccounting;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;

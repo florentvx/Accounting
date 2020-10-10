@@ -95,7 +95,7 @@ namespace Design
 
         #endregion
 
-        private void ShowActive()
+        public void ShowActive()
         {
             if (InstitutionShowed != null)
                 ShowInstitution(InstitutionShowed);

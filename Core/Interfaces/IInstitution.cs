@@ -15,5 +15,6 @@ namespace Core.Interfaces
         IAccount TotalAccount(string overrideAccountName);
         void ModifyAmount(string accountName, object value);
         void ModifyCcy(string accountName, object value, bool IsLastRow);
+        bool ChangeName(string before, string after, NodeType nodeType);
     }
 }

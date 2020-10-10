@@ -6,8 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
 
-using AccountingDataDictionary = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>>;
-
 namespace Core
 {
 
@@ -25,7 +23,7 @@ namespace Core
             _Data = input.ToDictionary(x => x.CategoryName, x => x);
         }
 
-        public AccountingDataDictionary GetSummary()
+        public Dictionary<string, Dictionary<string, List<string>>> GetSummary()
         {
             return _Data.ToDictionary(x => x.Key, x => x.Value.GetCategorySummary());
         }
@@ -40,7 +38,7 @@ namespace Core
             return _Data[catName].GetInstitution(institName);
         }
 
-        public Category GetFirstCategory()
+        public ICategory GetFirstCategory()
         {
             return _Data[_Data.Keys.First().ToString()];
         }
@@ -52,6 +50,24 @@ namespace Core
             cat.AddInstitution("Institution");
             cat.AddAccount("Account", "Institution");
             _Data.Add(cat.CategoryName, cat);
+        }
+
+        public void ChangeName(string before, string after, NodeType nodeTag)
+        {
+            // TODO: Check before that the new Name does not already exist
+            if (nodeTag == NodeType.Category)
+            {
+                _Data[after] = _Data[before];
+                _Data.Remove(before);
+            }
+            else
+            {
+                foreach (Category item in _Data.Values)
+                {
+                    if (item.ChangeName(before, after, nodeTag))
+                        break;
+                }
+            }
         }
 
         #region IEnumerable
