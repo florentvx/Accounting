@@ -45,12 +45,21 @@
     <Compile Include="DataGridViewComboBoxCellAccounting.cs" />
     <Compile Include="DataGridViewRowAccounting.cs" />
     <Compile Include="DataGridViewAccounting.cs" />
+    <Compile Include="FormAccounting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAccounting.Designer.cs">
+      <DependentUpon>FormAccounting.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TreeViewAccounting.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DataGridViewAccounting.resx">
       <DependentUpon>DataGridViewAccounting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAccounting.resx">
+      <DependentUpon>FormAccounting.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

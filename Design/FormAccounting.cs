@@ -9,13 +9,14 @@ using Design;
 
 namespace Accounting
 {
-    public partial class MainForm : FormAccounting, IView
+    public partial class FormAccounting : Form, IView
     {
         AccountingData Data;
-        Presenter MainPresenter;
+        //Presenter MainPresenter;
 
-        public MainForm() : base()
+        public FormAccounting() : base()
         {
+            //XmlConfigurator.Configure();
             InitializeComponent();
             OnLoad();
         }
@@ -36,30 +37,42 @@ namespace Accounting
         private void OnLoad()
         {
             LoadTestData();
-            MainPresenter = new Presenter(this, Data);
-            MainPresenter.LoadAccounts();
+            //MainPresenter = new Presenter(this, Data);
+            //MainPresenter.LoadAccounts();
         }
 
-        private void TreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        #region Interface
+
+        public void Reset()
         {
-            MainPresenter.TreeView_AfterSelect(sender, e);
+            TreeViewAccounting.Reset();
         }
 
-        private void NewToolStripMenuItem_Click(object sender, System.EventArgs e)
+        public void ShowActive()
         {
-            Data.Reset();
-            MainPresenter.LoadAccounts();
+            dataGridViewAccounting.ShowActive();
         }
 
-        private void TreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        public void ShowCategory(ICategory cat)
         {
-            MainPresenter.TreeView_AfterLabelEdit(e);
-            TreeViewAccounting.LabelEdit = false;
+            dataGridViewAccounting.ShowCategory(cat);
         }
 
-        private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        public void ShowInstitution(IInstitution cat)
         {
-            MainPresenter.TreeView_NodeMouseClick(e);
+            dataGridViewAccounting.ShowInstitution(cat);
+        }
+
+        public void SetUpTree(Dictionary<string, Dictionary<string, List<string>>> sum)
+        {
+            TreeViewAccounting.SetUpTree(sum);
+        }
+
+        #endregion
+
+        public void TreeView_NodeMouseRightClick(TreeNodeMouseClickEventArgs e)
+        {
+            TreeViewAccounting.NodeMouseRightClick(e);
         }
     }
 }
