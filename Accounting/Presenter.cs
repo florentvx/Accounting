@@ -22,36 +22,38 @@ namespace Accounting
         public void LoadAccounts()
         {
             _view.Reset();
-            Dictionary<string, Dictionary<string, List<string>>> add = _ad.GetSummary();
-            _view.SetUpTree(add);
+            _view.SetUpTree();
             _view.ShowCategory(_ad.GetFirstCategory());
         }
 
-        internal void TreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        internal async void TreeView_AfterLabelEdit(NodeLabelEditEventArgs e)
         {
-            string fullPath = e.Node.FullPath;
-            string[] split = fullPath.Split('\\');
-            if (split.Count() == 1)
+            string before = e.Node.Text;
+            string after = e.Label;
+            if (after != null && after != "")
             {
-                _view.ShowCategory(_ad.GetCategory(split[0]));
+                await Task.Run(() =>
+                {
+                    NodeAddress na = (NodeAddress)e.Node.Tag;
+                    _ad.ChangeName(before, after, na);
+                    na.ChangeAddress(after);
+                    _view.ChangeActive(na);
+                    _view.SetUpTree(na); // TODO: Add Optional Arg to set up Tree to indicate which adress to start on
+                });
             }
-            if (split.Count() == 2)
+            else
             {
-                _view.ShowInstitution(_ad.GetInstitution(split[0], split[1]));
+                e.CancelEdit = true;
             }
-            e.Node.Expand();
-        }
 
-        internal void TreeView_AfterLabelEdit(NodeLabelEditEventArgs e)
-        {
-            _ad.ChangeName(e.Node.Text, e.Label, (NodeType)e.Node.Tag);
-            _view.ShowActive();
         }
 
         internal void TreeView_NodeMouseClick(TreeNodeMouseClickEventArgs e)
         {
             if (e.Button.Equals(MouseButtons.Right))
                 _view.TreeView_NodeMouseRightClick(e);
+            if (e.Button.Equals(MouseButtons.Left))
+                _view.TreeView_NodeMouseLeftClick(e);
         }
 
     }

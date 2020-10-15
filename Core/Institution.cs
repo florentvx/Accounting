@@ -84,19 +84,41 @@ namespace Core
             }
         }
 
-        public bool ChangeName(string before, string after, NodeType nodeTag)
+        public void ChangeName(string before, string after, NodeAddress nodeTag)
         {
-            if (nodeTag != NodeType.Account)
-                throw new Exception($"Node Tag Unknown! [{nodeTag}]");
-            foreach (Account item in Accounts)
+            if (nodeTag.NodeType != NodeType.Account)
+                throw new Exception($"Node Tag Unknown! [{nodeTag.NodeType}]");
+            if (Accounts.Where(x => x.AccountName == after).Count() == 0)
             {
-                if(item.AccountName == before)
-                {
-                    item.AccountName = after;
-                    return true;
-                }
+                var acc = Accounts.Where(x => x.AccountName == before).FirstOrDefault();
+                acc.AccountName = after;
             }
-            return false;
+        }
+
+        private string GetNewAccountName()
+        {
+            int i = 0;
+            string newNameRef = "New Account";
+            string newName = newNameRef;
+            while (_Accounts.Where(x => x.AccountName == newName).Count() > 0)
+            {
+                i++;
+                newName = $"{newNameRef} - {i}";
+            }
+            return newName;
+        }
+
+        internal NodeAddress AddItem(NodeAddress nodeAddress)
+        {
+            if (nodeAddress.NodeType == NodeType.Account)
+            {
+                string newName = GetNewAccountName();
+                AddAccount(newName);
+                nodeAddress.ChangeAddress(newName);
+                return nodeAddress;
+            }
+            else
+                throw new Exception($"Unknown NodeType: [{nodeAddress.NodeType}]");
         }
     }
 }

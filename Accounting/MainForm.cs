@@ -11,7 +11,6 @@ namespace Accounting
 {
     public partial class MainForm : FormAccounting, IView
     {
-        AccountingData Data;
         Presenter MainPresenter;
 
         public MainForm() : base()
@@ -38,11 +37,6 @@ namespace Accounting
             LoadTestData();
             MainPresenter = new Presenter(this, Data);
             MainPresenter.LoadAccounts();
-        }
-
-        private void TreeView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            MainPresenter.TreeView_AfterSelect(sender, e);
         }
 
         private void NewToolStripMenuItem_Click(object sender, System.EventArgs e)

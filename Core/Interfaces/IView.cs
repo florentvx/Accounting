@@ -11,9 +11,12 @@ namespace Core.Interfaces
     {
         void Reset();
         void ShowActive();
+        void ChangeActive(NodeAddress nd);
         void ShowCategory(ICategory cat);
         void ShowInstitution(IInstitution cat);
-        void SetUpTree(Dictionary<string, Dictionary<string, List<string>>> sum);
+        void SetUpTree();
+        void SetUpTree(NodeAddress na);
         void TreeView_NodeMouseRightClick(TreeNodeMouseClickEventArgs e);
+        void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e);
     }
 }

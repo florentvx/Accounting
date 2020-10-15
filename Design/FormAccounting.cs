@@ -5,40 +5,16 @@ using System.Windows.Forms;
 using Core;
 using Core.Interfaces;
 using Design;
-//using log4net.Config;
 
 namespace Accounting
 {
     public partial class FormAccounting : Form, IView
     {
-        AccountingData Data;
-        //Presenter MainPresenter;
+        protected AccountingData Data;
 
         public FormAccounting() : base()
         {
-            //XmlConfigurator.Configure();
             InitializeComponent();
-            OnLoad();
-        }
-
-        private void LoadTestData()
-        {
-            Category category = new Category("Banks");
-            category.AddInstitution("Toto Bank");
-            category.AddAccount("Checking", "Toto Bank");
-            category.AddAccount("Saving", "Toto Bank");
-            Category category2 = new Category("Investing");
-            category2.AddInstitution("Fidelity");
-            category2.AddAccount("ETF", "Fidelity");
-            List<Category> cats = new List<Category> { category, category2 };
-            Data = new AccountingData(cats);
-        }
-
-        private void OnLoad()
-        {
-            LoadTestData();
-            //MainPresenter = new Presenter(this, Data);
-            //MainPresenter.LoadAccounts();
         }
 
         #region Interface
@@ -53,6 +29,30 @@ namespace Accounting
             dataGridViewAccounting.ShowActive();
         }
 
+        public void ChangeActive(NodeAddress na)
+        {
+            if (dataGridViewAccounting.InvokeRequired)
+            {
+                DelegateTable d = new DelegateTable(ChangeActive);
+                this.Invoke(d, new object[] { na });
+            }
+            else
+            {
+                switch (na.NodeType)
+                {
+                    case NodeType.Category:
+                        dataGridViewAccounting.ShowCategory(Data.GetCategory(na.Address[0]));
+                        break;
+                    case NodeType.Institution:
+                    case NodeType.Account:
+                        dataGridViewAccounting.ShowInstitution(Data.GetInstitution(na.Address[0], na.Address[1]));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         public void ShowCategory(ICategory cat)
         {
             dataGridViewAccounting.ShowCategory(cat);
@@ -63,16 +63,65 @@ namespace Accounting
             dataGridViewAccounting.ShowInstitution(cat);
         }
 
-        public void SetUpTree(Dictionary<string, Dictionary<string, List<string>>> sum)
+        public void SetUpTree()
         {
-            TreeViewAccounting.SetUpTree(sum);
+            if (TreeViewAccounting.InvokeRequired)
+            {
+                DelegateTree d = new DelegateTree(SetUpTree);
+                this.Invoke(d, new object[] { });
+            }
+            else
+                TreeViewAccounting.SetUpTree(Data.GetSummary());
+        }
+
+        public void SetUpTree(NodeAddress na)
+        {
+            if (TreeViewAccounting.InvokeRequired)
+            {
+                DelegateTreeWithInput d = new DelegateTreeWithInput(SetUpTree);
+                this.Invoke(d, new object[] { na });
+            }
+            else
+                TreeViewAccounting.SetUpTree(Data.GetSummary(), na);
         }
 
         #endregion
+
+        public void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e)
+        {
+            NodeAddress na = (NodeAddress)e.Node.Tag;
+            switch (na.NodeType)
+            {
+                case NodeType.Category:
+                    ShowCategory(Data.GetCategory(na.Address[0]));
+                    break;
+
+                case NodeType.Institution:
+                case NodeType.Account:
+                    ShowInstitution(Data.GetInstitution(na.Address[0], na.Address[1]));
+                    break;
+
+                default:
+                    break;
+            }
+        }
 
         public void TreeView_NodeMouseRightClick(TreeNodeMouseClickEventArgs e)
         {
             TreeViewAccounting.NodeMouseRightClick(e);
         }
+
+        public void TreeView_NodeAddition(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            NodeAddress na = (NodeAddress)e.Node.Tag;
+            NodeAddress newNode = Data.AddItem(na);
+            SetUpTree(newNode);
+            ChangeActive(newNode);
+        }
+
+        delegate void DelegateTree();
+        delegate void DelegateTreeWithInput(NodeAddress na);
+        delegate void DelegateTable(NodeAddress na);
+
     }
 }

@@ -145,36 +145,39 @@ namespace Design
 
         protected override void OnCellMouseClick(DataGridViewCellMouseEventArgs e)
         {
-            DataGridViewCell cell = Rows[e.RowIndex].Cells[e.ColumnIndex];
-
-            bool IsLastRow = cell.RowIndex == Rows.Count - 1;
-            switch (cell.ColumnIndex)
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
-                case DataGridViewAccountingStatics.Column_Amount:
-                    if (InstitutionShowed != null && !IsLastRow)
-                    {
-                        cell.Selected = true;
-                        BeginEdit(true);
-                    }
-                    else
-                    {
+                DataGridViewCell cell = Rows[e.RowIndex].Cells[e.ColumnIndex];
+
+                bool IsLastRow = cell.RowIndex == Rows.Count - 1;
+                switch (cell.ColumnIndex)
+                {
+                    case DataGridViewAccountingStatics.Column_Amount:
+                        if (InstitutionShowed != null && !IsLastRow)
+                        {
+                            cell.Selected = true;
+                            BeginEdit(true);
+                        }
+                        else
+                        {
+                            cell.Selected = false;
+                        }
+                        break;
+
+                    case DataGridViewAccountingStatics.Column_Currency:
+                        if (InstitutionShowed != null || IsLastRow)
+                        {
+                            cell.Selected = true;
+                            BeginEdit(true);
+                            if (cell.Value.ToString() != cell.EditedFormattedValue.ToString())
+                                ShowActive();
+                        }
+                        break;
+
+                    default:
                         cell.Selected = false;
-                    }
-                    break;
-
-                case DataGridViewAccountingStatics.Column_Currency:
-                    if (InstitutionShowed != null || IsLastRow)
-                    {
-                        cell.Selected = true;
-                        BeginEdit(true);
-                        if (cell.Value.ToString() != cell.EditedFormattedValue.ToString())
-                            ShowActive();
-                    }
-                    break;
-
-                default:
-                    cell.Selected = false;
-                    break;
+                        break;
+                }
             }
         }
     }

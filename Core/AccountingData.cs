@@ -43,31 +43,55 @@ namespace Core
             return _Data[_Data.Keys.First().ToString()];
         }
 
+        public string AddNewCategory()
+        {
+            int i = 0;
+            string newNameRef = "New Category";
+            string newName = newNameRef;
+            while (_Data.ContainsKey(newName))
+            {
+                i++;
+                newName = $"{newNameRef} - {i}";
+            }
+            Category cat = new Category(newName);
+            cat.AddInstitution("New Institution");
+            cat.AddAccount("New Account", "New Institution");
+            _Data.Add(cat.CategoryName, cat);
+            return newName;
+        }
+
         public void Reset()
         {
             _Data = new Dictionary<string, Category> { };
-            Category cat = new Category("Category");
-            cat.AddInstitution("Institution");
-            cat.AddAccount("Account", "Institution");
-            _Data.Add(cat.CategoryName, cat);
+            AddNewCategory();
+            
         }
 
-        public void ChangeName(string before, string after, NodeType nodeTag)
+        public void ChangeName(string before, string after, NodeAddress nodeTag)
         {
-            // TODO: Check before that the new Name does not already exist
-            if (nodeTag == NodeType.Category)
+            if (nodeTag.NodeType == NodeType.Category)
             {
-                _Data[after] = _Data[before];
-                _Data.Remove(before);
+                if (!_Data.ContainsKey(after))
+                {
+                    _Data[after] = _Data[before];
+                    _Data.Remove(before);
+                }
             }
             else
             {
-                foreach (Category item in _Data.Values)
-                {
-                    if (item.ChangeName(before, after, nodeTag))
-                        break;
-                }
+                _Data[nodeTag.Address[0]].ChangeName(before, after, nodeTag);
             }
+        }
+
+        public NodeAddress AddItem(NodeAddress nodeAddress)
+        {
+            if (nodeAddress.NodeType == NodeType.Category)
+            {
+                string newName = AddNewCategory();
+                return new NodeAddress(NodeType.Category, newName);
+            }
+            else
+                return _Data[nodeAddress.Address[0]].AddItem(nodeAddress);
         }
 
         #region IEnumerable

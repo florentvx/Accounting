@@ -31,6 +31,21 @@ namespace Core
             _Institutions.Add(instit.InstitutionName, instit);
         }
 
+        public string AddNewInstitution()
+        {
+            int i = 0;
+            string newNameRef = "New Institution";
+            string newName = newNameRef;
+            while (_Institutions.ContainsKey(newName))
+            {
+                i++;
+                newName = $"{newNameRef} - {i}";
+            }
+            AddInstitution(newName);
+            _Institutions[newName].AddAccount("New Account");
+            return newName;
+        }
+
         public Institution GetInstitution(string name)
         {
             return _Institutions[name];
@@ -58,29 +73,33 @@ namespace Core
             return new Account("Total", Ccy, total);
         }
 
-        public bool ChangeName(string before, string after, NodeType nodeTag)
+        public void ChangeName(string before, string after, NodeAddress nodeTag)
         {
-            if (nodeTag == NodeType.Institution)
+            if (nodeTag.NodeType == NodeType.Institution)
             {
-                if (_Institutions.ContainsKey(before))
+                if (_Institutions.ContainsKey(before) && !_Institutions.ContainsKey(after))
                 {
                     _Institutions[after] = _Institutions[before];
                     _Institutions[after].InstitutionName = after;
                     _Institutions.Remove(before);
-                    return true;
                 }
-                return false;
-                
             }
             else
             {
-                foreach (Institution item in _Institutions.Values)
-                {
-                    if (item.ChangeName(before, after, nodeTag))
-                        return true;
-                }
-                return false;
+                _Institutions[nodeTag.Address[1]].ChangeName(before, after, nodeTag);
             }
+        }
+
+        internal NodeAddress AddItem(NodeAddress nodeAddress)
+        {
+            if (nodeAddress.NodeType == NodeType.Institution)
+            {
+                string newName = AddNewInstitution();
+                nodeAddress.ChangeAddress(newName);
+                return nodeAddress;
+            }
+            else
+                return _Institutions[nodeAddress.Address[1]].AddItem(nodeAddress);
         }
 
         public void ModifyCcy(object value)

@@ -8,7 +8,7 @@ namespace Core.Interfaces
 {
     public interface IAccount
     {
-        string AccountName { get; }
+        string AccountName { get; set; }
         Currency Ccy { get; }
         double Amount { get; }
         bool IsCalculatedAccount { get; }

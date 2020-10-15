@@ -12,6 +12,6 @@ namespace Core.Interfaces
         IInstitution GetInstitution(string catName, string instName);
         Dictionary<string, Dictionary<string, List<string>>> GetSummary();
         ICategory GetFirstCategory();
-        void ChangeName(string before, string after, NodeType nodeType);
+        void ChangeName(string before, string after, NodeAddress nodeType);
     }
 }

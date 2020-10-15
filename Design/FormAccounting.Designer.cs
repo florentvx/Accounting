@@ -65,7 +65,7 @@ namespace Accounting
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(114, 26);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.newToolStripMenuItem.Text = "New";
             // 
             // dataGridViewAccounting
@@ -109,6 +109,7 @@ namespace Accounting
             this.TreeViewAccounting.Name = "TreeViewAccounting";
             this.TreeViewAccounting.Size = new System.Drawing.Size(244, 343);
             this.TreeViewAccounting.TabIndex = 1;
+            this.TreeViewAccounting.NodeAdded += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeAddition);
             // 
             // FormAccounting
             // 
