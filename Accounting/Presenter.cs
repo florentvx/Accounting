@@ -22,8 +22,9 @@ namespace Accounting
         public void LoadAccounts()
         {
             _view.Reset();
-            _view.SetUpTree();
-            _view.ShowCategory(_ad.GetFirstCategory());
+            ICategory icat = _ad.GetFirstCategory();
+            _view.SetUpTree(new NodeAddress(NodeType.Category, icat.CategoryName));
+            _view.ShowCategory(icat);
         }
 
         internal async void TreeView_AfterLabelEdit(NodeLabelEditEventArgs e)

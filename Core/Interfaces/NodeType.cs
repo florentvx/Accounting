@@ -14,12 +14,14 @@ namespace Core.Interfaces
     public class NodeAddress
     {
         public static char Separator = '/';
-        public NodeType NodeType;
+        public NodeType _NodeType;
         public List<string> Address;
+
+        public NodeType NodeType { get { return _NodeType; } }
 
         public NodeAddress(NodeType nt, string path)
         {
-            NodeType = nt;
+            _NodeType = nt;
             Address = new List<string> { };
             var res = path.Split(Separator);
             for (int i = 0; i < res.Length; i++)
@@ -29,6 +31,18 @@ namespace Core.Interfaces
         public void ChangeAddress(string label)
         {
             Address[Address.Count() - 1] = label;
+        }
+
+        public string GetLabelText()
+        {
+            NodeType nt = NodeType;
+            if (_NodeType == NodeType.Account)
+                nt = NodeType.Institution;
+            string res = Enum.GetName(typeof(NodeType), nt) + " : ";
+            res += Address[0];
+            if (nt == NodeType.Institution)
+                res += $" -> {Address[1]}";
+            return res;
         }
     }
 }

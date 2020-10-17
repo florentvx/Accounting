@@ -8,6 +8,7 @@ namespace Core.Interfaces
 {
     public interface ICategory
     {
+        string CategoryName { get; }
         IEnumerable<IInstitution> Institutions { get; }
         IAccount TotalInstitution();
         void ModifyCcy(object value);

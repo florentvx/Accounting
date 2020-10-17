@@ -33,12 +33,10 @@ namespace Accounting
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelTable = new System.Windows.Forms.Label();
             this.dataGridViewAccounting = new Design.DataGridViewAccounting();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TreeViewAccounting = new Design.TreeViewAccounting();
+            this.buttonTotal = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).BeginInit();
             this.SuspendLayout();
@@ -65,57 +63,55 @@ namespace Accounting
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(114, 26);
             this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
+            // 
+            // labelTable
+            // 
+            this.labelTable.AutoSize = true;
+            this.labelTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTable.Location = new System.Drawing.Point(277, 34);
+            this.labelTable.Name = "labelTable";
+            this.labelTable.Size = new System.Drawing.Size(79, 18);
+            this.labelTable.TabIndex = 3;
+            this.labelTable.Text = "LabelTable";
             // 
             // dataGridViewAccounting
             // 
             this.dataGridViewAccounting.AllowUserToAddRows = false;
             this.dataGridViewAccounting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewAccounting.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.dataGridViewTextBoxColumn3,
-            this.dataGridViewTextBoxColumn4});
-            this.dataGridViewAccounting.Location = new System.Drawing.Point(276, 43);
+            this.dataGridViewAccounting.Location = new System.Drawing.Point(276, 65);
             this.dataGridViewAccounting.Name = "dataGridViewAccounting";
             this.dataGridViewAccounting.RowTemplate.Height = 24;
             this.dataGridViewAccounting.Size = new System.Drawing.Size(641, 343);
             this.dataGridViewAccounting.TabIndex = 2;
             // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
             // TreeViewAccounting
             // 
-            this.TreeViewAccounting.Location = new System.Drawing.Point(12, 43);
+            this.TreeViewAccounting.Location = new System.Drawing.Point(12, 65);
             this.TreeViewAccounting.Name = "TreeViewAccounting";
             this.TreeViewAccounting.Size = new System.Drawing.Size(244, 343);
             this.TreeViewAccounting.TabIndex = 1;
             this.TreeViewAccounting.NodeAdded += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeAddition);
             // 
+            // buttonTotal
+            // 
+            this.buttonTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonTotal.Location = new System.Drawing.Point(16, 31);
+            this.buttonTotal.Name = "buttonTotal";
+            this.buttonTotal.Size = new System.Drawing.Size(239, 28);
+            this.buttonTotal.TabIndex = 4;
+            this.buttonTotal.Text = "Show Total";
+            this.buttonTotal.UseVisualStyleBackColor = true;
+            // 
             // FormAccounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(929, 398);
+            this.ClientSize = new System.Drawing.Size(929, 420);
+            this.Controls.Add(this.buttonTotal);
+            this.Controls.Add(this.labelTable);
             this.Controls.Add(this.dataGridViewAccounting);
             this.Controls.Add(this.TreeViewAccounting);
             this.Controls.Add(this.menuStrip1);
@@ -137,10 +133,8 @@ namespace Accounting
         protected DataGridViewAccounting dataGridViewAccounting;
         protected System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         protected System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        protected System.Windows.Forms.Label labelTable;
+        private System.Windows.Forms.Button buttonTotal;
     }
 }
 

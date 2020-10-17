@@ -14,7 +14,6 @@ namespace Core.Interfaces
         void ChangeActive(NodeAddress nd);
         void ShowCategory(ICategory cat);
         void ShowInstitution(IInstitution cat);
-        void SetUpTree();
         void SetUpTree(NodeAddress na);
         void TreeView_NodeMouseRightClick(TreeNodeMouseClickEventArgs e);
         void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e);

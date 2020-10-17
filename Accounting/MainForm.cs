@@ -39,7 +39,7 @@ namespace Accounting
             MainPresenter.LoadAccounts();
         }
 
-        private void NewToolStripMenuItem_Click(object sender, System.EventArgs e)
+        public override void NewToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             Data.Reset();
             MainPresenter.LoadAccounts();

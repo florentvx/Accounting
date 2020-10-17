@@ -9,16 +9,19 @@ namespace Core
 {
     public class Category : ICategory
     {
-        public string CategoryName;
+        private string _CategoryName;
         Currency Ccy;
         Dictionary<string, Institution> _Institutions;
+
+        public string CategoryName { get { return _CategoryName; } }
+
         public IEnumerable<IInstitution> Institutions {
             get { return _Institutions.Values.ToList<IInstitution>(); }
         }
 
         public Category(string name, Currency ccy = Currency.USD)
         {
-            CategoryName = name;
+            _CategoryName = name;
             Ccy = ccy;
             _Institutions = new Dictionary<string, Institution> { };
         }

@@ -38,6 +38,7 @@ namespace Accounting
             }
             else
             {
+                labelTable.Text = na.GetLabelText();
                 switch (na.NodeType)
                 {
                     case NodeType.Category:
@@ -63,19 +64,9 @@ namespace Accounting
             dataGridViewAccounting.ShowInstitution(cat);
         }
 
-        public void SetUpTree()
-        {
-            if (TreeViewAccounting.InvokeRequired)
-            {
-                DelegateTree d = new DelegateTree(SetUpTree);
-                this.Invoke(d, new object[] { });
-            }
-            else
-                TreeViewAccounting.SetUpTree(Data.GetSummary());
-        }
-
         public void SetUpTree(NodeAddress na)
         {
+            labelTable.Text = na.GetLabelText();
             if (TreeViewAccounting.InvokeRequired)
             {
                 DelegateTreeWithInput d = new DelegateTreeWithInput(SetUpTree);
@@ -87,9 +78,12 @@ namespace Accounting
 
         #endregion
 
+        virtual public void NewToolStripMenuItem_Click(object sender, System.EventArgs e) { }
+
         public void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e)
         {
             NodeAddress na = (NodeAddress)e.Node.Tag;
+            labelTable.Text = na.GetLabelText();
             switch (na.NodeType)
             {
                 case NodeType.Category:
