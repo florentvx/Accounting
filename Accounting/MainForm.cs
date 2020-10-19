@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -39,10 +40,15 @@ namespace Accounting
             MainPresenter.LoadAccounts();
         }
 
-        public override void NewToolStripMenuItem_Click(object sender, System.EventArgs e)
+        protected override void NewToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             Data.Reset();
             MainPresenter.LoadAccounts();
+        }
+
+        protected override void ButtonTotal_Click(object sender, EventArgs e)
+        {
+            MainPresenter.ButtonTotal();
         }
 
         private void TreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)

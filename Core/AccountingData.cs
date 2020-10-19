@@ -9,17 +9,30 @@ using Core.Interfaces;
 namespace Core
 {
 
-    public class AccountingData : IAccountingData, IEnumerator<Category>
+    public class AccountingData : IAccountingData
     {
+        Currency _Ccy;
         Dictionary<string, Category> _Data = new Dictionary<string, Category> { };
-        int position = 0;
 
-        Category IEnumerator<Category>.Current => throw new NotImplementedException();
+        public Currency Ccy
+        {
+            get { return _Ccy; }
+            set { _Ccy = value; }
+        }
 
-        object IEnumerator.Current => throw new NotImplementedException();
+        public void ModifyCcy(object valueCcy)
+        {
+            _Ccy = CurrencyFunctions.ToCurrency(valueCcy);
+        }
+
+        public IEnumerable<ICategory> Categories
+        {
+            get { return _Data.Values.ToList<ICategory>(); }
+        }
 
         public AccountingData(List<Category> input)
         {
+            _Ccy = Currency.USD;
             _Data = input.ToDictionary(x => x.CategoryName, x => x);
         }
 
@@ -41,6 +54,14 @@ namespace Core
         public ICategory GetFirstCategory()
         {
             return _Data[_Data.Keys.First().ToString()];
+        }
+
+        public IAccount Total()
+        {
+            double total = 0;
+            foreach (var item in _Data)
+                total += item.Value.TotalInstitution().Amount;
+            return new Account("Total", Ccy, total);
         }
 
         public string AddNewCategory()
@@ -99,22 +120,6 @@ namespace Core
         public IEnumerator<Category> GetEnumerator()
         {
             return _Data.Values.GetEnumerator();
-        }
-
-        void IDisposable.Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
-        bool IEnumerator.MoveNext()
-        {
-            position++;
-            return position < _Data.Count;
-        }
-
-        void IEnumerator.Reset()
-        {
-            position = -1;
         }
 
         #endregion

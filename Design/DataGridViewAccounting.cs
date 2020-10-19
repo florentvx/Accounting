@@ -24,6 +24,7 @@ namespace Design
     {
         public IInstitution InstitutionShowed;
         public ICategory CategoryShowed;
+        public IAccountingData TotalShowed;
 
         private void SetUpTable()
         {
@@ -58,6 +59,7 @@ namespace Design
             AddRow(instit.TotalAccount(), isTotal: true);
             InstitutionShowed = instit;
             CategoryShowed = null;
+            TotalShowed = null;
             Rows[0].Cells[0].Selected = false;
         }
 
@@ -85,12 +87,35 @@ namespace Design
             AddRow(cat.TotalInstitution(), isTotal: true);
             InstitutionShowed = null;
             CategoryShowed = cat;
+            TotalShowed = null;
             Rows[0].Cells[0].Selected = false;
         }
 
         public void ShowCategory(IAccountingData iad, string catName)
         {
             ShowCategory(iad.GetCategory(catName));
+        }
+
+        #endregion
+
+        #region ShowTotal
+
+        private void AddRow(ICategory item)
+        {
+            IAccount sum = item.TotalInstitution(item.CategoryName);
+            AddRow(sum, false);
+        }
+
+        internal void ShowTotal(IAccountingData iad)
+        {
+            Rows.Clear();
+            foreach (ICategory icat in iad.Categories)
+                AddRow(icat);
+            AddRow(iad.Total(), isTotal: true);
+            InstitutionShowed = null;
+            CategoryShowed = null;
+            TotalShowed = iad;
+            Rows[0].Cells[0].Selected = false;
         }
 
         #endregion
@@ -108,7 +133,7 @@ namespace Design
         protected override void OnCellValueChanged(DataGridViewCellEventArgs e)
         {
             bool IsLastRow = e.RowIndex == Rows.Count - 1;
-            if (CategoryShowed == null)
+            if (InstitutionShowed != null)
             {
                 switch (e.ColumnIndex)
                 {
@@ -140,6 +165,17 @@ namespace Design
                         break;
                 }
                 ShowCategory(CategoryShowed);
+            }
+            else if (TotalShowed != null)
+            {
+                switch (e.ColumnIndex)
+                {
+                    case DataGridViewAccountingStatics.Column_Currency:
+                        var valueCcy = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                        TotalShowed.ModifyCcy(valueCcy);
+                        break;
+                }
+                ShowTotal(TotalShowed);
             }
         }
 

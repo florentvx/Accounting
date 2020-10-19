@@ -104,6 +104,7 @@ namespace Accounting
             this.buttonTotal.TabIndex = 4;
             this.buttonTotal.Text = "Show Total";
             this.buttonTotal.UseVisualStyleBackColor = true;
+            this.buttonTotal.Click += new System.EventHandler(this.ButtonTotal_Click);
             // 
             // FormAccounting
             // 

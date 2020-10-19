@@ -68,12 +68,17 @@ namespace Core
             return res;
         }
 
-        public IAccount TotalInstitution()
+        public IAccount TotalInstitution(string overrideName)
         {
             double total = 0;
             foreach (var item in Institutions)
                 total += item.TotalAccount().Amount;
-            return new Account("Total", Ccy, total);
+            return new Account(overrideName, Ccy, total, true);
+        }
+
+        public IAccount TotalInstitution()
+        {
+            return TotalInstitution("Total");
         }
 
         public void ChangeName(string before, string after, NodeAddress nodeTag)

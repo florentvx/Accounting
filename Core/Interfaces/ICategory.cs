@@ -11,6 +11,7 @@ namespace Core.Interfaces
         string CategoryName { get; }
         IEnumerable<IInstitution> Institutions { get; }
         IAccount TotalInstitution();
+        IAccount TotalInstitution(string overrideName);
         void ModifyCcy(object value);
     }
 }

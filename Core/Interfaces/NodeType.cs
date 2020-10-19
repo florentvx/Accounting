@@ -8,7 +8,7 @@ namespace Core.Interfaces
 {
     public enum NodeType
     {
-        Category, Institution, Account
+        All, Category, Institution, Account
     }
 
     public class NodeAddress

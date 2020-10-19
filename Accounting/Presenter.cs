@@ -57,5 +57,9 @@ namespace Accounting
                 _view.TreeView_NodeMouseLeftClick(e);
         }
 
+        internal void ButtonTotal()
+        {
+            _view.ShowTotal();
+        }
     }
 }

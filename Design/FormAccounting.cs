@@ -54,6 +54,12 @@ namespace Accounting
             }
         }
 
+        public void ShowTotal()
+        {
+            labelTable.Text = "Total";
+            dataGridViewAccounting.ShowTotal(Data);
+        }
+
         public void ShowCategory(ICategory cat)
         {
             dataGridViewAccounting.ShowCategory(cat);
@@ -78,7 +84,10 @@ namespace Accounting
 
         #endregion
 
-        virtual public void NewToolStripMenuItem_Click(object sender, System.EventArgs e) { }
+        virtual protected void NewToolStripMenuItem_Click(object sender, System.EventArgs e) { }
+        virtual protected void ButtonTotal_Click(object sender, System.EventArgs e) { }
+
+        #region TreeView Event Functions
 
         public void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e)
         {
@@ -113,9 +122,12 @@ namespace Accounting
             ChangeActive(newNode);
         }
 
+        #endregion
+
         delegate void DelegateTree();
         delegate void DelegateTreeWithInput(NodeAddress na);
         delegate void DelegateTable(NodeAddress na);
 
+        
     }
 }

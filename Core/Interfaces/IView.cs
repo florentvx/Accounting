@@ -12,6 +12,7 @@ namespace Core.Interfaces
         void Reset();
         void ShowActive();
         void ChangeActive(NodeAddress nd);
+        void ShowTotal();
         void ShowCategory(ICategory cat);
         void ShowInstitution(IInstitution cat);
         void SetUpTree(NodeAddress na);
