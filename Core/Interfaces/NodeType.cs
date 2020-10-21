@@ -44,5 +44,22 @@ namespace Core.Interfaces
                 res += $" -> {Address[1]}";
             return res;
         }
+
+        public NodeAddress GetParent()
+        {
+            switch (NodeType)
+            {
+                case NodeType.All:
+                    return null;
+                case NodeType.Category:
+                    return new NodeAddress(NodeType.All, "");
+                case NodeType.Institution:
+                    return new NodeAddress(NodeType.Category, Address[0]);
+                case NodeType.Account:
+                    return new NodeAddress(NodeType.Institution, Address[0] + Separator + Address[1]);
+                default:
+                    return null;
+            }
+        }
     }
 }

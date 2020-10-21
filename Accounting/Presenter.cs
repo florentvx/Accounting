@@ -23,8 +23,8 @@ namespace Accounting
         {
             _view.Reset();
             ICategory icat = _ad.GetFirstCategory();
-            _view.SetUpTree(new NodeAddress(NodeType.Category, icat.CategoryName));
-            _view.ShowCategory(icat);
+            _view.SetUpTree(_ad.Map);
+            _view.ShowCategory(new NodeAddress(NodeType.Category, icat.CategoryName));
         }
 
         internal async void TreeView_AfterLabelEdit(NodeLabelEditEventArgs e)
@@ -39,7 +39,7 @@ namespace Accounting
                     _ad.ChangeName(before, after, na);
                     na.ChangeAddress(after);
                     _view.ChangeActive(na);
-                    _view.SetUpTree(na); // TODO: Add Optional Arg to set up Tree to indicate which adress to start on
+                    _view.SetUpTree(_ad.Map);
                 });
             }
             else

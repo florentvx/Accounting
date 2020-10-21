@@ -10,12 +10,12 @@ namespace Core.Interfaces
     public interface IView
     {
         void Reset();
-        void ShowActive();
+        //void ShowActive();
         void ChangeActive(NodeAddress nd);
         void ShowTotal();
-        void ShowCategory(ICategory cat);
-        void ShowInstitution(IInstitution cat);
-        void SetUpTree(NodeAddress na);
+        void ShowCategory(NodeAddress na);
+        void ShowInstitution(NodeAddress na);
+        void SetUpTree(TreeViewMapping na);
         void TreeView_NodeMouseRightClick(TreeNodeMouseClickEventArgs e);
         void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e);
     }

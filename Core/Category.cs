@@ -13,10 +13,20 @@ namespace Core
         Currency Ccy;
         Dictionary<string, Institution> _Institutions;
 
-        public string CategoryName { get { return _CategoryName; } }
+        public string CategoryName
+        {
+            get { return _CategoryName; }
+            set { _CategoryName = value; }
+        }
 
-        public IEnumerable<IInstitution> Institutions {
+        public IEnumerable<IInstitution> Institutions
+        {
             get { return _Institutions.Values.ToList<IInstitution>(); }
+        }
+
+        public IEnumerable<IInstitution> GetInstitutions(TreeViewMappingElement tvme)
+        {
+            return tvme.Nodes.Select(x => _Institutions[x.Name]);
         }
 
         public Category(string name, Currency ccy = Currency.USD)
@@ -34,7 +44,7 @@ namespace Core
             _Institutions.Add(instit.InstitutionName, instit);
         }
 
-        public string AddNewInstitution()
+        public Institution AddNewInstitution()
         {
             int i = 0;
             string newNameRef = "New Institution";
@@ -46,7 +56,7 @@ namespace Core
             }
             AddInstitution(newName);
             _Institutions[newName].AddAccount("New Account");
-            return newName;
+            return _Institutions[newName];
         }
 
         public Institution GetInstitution(string name)
@@ -96,18 +106,6 @@ namespace Core
             {
                 _Institutions[nodeTag.Address[1]].ChangeName(before, after, nodeTag);
             }
-        }
-
-        internal NodeAddress AddItem(NodeAddress nodeAddress)
-        {
-            if (nodeAddress.NodeType == NodeType.Institution)
-            {
-                string newName = AddNewInstitution();
-                nodeAddress.ChangeAddress(newName);
-                return nodeAddress;
-            }
-            else
-                return _Institutions[nodeAddress.Address[1]].AddItem(nodeAddress);
         }
 
         public void ModifyCcy(object value)

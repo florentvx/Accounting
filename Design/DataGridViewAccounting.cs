@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core;
+using Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -25,6 +26,7 @@ namespace Design
         public IInstitution InstitutionShowed;
         public ICategory CategoryShowed;
         public IAccountingData TotalShowed;
+        private TreeViewMappingElement memory;
 
         private void SetUpTable()
         {
@@ -51,10 +53,13 @@ namespace Design
             Rows.Add(dgvr);
         }
 
-        public void ShowInstitution(IInstitution instit)
+        public void ShowInstitution(IInstitution instit, TreeViewMappingElement tvme = null)
         {
+            if (tvme == null) { tvme = memory; }
+            else
+                memory = tvme;
             Rows.Clear();
-            foreach (IAccount item in instit.Accounts)
+            foreach (IAccount item in instit.GetAccounts(tvme))
                 AddRow(item);
             AddRow(instit.TotalAccount(), isTotal: true);
             InstitutionShowed = instit;
@@ -63,11 +68,11 @@ namespace Design
             Rows[0].Cells[0].Selected = false;
         }
 
-        public void ShowInstitution(IAccountingData iad, string catName, string instName)
-        {
-            IInstitution instit = iad.GetInstitution(catName, instName);
-            ShowInstitution(instit);            
-        }
+        //public void ShowInstitution(IAccountingData iad, string catName, string instName)
+        //{
+        //    IInstitution instit = iad.GetInstitution(catName, instName);
+        //    ShowInstitution(instit);            
+        //}
 
         #endregion
 
@@ -79,10 +84,13 @@ namespace Design
             AddRow(sum, false);
         }
 
-        public void ShowCategory(ICategory cat)
+        public void ShowCategory(ICategory cat, TreeViewMappingElement tvme = null)
         {
+            if (tvme == null) { tvme = memory; }
+            else
+                memory = tvme;
             Rows.Clear();
-            foreach (IInstitution item in cat.Institutions)
+            foreach (IInstitution item in cat.GetInstitutions(tvme))
                 AddRow(item);
             AddRow(cat.TotalInstitution(), isTotal: true);
             InstitutionShowed = null;
@@ -91,10 +99,10 @@ namespace Design
             Rows[0].Cells[0].Selected = false;
         }
 
-        public void ShowCategory(IAccountingData iad, string catName)
-        {
-            ShowCategory(iad.GetCategory(catName));
-        }
+        //public void ShowCategory(IAccountingData iad, string catName)
+        //{
+        //    ShowCategory(iad.GetCategory(catName));
+        //}
 
         #endregion
 

@@ -9,7 +9,7 @@ namespace Core.Interfaces
     public interface ICategory
     {
         string CategoryName { get; }
-        IEnumerable<IInstitution> Institutions { get; }
+        IEnumerable<IInstitution> GetInstitutions(TreeViewMappingElement tvm);
         IAccount TotalInstitution();
         IAccount TotalInstitution(string overrideName);
         void ModifyCcy(object value);

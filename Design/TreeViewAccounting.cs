@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Core;
 using Core.Interfaces;
 
 namespace Design
@@ -24,13 +25,12 @@ namespace Design
 
     public class TreeViewAccounting : TreeView
     {
+        //TreeViewMapping Mapping;
+
         public void Reset()
         {
             Nodes.Clear();
         }
-
-
-
 
         // Nodes ref to a list not a dictionary
         // i can use that by creating a custom mapping
@@ -49,31 +49,36 @@ namespace Design
             }
         }
 
-        public void SetUpTree(Dictionary<string, Dictionary<string, List<string>>> add, NodeAddress na = null)
+        public void SetUpTree(TreeViewMapping tvm)
         {
             Reset();
-            foreach (var itemC in add)
+            //if (Mapping == null)
+            //    Mapping = new TreeViewMapping(add);
+            //else
+            //    Mapping.Modify(add, na, isNodeAddition);
+
+            foreach (TreeViewMappingElement itemC in tvm)
             {
-                string path_C = itemC.Key;
-                TreeNode treeNodeC = new TreeNode(itemC.Key) { Tag = new NodeAddress(NodeType.Category, path_C)  };
+                string path_C = itemC.Name;
+                TreeNode treeNodeC = new TreeNode(itemC.Name) { Tag = new NodeAddress(NodeType.Category, path_C) };
                 path_C += NodeAddress.Separator;
-                foreach (var itemI in itemC.Value)
+                foreach (var itemI in itemC)
                 {
-                    string path_I = path_C + itemI.Key;
-                    TreeNode treeNodeI = new TreeNode(itemI.Key) { Tag = new NodeAddress(NodeType.Institution, path_I) };
+                    string path_I = path_C + itemI.Name;
+                    TreeNode treeNodeI = new TreeNode(itemI.Name) { Tag = new NodeAddress(NodeType.Institution, path_I) };
                     path_I += NodeAddress.Separator;
-                    foreach (string itemA in itemI.Value)
+                    foreach (var itemA in itemI)
                     {
-                        string path_A = path_I + itemA;
-                        TreeNode treeNodeA = new TreeNode(itemA) { Tag = new NodeAddress(NodeType.Account, path_A) };
+                        string path_A = path_I + itemA.Name;
+                        TreeNode treeNodeA = new TreeNode(itemA.Name) { Tag = new NodeAddress(NodeType.Account, path_A) };
                         treeNodeI.Nodes.Add(treeNodeA);
                     }
                     treeNodeC.Nodes.Add(treeNodeI);
                 }
                 Nodes.Add(treeNodeC);
             }
-            if (na != null)
-                ExpandNode(na);
+            //if (na != null)
+            //    ExpandNode(na);
         }
 
         private void ContextMenu_Rename(object sender, EventArgs e)

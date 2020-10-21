@@ -26,6 +26,11 @@ namespace Core
         List<Account> _Accounts;
         public IEnumerable<IAccount> Accounts { get { return _Accounts; } }
 
+        public IEnumerable<IAccount> GetAccounts(TreeViewMappingElement tvme)
+        {
+            return tvme.Nodes.Select(x => GetAccount(x.Name));
+        }
+
         public Institution(string name, Currency ccy)
         {
             _InstitutionName = name;
@@ -33,12 +38,13 @@ namespace Core
             _Accounts = new List<Account> { };
         }
 
-        public void AddAccount(string name, Currency currency = Currency.None)
+        public Account AddAccount(string name, Currency currency = Currency.None)
         {
             if (currency == Currency.None)
                 currency = Ccy;
             Account account = new Account(name, currency);
             _Accounts.Add(account);
+            return account;
         }
 
         public List<string> GetAccountList()
@@ -108,17 +114,10 @@ namespace Core
             return newName;
         }
 
-        internal NodeAddress AddItem(NodeAddress nodeAddress)
+        public Account AddNewAccount()
         {
-            if (nodeAddress.NodeType == NodeType.Account)
-            {
-                string newName = GetNewAccountName();
-                AddAccount(newName);
-                nodeAddress.ChangeAddress(newName);
-                return nodeAddress;
-            }
-            else
-                throw new Exception($"Unknown NodeType: [{nodeAddress.NodeType}]");
+            string newName = GetNewAccountName();
+            return AddAccount(newName);
         }
     }
 }

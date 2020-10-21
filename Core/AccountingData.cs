@@ -13,6 +13,7 @@ namespace Core
     {
         Currency _Ccy;
         Dictionary<string, Category> _Data = new Dictionary<string, Category> { };
+        TreeViewMapping _Map;
 
         public Currency Ccy
         {
@@ -27,13 +28,20 @@ namespace Core
 
         public IEnumerable<ICategory> Categories
         {
-            get { return _Data.Values.ToList<ICategory>(); }
+            get
+            {
+                IEnumerable<string> nameList = _Map.GetList(new NodeAddress(NodeType.All, ""));
+                return nameList.Select(x => _Data[x]);
+            }
         }
+
+        public TreeViewMapping Map { get { return _Map; } }
 
         public AccountingData(List<Category> input)
         {
             _Ccy = Currency.USD;
             _Data = input.ToDictionary(x => x.CategoryName, x => x);
+            _Map = new TreeViewMapping(_Data);
         }
 
         public Dictionary<string, Dictionary<string, List<string>>> GetSummary()
@@ -46,14 +54,44 @@ namespace Core
             return _Data[catName];
         }
 
+        public Category GetCategory(NodeAddress na)
+        {
+            return GetCategory(na.Address[0]);
+        }
+
         public IInstitution GetInstitution(string catName, string institName)
         {
-            return _Data[catName].GetInstitution(institName);
+            return GetCategory(catName).GetInstitution(institName);
+        }
+
+        public IInstitution GetInstitution(NodeAddress na)
+        {
+            return GetInstitution(na.Address[0], na.Address[1]);
         }
 
         public ICategory GetFirstCategory()
         {
             return _Data[_Data.Keys.First().ToString()];
+        }
+
+        public ICategory GetElement(NodeAddress na)
+        {
+            switch (na.NodeType)
+            {
+                case NodeType.All:
+                    break;
+                case NodeType.Category:
+                    GetCategory(na.Address[0]);
+                    break;
+                case NodeType.Institution:
+                    GetInstitution(na.Address[0], na.Address[1]);
+                    break;
+                case NodeType.Account:
+                    break;
+                default:
+                    break;
+            }
+            throw new Exception("ERROR");
         }
 
         public IAccount Total()
@@ -64,7 +102,7 @@ namespace Core
             return new Account("Total", Ccy, total);
         }
 
-        public string AddNewCategory()
+        public Category AddNewCategory()
         {
             int i = 0;
             string newNameRef = "New Category";
@@ -78,7 +116,7 @@ namespace Core
             cat.AddInstitution("New Institution");
             cat.AddAccount("New Account", "New Institution");
             _Data.Add(cat.CategoryName, cat);
-            return newName;
+            return cat;
         }
 
         public void Reset()
@@ -96,23 +134,41 @@ namespace Core
                 {
                     _Data[after] = _Data[before];
                     _Data.Remove(before);
+                    _Data[after].CategoryName = after;
                 }
             }
             else
             {
                 _Data[nodeTag.Address[0]].ChangeName(before, after, nodeTag);
             }
+            _Map.ChangeName(nodeTag, after);
         }
 
         public NodeAddress AddItem(NodeAddress nodeAddress)
         {
-            if (nodeAddress.NodeType == NodeType.Category)
+            switch (nodeAddress.NodeType)
             {
-                string newName = AddNewCategory();
-                return new NodeAddress(NodeType.Category, newName);
+                case NodeType.All:
+                    break;
+                case NodeType.Category:
+                    Category newCat = AddNewCategory();
+                    Map.AddItem(nodeAddress, newCat);
+                    nodeAddress.ChangeAddress(newCat.CategoryName);
+                    return nodeAddress;
+                case NodeType.Institution:
+                    Institution newInstit = _Data[nodeAddress.Address[0]].AddNewInstitution();
+                    Map.AddItem(nodeAddress, newInstit);
+                    nodeAddress.ChangeAddress(newInstit.InstitutionName);
+                    return nodeAddress;
+                case NodeType.Account:
+                    Account newAccount = GetCategory(nodeAddress.Address[0]).GetInstitution(nodeAddress.Address[1]).AddNewAccount();
+                    Map.AddItem(nodeAddress, newAccount);
+                    nodeAddress.ChangeAddress(newAccount.AccountName);
+                    return nodeAddress;
+                default:
+                    break;
             }
-            else
-                return _Data[nodeAddress.Address[0]].AddItem(nodeAddress);
+            throw new Exception("Issue");
         }
 
         #region IEnumerable

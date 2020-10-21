@@ -16,5 +16,6 @@ namespace Core.Interfaces
         ICategory GetFirstCategory();
         void ChangeName(string before, string after, NodeAddress nodeType);
         void ModifyCcy(object valueCcy);
+        TreeViewMapping Map { get; }
     }
 }

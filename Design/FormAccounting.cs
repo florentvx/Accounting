@@ -24,10 +24,10 @@ namespace Accounting
             TreeViewAccounting.Reset();
         }
 
-        public void ShowActive()
-        {
-            dataGridViewAccounting.ShowActive();
-        }
+        //public void ShowActive()
+        //{
+        //    dataGridViewAccounting.ShowActive();
+        //}
 
         public void ChangeActive(NodeAddress na)
         {
@@ -42,11 +42,13 @@ namespace Accounting
                 switch (na.NodeType)
                 {
                     case NodeType.Category:
-                        dataGridViewAccounting.ShowCategory(Data.GetCategory(na.Address[0]));
+                        dataGridViewAccounting.ShowCategory(Data.GetCategory(na.Address[0]), Data.Map.GetElement(na));
                         break;
                     case NodeType.Institution:
+                        dataGridViewAccounting.ShowInstitution(Data.GetInstitution(na.Address[0], na.Address[1]), Data.Map.GetElement(na));
+                        break;
                     case NodeType.Account:
-                        dataGridViewAccounting.ShowInstitution(Data.GetInstitution(na.Address[0], na.Address[1]));
+                        dataGridViewAccounting.ShowInstitution(Data.GetInstitution(na.Address[0], na.Address[1]), Data.Map.GetElement(na.GetParent()));
                         break;
                     default:
                         break;
@@ -60,26 +62,25 @@ namespace Accounting
             dataGridViewAccounting.ShowTotal(Data);
         }
 
-        public void ShowCategory(ICategory cat)
+        public void ShowCategory(NodeAddress na)
         {
-            dataGridViewAccounting.ShowCategory(cat);
+            dataGridViewAccounting.ShowCategory(Data.GetCategory(na), Data.Map.GetElement(na));
         }
 
-        public void ShowInstitution(IInstitution cat)
+        public void ShowInstitution(NodeAddress na)
         {
-            dataGridViewAccounting.ShowInstitution(cat);
+            dataGridViewAccounting.ShowInstitution(Data.GetInstitution(na), Data.Map.GetElement(na));
         }
 
-        public void SetUpTree(NodeAddress na)
+        public void SetUpTree(TreeViewMapping tvm)
         {
-            labelTable.Text = na.GetLabelText();
             if (TreeViewAccounting.InvokeRequired)
             {
                 DelegateTreeWithInput d = new DelegateTreeWithInput(SetUpTree);
-                this.Invoke(d, new object[] { na });
+                this.Invoke(d, new object[] { tvm });
             }
             else
-                TreeViewAccounting.SetUpTree(Data.GetSummary(), na);
+                TreeViewAccounting.SetUpTree(tvm);
         }
 
         #endregion
@@ -96,14 +97,15 @@ namespace Accounting
             switch (na.NodeType)
             {
                 case NodeType.Category:
-                    ShowCategory(Data.GetCategory(na.Address[0]));
+                    ShowCategory(na);
                     break;
 
                 case NodeType.Institution:
-                case NodeType.Account:
-                    ShowInstitution(Data.GetInstitution(na.Address[0], na.Address[1]));
+                    ShowInstitution(na);
                     break;
-
+                case NodeType.Account:
+                    ShowInstitution(na.GetParent());
+                    break;
                 default:
                     break;
             }
@@ -118,14 +120,14 @@ namespace Accounting
         {
             NodeAddress na = (NodeAddress)e.Node.Tag;
             NodeAddress newNode = Data.AddItem(na);
-            SetUpTree(newNode);
+            SetUpTree(Data.Map);
             ChangeActive(newNode);
         }
 
         #endregion
 
         delegate void DelegateTree();
-        delegate void DelegateTreeWithInput(NodeAddress na);
+        delegate void DelegateTreeWithInput(TreeViewMapping tvm);
         delegate void DelegateTable(NodeAddress na);
 
         
