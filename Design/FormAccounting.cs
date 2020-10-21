@@ -17,17 +17,12 @@ namespace Accounting
             InitializeComponent();
         }
 
-        #region Interface
+        #region IView
 
         public void Reset()
         {
             TreeViewAccounting.Reset();
         }
-
-        //public void ShowActive()
-        //{
-        //    dataGridViewAccounting.ShowActive();
-        //}
 
         public void ChangeActive(NodeAddress na)
         {
@@ -39,20 +34,7 @@ namespace Accounting
             else
             {
                 labelTable.Text = na.GetLabelText();
-                switch (na.NodeType)
-                {
-                    case NodeType.Category:
-                        dataGridViewAccounting.ShowCategory(Data.GetCategory(na.Address[0]), Data.Map.GetElement(na));
-                        break;
-                    case NodeType.Institution:
-                        dataGridViewAccounting.ShowInstitution(Data.GetInstitution(na.Address[0], na.Address[1]), Data.Map.GetElement(na));
-                        break;
-                    case NodeType.Account:
-                        dataGridViewAccounting.ShowInstitution(Data.GetInstitution(na.Address[0], na.Address[1]), Data.Map.GetElement(na.GetParent()));
-                        break;
-                    default:
-                        break;
-                }
+                dataGridViewAccounting.ShowElement(Data.GetElement(na), Data.Map.GetElement(na));
             }
         }
 
@@ -62,14 +44,9 @@ namespace Accounting
             dataGridViewAccounting.ShowTotal(Data);
         }
 
-        public void ShowCategory(NodeAddress na)
+        public void ShowElement(NodeAddress na)
         {
-            dataGridViewAccounting.ShowCategory(Data.GetCategory(na), Data.Map.GetElement(na));
-        }
-
-        public void ShowInstitution(NodeAddress na)
-        {
-            dataGridViewAccounting.ShowInstitution(Data.GetInstitution(na), Data.Map.GetElement(na));
+            dataGridViewAccounting.ShowElement(Data.GetElement(na), Data.Map.GetElement(na));
         }
 
         public void SetUpTree(TreeViewMapping tvm)
@@ -83,13 +60,6 @@ namespace Accounting
                 TreeViewAccounting.SetUpTree(tvm);
         }
 
-        #endregion
-
-        virtual protected void NewToolStripMenuItem_Click(object sender, System.EventArgs e) { }
-        virtual protected void ButtonTotal_Click(object sender, System.EventArgs e) { }
-
-        #region TreeView Event Functions
-
         public void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e)
         {
             NodeAddress na = (NodeAddress)e.Node.Tag;
@@ -97,16 +67,11 @@ namespace Accounting
             switch (na.NodeType)
             {
                 case NodeType.Category:
-                    ShowCategory(na);
-                    break;
-
                 case NodeType.Institution:
-                    ShowInstitution(na);
+                    ShowElement(na);
                     break;
                 case NodeType.Account:
-                    ShowInstitution(na.GetParent());
-                    break;
-                default:
+                    ShowElement(na.GetParent());
                     break;
             }
         }
@@ -116,6 +81,11 @@ namespace Accounting
             TreeViewAccounting.NodeMouseRightClick(e);
         }
 
+        #endregion
+
+        virtual protected void NewToolStripMenuItem_Click(object sender, System.EventArgs e) { }
+        virtual protected void ButtonTotal_Click(object sender, System.EventArgs e) { }
+
         public void TreeView_NodeAddition(object sender, TreeNodeMouseClickEventArgs e)
         {
             NodeAddress na = (NodeAddress)e.Node.Tag;
@@ -123,8 +93,6 @@ namespace Accounting
             SetUpTree(Data.Map);
             ChangeActive(newNode);
         }
-
-        #endregion
 
         delegate void DelegateTree();
         delegate void DelegateTreeWithInput(TreeViewMapping tvm);

@@ -13,27 +13,7 @@ namespace Core
         public string Name;
         public List<TreeViewMappingElement> Nodes;
 
-        public TreeViewMappingElement(string name)
-        {             
-            Name = name;
-            Nodes = null;
-        }
-
-        public TreeViewMappingElement AddElement(string name)
-        {
-            if (Nodes == null)
-                Nodes = new List<TreeViewMappingElement> { };
-            TreeViewMappingElement newElmt = new TreeViewMappingElement(name);
-            Nodes.Add(newElmt);
-            return newElmt;
-        }
-
-        public void AddElement(TreeViewMappingElement elmt)
-        {
-            if (Nodes == null)
-                Nodes = new List<TreeViewMappingElement> { };
-            Nodes.Add(elmt);
-        }
+        #region IEnumerable
 
         public IEnumerator<TreeViewMappingElement> GetEnumerator()
         {
@@ -43,6 +23,14 @@ namespace Core
         IEnumerator IEnumerable.GetEnumerator()
         {
             return Nodes.GetEnumerator();
+        }
+
+        #endregion
+
+        public TreeViewMappingElement(string name)
+        {             
+            Name = name;
+            Nodes = null;
         }
 
         internal TreeViewMappingElement GetElement(string name)
@@ -57,30 +45,18 @@ namespace Core
             return null;
         }
 
-        public static TreeViewMappingElement CreateElement(Account newInst)
+        internal void AddElement(TreeViewMappingElement elmt)
         {
-            var res = new TreeViewMappingElement(newInst.AccountName);
-            return res;
+            if (Nodes == null)
+                Nodes = new List<TreeViewMappingElement> { };
+            Nodes.Add(elmt);
         }
 
-        public static TreeViewMappingElement CreateElement(Institution newInst)
+        internal TreeViewMappingElement AddElement(string name)
         {
-            var res = new TreeViewMappingElement(newInst.InstitutionName);
-            foreach (Account item in newInst.Accounts)
-            {
-                res.AddElement(CreateElement(item));
-            }
-            return res;
-        }
-
-        public static TreeViewMappingElement CreateElement(Category newCat)
-        {
-            var res = new TreeViewMappingElement(newCat.CategoryName);
-            foreach (Institution item in newCat.Institutions)
-            {
-                res.AddElement(CreateElement(item));
-            }
-            return res;
+            TreeViewMappingElement newElmt = new TreeViewMappingElement(name);
+            AddElement(newElmt);
+            return newElmt;
         }
 
         internal TreeViewMappingElement AddElement(string stringRef, TreeViewMappingElement elmt)
@@ -109,12 +85,22 @@ namespace Core
             return Nodes[i];
         }
 
-
+        public static TreeViewMappingElement CreateElement(IAccountingElement iNewElmt)
+        {
+            var res = new TreeViewMappingElement(iNewElmt.GetName());
+            foreach (IAccountingElement item in iNewElmt.GetItemList())
+            {
+                res.AddElement(CreateElement(item));
+            }
+            return res;
+        }
     }
 
     public class TreeViewMapping : IEnumerable<TreeViewMappingElement>
     {
         TreeViewMappingElement Map;
+
+        #region IEnumerable
 
         public IEnumerator<TreeViewMappingElement> GetEnumerator()
         {
@@ -125,6 +111,8 @@ namespace Core
         {
             return Map.GetEnumerator();
         }
+
+        #endregion
 
         public TreeViewMapping(Dictionary<string, Category> data)
         {
@@ -160,32 +148,21 @@ namespace Core
             }
         }
 
+        internal IEnumerable<string> GetList(NodeAddress nodeAddress)
+        {
+            return GetElement(nodeAddress).Nodes.Select(x => x.Name);
+        }
+
         internal void ChangeName(NodeAddress nodeTag, string after)
         {
             GetElement(nodeTag).Name = after;
         }
 
-        internal void AddItem(NodeAddress nodeAddress, Account newAcc)
+        internal void AddItem(NodeAddress nodeAddress, IAccountingElement iNewAcc)
         {
             TreeViewMappingElement elmt = GetElement(nodeAddress.GetParent());
-            TreeViewMappingElement newElmt = elmt.AddElement(nodeAddress.Address.Last(), TreeViewMappingElement.CreateElement(newAcc));
+            TreeViewMappingElement newElmt = elmt.AddElement(nodeAddress.Address.Last(), TreeViewMappingElement.CreateElement(iNewAcc));
         }
 
-        internal void AddItem(NodeAddress nodeAddress, Institution newInstit)
-        {
-            TreeViewMappingElement elmt = GetElement(nodeAddress.GetParent());
-            TreeViewMappingElement newElmt = elmt.AddElement(nodeAddress.Address.Last(), TreeViewMappingElement.CreateElement(newInstit));
-        }
-
-        internal void AddItem(NodeAddress nodeAddress, Category newCat)
-        {
-            TreeViewMappingElement elmt = GetElement(nodeAddress.GetParent());
-            TreeViewMappingElement newElmt = elmt.AddElement(nodeAddress.Address.Last(), TreeViewMappingElement.CreateElement(newCat));
-        }
-
-        internal IEnumerable<string> GetList(NodeAddress nodeAddress)
-        {
-            return GetElement(nodeAddress).Nodes.Select(x => x.Name);
-        }
     }
 }

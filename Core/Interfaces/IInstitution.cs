@@ -12,10 +12,7 @@ namespace Core.Interfaces
         Currency Ccy { get; }
         IEnumerable<IAccount> Accounts { get; }
         IEnumerable<IAccount> GetAccounts(TreeViewMappingElement tvme);
-        IAccount TotalAccount();
         IAccount TotalAccount(string overrideAccountName);
-        void ModifyAmount(string accountName, object value);
-        void ModifyCcy(string accountName, object value, bool IsLastRow);
-        void ChangeName(string before, string after, NodeAddress nodeType);
+        IAccount TotalAccount();
     }
 }

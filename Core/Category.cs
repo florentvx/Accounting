@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace Core
 {
-    public class Category : ICategory
+    public class Category : ICategory, IAccountingElement
     {
         private string _CategoryName;
         Currency Ccy;
         Dictionary<string, Institution> _Institutions;
+
+        #region ICategory
 
         public string CategoryName
         {
@@ -19,21 +21,82 @@ namespace Core
             set { _CategoryName = value; }
         }
 
-        public IEnumerable<IInstitution> Institutions
-        {
-            get { return _Institutions.Values.ToList<IInstitution>(); }
-        }
-
         public IEnumerable<IInstitution> GetInstitutions(TreeViewMappingElement tvme)
         {
             return tvme.Nodes.Select(x => _Institutions[x.Name]);
         }
+
+        public IAccount TotalInstitution(string overrideName)
+        {
+            double total = 0;
+            foreach (var item in Institutions)
+                total += item.TotalAccount().Amount;
+            return new Account(overrideName, Ccy, total, true);
+        }
+
+        public IAccount TotalInstitution()
+        {
+            return TotalInstitution("Total");
+        }
+
+        #endregion
+
+        #region IAccountingElement
+
+        public string GetName() { return _CategoryName; }
+
+        public IEnumerable<IAccountingElement> GetItemList()
+        {
+            return _Institutions.Values.ToList<IAccountingElement>();
+        }
+
+        public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
+        {
+            return (IEnumerable<IAccountingElement>)GetInstitutions(tvme);
+        }
+
+        public NodeType GetNodeType() { return NodeType.Category; }
+
+        public IAccount GetTotalAccount(string name)
+        {
+            return TotalInstitution(name);
+        }
+
+        public IAccount GetTotalAccount()
+        {
+            return GetTotalAccount("Total");
+        }
+
+        public void ModifyAmount(string v, object valueAmount)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ModifyCcy(string v, object valueCcy, bool isLastRow)
+        {
+            if (isLastRow)
+            {
+                Ccy = CurrencyFunctions.ToCurrency(valueCcy);
+            }
+        }
+
+        #endregion
 
         public Category(string name, Currency ccy = Currency.USD)
         {
             _CategoryName = name;
             Ccy = ccy;
             _Institutions = new Dictionary<string, Institution> { };
+        }
+
+        public IEnumerable<IInstitution> Institutions
+        {
+            get { return _Institutions.Values.ToList<IInstitution>(); }
+        }
+
+        public Institution GetInstitution(string name)
+        {
+            return _Institutions[name];
         }
 
         public void AddInstitution(string name, Currency currency = Currency.None)
@@ -59,36 +122,10 @@ namespace Core
             return _Institutions[newName];
         }
 
-        public Institution GetInstitution(string name)
-        {
-            return _Institutions[name];
-        }
-
         public void AddAccount(string name, string institutionName)
         {
             Institution instit = _Institutions[institutionName];
             instit.AddAccount(name, instit.Ccy);
-        }
-
-        public Dictionary<string, List<string>> GetCategorySummary()
-        {
-            Dictionary<string, List<string>> res = new Dictionary<string, List<string>> { };
-            foreach (Institution item in Institutions)
-                res[item.InstitutionName] = item.GetAccountList();
-            return res;
-        }
-
-        public IAccount TotalInstitution(string overrideName)
-        {
-            double total = 0;
-            foreach (var item in Institutions)
-                total += item.TotalAccount().Amount;
-            return new Account(overrideName, Ccy, total, true);
-        }
-
-        public IAccount TotalInstitution()
-        {
-            return TotalInstitution("Total");
         }
 
         public void ChangeName(string before, string after, NodeAddress nodeTag)
@@ -108,9 +145,6 @@ namespace Core
             }
         }
 
-        public void ModifyCcy(object value)
-        {
-            Ccy = CurrencyFunctions.ToCurrency(value);
-        }
+       
     }
 }

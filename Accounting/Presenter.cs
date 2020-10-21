@@ -24,7 +24,7 @@ namespace Accounting
             _view.Reset();
             ICategory icat = _ad.GetFirstCategory();
             _view.SetUpTree(_ad.Map);
-            _view.ShowCategory(new NodeAddress(NodeType.Category, icat.CategoryName));
+            _view.ShowElement(new NodeAddress(NodeType.Category, icat.CategoryName));
         }
 
         internal async void TreeView_AfterLabelEdit(NodeLabelEditEventArgs e)

@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace Core
 {
-    public class Institution : IInstitution
+    public class Institution : IInstitution, IAccountingElement
     {
         string _InstitutionName;
         Currency _Ccy;
+        List<Account> _Accounts;
+
+        #region IInstitution
 
         public string InstitutionName
         {
@@ -18,46 +21,17 @@ namespace Core
             set { _InstitutionName = value; }
         }
 
-        public Currency Ccy {
+        public Currency Ccy
+        {
             get { return _Ccy; }
             set { _Ccy = value; }
         }
 
-        List<Account> _Accounts;
         public IEnumerable<IAccount> Accounts { get { return _Accounts; } }
 
         public IEnumerable<IAccount> GetAccounts(TreeViewMappingElement tvme)
         {
             return tvme.Nodes.Select(x => GetAccount(x.Name));
-        }
-
-        public Institution(string name, Currency ccy)
-        {
-            _InstitutionName = name;
-            Ccy = ccy;
-            _Accounts = new List<Account> { };
-        }
-
-        public Account AddAccount(string name, Currency currency = Currency.None)
-        {
-            if (currency == Currency.None)
-                currency = Ccy;
-            Account account = new Account(name, currency);
-            _Accounts.Add(account);
-            return account;
-        }
-
-        public List<string> GetAccountList()
-        {
-            return Accounts.Select(x => x.AccountName).ToList();
-        }
-
-        public Account GetAccount(string accountName)
-        {
-            foreach (Account item in Accounts)
-                if (item.AccountName == accountName)
-                    return item;
-            throw new Exception($"Account Name [{accountName}] not found in Insitution [{InstitutionName}]");
         }
 
         public IAccount TotalAccount(string overrideAccountName)
@@ -71,6 +45,33 @@ namespace Core
         public IAccount TotalAccount()
         {
             return TotalAccount("Total");
+        }
+
+        
+
+        #endregion
+
+        #region IAccountingElement
+
+        public string GetName() { return InstitutionName; }
+
+        public IEnumerable<IAccountingElement> GetItemList() => _Accounts;
+
+        public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
+        {
+            return (IEnumerable<IAccountingElement>)GetAccounts(tvme);
+        }
+
+        public NodeType GetNodeType() { return NodeType.Institution; }
+
+        public IAccount GetTotalAccount(string name)
+        {
+            return TotalAccount(name);
+        }
+
+        public IAccount GetTotalAccount()
+        {
+            return GetTotalAccount("Total");
         }
 
         public void ModifyAmount(string accountName, object value)
@@ -90,15 +91,30 @@ namespace Core
             }
         }
 
-        public void ChangeName(string before, string after, NodeAddress nodeTag)
+        #endregion
+
+        public Institution(string name, Currency ccy)
         {
-            if (nodeTag.NodeType != NodeType.Account)
-                throw new Exception($"Node Tag Unknown! [{nodeTag.NodeType}]");
-            if (Accounts.Where(x => x.AccountName == after).Count() == 0)
-            {
-                var acc = Accounts.Where(x => x.AccountName == before).FirstOrDefault();
-                acc.AccountName = after;
-            }
+            _InstitutionName = name;
+            Ccy = ccy;
+            _Accounts = new List<Account> { };
+        }
+
+        public Account GetAccount(string accountName)
+        {
+            foreach (Account item in Accounts)
+                if (item.AccountName == accountName)
+                    return item;
+            throw new Exception($"Account Name [{accountName}] not found in Insitution [{InstitutionName}]");
+        }
+
+        public Account AddAccount(string name, Currency currency = Currency.None)
+        {
+            if (currency == Currency.None)
+                currency = Ccy;
+            Account account = new Account(name, currency);
+            _Accounts.Add(account);
+            return account;
         }
 
         private string GetNewAccountName()
@@ -118,6 +134,17 @@ namespace Core
         {
             string newName = GetNewAccountName();
             return AddAccount(newName);
+        }
+
+        public void ChangeName(string before, string after, NodeAddress nodeTag)
+        {
+            if (nodeTag.NodeType != NodeType.Account)
+                throw new Exception($"Node Tag Unknown! [{nodeTag.NodeType}]");
+            if (Accounts.Where(x => x.AccountName == after).Count() == 0)
+            {
+                var acc = Accounts.Where(x => x.AccountName == before).FirstOrDefault();
+                acc.AccountName = after;
+            }
         }
     }
 }

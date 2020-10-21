@@ -21,9 +21,28 @@ namespace Core
             set { _Ccy = value; }
         }
 
+        private Category GetCategory(string catName)
+        {
+            return _Data[catName];
+        }
+
+        private Institution GetInstitution(string catName, string institName)
+        {
+            return GetCategory(catName).GetInstitution(institName);
+        }
+
+        #region IAccountingData
+
+        public TreeViewMapping Map { get { return _Map; } }
+
         public void ModifyCcy(object valueCcy)
         {
             _Ccy = CurrencyFunctions.ToCurrency(valueCcy);
+        }
+
+        public ICategory GetFirstCategory()
+        {
+            return _Data[_Data.Keys.First().ToString()];
         }
 
         public IEnumerable<ICategory> Categories
@@ -35,95 +54,12 @@ namespace Core
             }
         }
 
-        public TreeViewMapping Map { get { return _Map; } }
-
-        public AccountingData(List<Category> input)
-        {
-            _Ccy = Currency.USD;
-            _Data = input.ToDictionary(x => x.CategoryName, x => x);
-            _Map = new TreeViewMapping(_Data);
-        }
-
-        public Dictionary<string, Dictionary<string, List<string>>> GetSummary()
-        {
-            return _Data.ToDictionary(x => x.Key, x => x.Value.GetCategorySummary());
-        }
-
-        public Category GetCategory(string catName)
-        {
-            return _Data[catName];
-        }
-
-        public Category GetCategory(NodeAddress na)
-        {
-            return GetCategory(na.Address[0]);
-        }
-
-        public IInstitution GetInstitution(string catName, string institName)
-        {
-            return GetCategory(catName).GetInstitution(institName);
-        }
-
-        public IInstitution GetInstitution(NodeAddress na)
-        {
-            return GetInstitution(na.Address[0], na.Address[1]);
-        }
-
-        public ICategory GetFirstCategory()
-        {
-            return _Data[_Data.Keys.First().ToString()];
-        }
-
-        public ICategory GetElement(NodeAddress na)
-        {
-            switch (na.NodeType)
-            {
-                case NodeType.All:
-                    break;
-                case NodeType.Category:
-                    GetCategory(na.Address[0]);
-                    break;
-                case NodeType.Institution:
-                    GetInstitution(na.Address[0], na.Address[1]);
-                    break;
-                case NodeType.Account:
-                    break;
-                default:
-                    break;
-            }
-            throw new Exception("ERROR");
-        }
-
         public IAccount Total()
         {
             double total = 0;
             foreach (var item in _Data)
                 total += item.Value.TotalInstitution().Amount;
             return new Account("Total", Ccy, total);
-        }
-
-        public Category AddNewCategory()
-        {
-            int i = 0;
-            string newNameRef = "New Category";
-            string newName = newNameRef;
-            while (_Data.ContainsKey(newName))
-            {
-                i++;
-                newName = $"{newNameRef} - {i}";
-            }
-            Category cat = new Category(newName);
-            cat.AddInstitution("New Institution");
-            cat.AddAccount("New Account", "New Institution");
-            _Data.Add(cat.CategoryName, cat);
-            return cat;
-        }
-
-        public void Reset()
-        {
-            _Data = new Dictionary<string, Category> { };
-            AddNewCategory();
-            
         }
 
         public void ChangeName(string before, string after, NodeAddress nodeTag)
@@ -142,6 +78,67 @@ namespace Core
                 _Data[nodeTag.Address[0]].ChangeName(before, after, nodeTag);
             }
             _Map.ChangeName(nodeTag, after);
+        }
+
+        #endregion
+
+        public AccountingData(List<Category> input)
+        {
+            _Ccy = Currency.USD;
+            _Data = input.ToDictionary(x => x.CategoryName, x => x);
+            _Map = new TreeViewMapping(_Data);
+        }
+
+        public IAccountingElement GetInstitution(NodeAddress na)
+        {
+            return GetInstitution(na.Address[0], na.Address[1]);
+        }
+
+        public Category GetCategory(NodeAddress na)
+        {
+            return GetCategory(na.Address[0]);
+        }
+
+        public void Reset()
+        {
+            _Data = new Dictionary<string, Category> { };
+            AddNewCategory();
+
+        }
+
+        public IAccountingElement GetElement(NodeAddress na)
+        {
+            switch (na.NodeType)
+            {
+                case NodeType.All:
+                    break;
+                case NodeType.Category:
+                    return GetCategory(na);
+                case NodeType.Institution:
+                    return GetInstitution(na);
+                case NodeType.Account:
+                    break;
+                default:
+                    break;
+            }
+            throw new Exception("ERROR");
+        }
+
+        public Category AddNewCategory()
+        {
+            int i = 0;
+            string newNameRef = "New Category";
+            string newName = newNameRef;
+            while (_Data.ContainsKey(newName))
+            {
+                i++;
+                newName = $"{newNameRef} - {i}";
+            }
+            Category cat = new Category(newName);
+            cat.AddInstitution("New Institution");
+            cat.AddAccount("New Account", "New Institution");
+            _Data.Add(cat.CategoryName, cat);
+            return cat;
         }
 
         public NodeAddress AddItem(NodeAddress nodeAddress)
@@ -170,14 +167,5 @@ namespace Core
             }
             throw new Exception("Issue");
         }
-
-        #region IEnumerable
-
-        public IEnumerator<Category> GetEnumerator()
-        {
-            return _Data.Values.GetEnumerator();
-        }
-
-        #endregion
     }
 }

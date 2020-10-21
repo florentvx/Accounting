@@ -12,6 +12,5 @@ namespace Core.Interfaces
         IEnumerable<IInstitution> GetInstitutions(TreeViewMappingElement tvm);
         IAccount TotalInstitution();
         IAccount TotalInstitution(string overrideName);
-        void ModifyCcy(object value);
     }
 }

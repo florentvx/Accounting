@@ -23,10 +23,9 @@ namespace Design
 
     public class DataGridViewAccounting: DataGridView
     {
-        public IInstitution InstitutionShowed;
-        public ICategory CategoryShowed;
         public IAccountingData TotalShowed;
-        private TreeViewMappingElement memory;
+        public IAccountingElement ElementShowed;
+        private TreeViewMappingElement _Memory;
 
         private void SetUpTable()
         {
@@ -45,7 +44,7 @@ namespace Design
             SetUpTable();
         }
 
-        #region Show Institution
+        #region ShowElement
 
         private void AddRow(IAccount item, bool isTotal = false)
         {
@@ -53,56 +52,25 @@ namespace Design
             Rows.Add(dgvr);
         }
 
-        public void ShowInstitution(IInstitution instit, TreeViewMappingElement tvme = null)
+        private void AddRow(IAccountingElement item, bool isTotal = false)
         {
-            if (tvme == null) { tvme = memory; }
+            IAccount sum = item.GetTotalAccount(item.GetName());
+            AddRow(sum, isTotal);
+        }
+
+        public void ShowElement(IAccountingElement iElmt, TreeViewMappingElement tvme = null)
+        {
+            if (tvme == null) { tvme = _Memory; }
             else
-                memory = tvme;
+                _Memory = tvme;
             Rows.Clear();
-            foreach (IAccount item in instit.GetAccounts(tvme))
+            foreach (IAccountingElement item in iElmt.GetItemList(tvme))
                 AddRow(item);
-            AddRow(instit.TotalAccount(), isTotal: true);
-            InstitutionShowed = instit;
-            CategoryShowed = null;
+            AddRow(iElmt.GetTotalAccount(), isTotal: iElmt.GetNodeType() != NodeType.Account);
+            ElementShowed = iElmt;
             TotalShowed = null;
             Rows[0].Cells[0].Selected = false;
         }
-
-        //public void ShowInstitution(IAccountingData iad, string catName, string instName)
-        //{
-        //    IInstitution instit = iad.GetInstitution(catName, instName);
-        //    ShowInstitution(instit);            
-        //}
-
-        #endregion
-
-        #region Show Category
-
-        private void AddRow(IInstitution item)
-        {
-            IAccount sum = item.TotalAccount(item.InstitutionName);
-            AddRow(sum, false);
-        }
-
-        public void ShowCategory(ICategory cat, TreeViewMappingElement tvme = null)
-        {
-            if (tvme == null) { tvme = memory; }
-            else
-                memory = tvme;
-            Rows.Clear();
-            foreach (IInstitution item in cat.GetInstitutions(tvme))
-                AddRow(item);
-            AddRow(cat.TotalInstitution(), isTotal: true);
-            InstitutionShowed = null;
-            CategoryShowed = cat;
-            TotalShowed = null;
-            Rows[0].Cells[0].Selected = false;
-        }
-
-        //public void ShowCategory(IAccountingData iad, string catName)
-        //{
-        //    ShowCategory(iad.GetCategory(catName));
-        //}
 
         #endregion
 
@@ -120,59 +88,37 @@ namespace Design
             foreach (ICategory icat in iad.Categories)
                 AddRow(icat);
             AddRow(iad.Total(), isTotal: true);
-            InstitutionShowed = null;
-            CategoryShowed = null;
+            ElementShowed = null;
             TotalShowed = iad;
             Rows[0].Cells[0].Selected = false;
         }
 
         #endregion
 
-        public void ShowActive()
-        {
-            if (InstitutionShowed != null)
-                ShowInstitution(InstitutionShowed);
-            if (CategoryShowed != null)
-                ShowCategory(CategoryShowed);
-            if (InstitutionShowed == null && CategoryShowed == null)
-                throw new Exception("Nothing to be showed!");
-        }
-
         protected override void OnCellValueChanged(DataGridViewCellEventArgs e)
         {
             bool IsLastRow = e.RowIndex == Rows.Count - 1;
-            if (InstitutionShowed != null)
+            if (ElementShowed != null)
             {
                 switch (e.ColumnIndex)
                 {
                     case DataGridViewAccountingStatics.Column_Amount:
-                        if (!IsLastRow)
+                        if (!IsLastRow && ElementShowed.GetNodeType() == NodeType.Institution)
                         {
                             var valueAmount = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-                            InstitutionShowed.ModifyAmount(Rows[e.RowIndex].Cells[0].Value.ToString(),
+                            ElementShowed.ModifyAmount(Rows[e.RowIndex].Cells[0].Value.ToString(),
                                                         valueAmount);
                         }
                         break;
 
                     case DataGridViewAccountingStatics.Column_Currency:
                         var valueCcy = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-                        InstitutionShowed.ModifyCcy(Rows[e.RowIndex].Cells[0].Value.ToString(),
+                        ElementShowed.ModifyCcy(Rows[e.RowIndex].Cells[0].Value.ToString(),
                                                     valueCcy,
                                                     IsLastRow);
                         break;
                 }
-                ShowInstitution(InstitutionShowed);
-            }
-            else if (CategoryShowed != null && IsLastRow)
-            {
-                switch (e.ColumnIndex)
-                {
-                    case DataGridViewAccountingStatics.Column_Currency:
-                        var valueCcy = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-                        CategoryShowed.ModifyCcy(valueCcy);
-                        break;
-                }
-                ShowCategory(CategoryShowed);
+                ShowElement(ElementShowed);
             }
             else if (TotalShowed != null)
             {
@@ -197,7 +143,7 @@ namespace Design
                 switch (cell.ColumnIndex)
                 {
                     case DataGridViewAccountingStatics.Column_Amount:
-                        if (InstitutionShowed != null && !IsLastRow)
+                        if (ElementShowed.GetNodeType() == NodeType.Institution && !IsLastRow)
                         {
                             cell.Selected = true;
                             BeginEdit(true);
@@ -209,13 +155,13 @@ namespace Design
                         break;
 
                     case DataGridViewAccountingStatics.Column_Currency:
-                        if (InstitutionShowed != null || IsLastRow)
+                        if (TotalShowed != null || ElementShowed.GetNodeType() == NodeType.Institution || IsLastRow)
                         {
                             cell.Selected = true;
                             BeginEdit(true);
-                            if (cell.Value.ToString() != cell.EditedFormattedValue.ToString())
-                                ShowActive();
                         }
+                        else
+                            cell.Selected = false;
                         break;
 
                     default:
