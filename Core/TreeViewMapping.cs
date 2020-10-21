@@ -12,6 +12,7 @@ namespace Core
     {
         public string Name;
         public List<TreeViewMappingElement> Nodes;
+        public bool Expand; 
 
         #region IEnumerable
 
@@ -31,6 +32,7 @@ namespace Core
         {             
             Name = name;
             Nodes = null;
+            Expand = false;
         }
 
         internal TreeViewMappingElement GetElement(string name)
@@ -61,6 +63,11 @@ namespace Core
 
         internal TreeViewMappingElement AddElement(string stringRef, TreeViewMappingElement elmt)
         {
+            if (Nodes == null)
+            {
+                AddElement(elmt);
+                return elmt;
+            }
             TreeViewMappingElement last;
             int i = 0;
             while (Nodes[i].Name != stringRef)
@@ -114,9 +121,14 @@ namespace Core
 
         #endregion
 
-        public TreeViewMapping(Dictionary<string, Category> data)
+        internal void Reset()
         {
             Map = new TreeViewMappingElement("Root");
+        }
+
+        public TreeViewMapping(Dictionary<string, Category> data)
+        {
+            Reset();
             foreach (var itemC in data)
             {
                 TreeViewMappingElement Map2 = Map.AddElement(itemC.Key);

@@ -102,8 +102,8 @@ namespace Core
         public void Reset()
         {
             _Data = new Dictionary<string, Category> { };
-            AddNewCategory();
-
+            Map.Reset();
+            AddItem(new NodeAddress(NodeType.Category, "TEMP"));
         }
 
         public IAccountingElement GetElement(NodeAddress na)

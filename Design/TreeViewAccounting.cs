@@ -25,16 +25,11 @@ namespace Design
 
     public class TreeViewAccounting : TreeView
     {
-        //TreeViewMapping Mapping;
-
         public void Reset()
         {
             Nodes.Clear();
         }
 
-        // Nodes ref to a list not a dictionary
-        // i can use that by creating a custom mapping
-        // that way I can have a control on the representing
         public void ExpandNode(NodeAddress na)
         {
             if (na.NodeType != NodeType.Category)
@@ -52,11 +47,6 @@ namespace Design
         public void SetUpTree(TreeViewMapping tvm)
         {
             Reset();
-            //if (Mapping == null)
-            //    Mapping = new TreeViewMapping(add);
-            //else
-            //    Mapping.Modify(add, na, isNodeAddition);
-
             foreach (TreeViewMappingElement itemC in tvm)
             {
                 string path_C = itemC.Name;
@@ -73,12 +63,14 @@ namespace Design
                         TreeNode treeNodeA = new TreeNode(itemA.Name) { Tag = new NodeAddress(NodeType.Account, path_A) };
                         treeNodeI.Nodes.Add(treeNodeA);
                     }
+                    if (itemI.Expand)
+                        treeNodeI.Expand();
                     treeNodeC.Nodes.Add(treeNodeI);
                 }
+                if (itemC.Expand)
+                    treeNodeC.Expand();
                 Nodes.Add(treeNodeC);
             }
-            //if (na != null)
-            //    ExpandNode(na);
         }
 
         private void ContextMenu_Rename(object sender, EventArgs e)

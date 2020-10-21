@@ -34,6 +34,8 @@ namespace Accounting
             else
             {
                 labelTable.Text = na.GetLabelText();
+                if (na.NodeType == NodeType.Account)
+                    na = na.GetParent();
                 dataGridViewAccounting.ShowElement(Data.GetElement(na), Data.Map.GetElement(na));
             }
         }
@@ -98,6 +100,9 @@ namespace Accounting
         delegate void DelegateTreeWithInput(TreeViewMapping tvm);
         delegate void DelegateTable(NodeAddress na);
 
-        
+        private void TreeViewAccounting_AfterExpand(object sender, TreeViewEventArgs e)
+        {
+            Data.Map.GetElement((NodeAddress)e.Node.Tag).Expand = true;
+        }
     }
 }

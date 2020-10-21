@@ -34,9 +34,9 @@ namespace Accounting
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelTable = new System.Windows.Forms.Label();
+            this.buttonTotal = new System.Windows.Forms.Button();
             this.dataGridViewAccounting = new Design.DataGridViewAccounting();
             this.TreeViewAccounting = new Design.TreeViewAccounting();
-            this.buttonTotal = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).BeginInit();
             this.SuspendLayout();
@@ -77,6 +77,17 @@ namespace Accounting
             this.labelTable.TabIndex = 3;
             this.labelTable.Text = "LabelTable";
             // 
+            // buttonTotal
+            // 
+            this.buttonTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonTotal.Location = new System.Drawing.Point(16, 31);
+            this.buttonTotal.Name = "buttonTotal";
+            this.buttonTotal.Size = new System.Drawing.Size(239, 28);
+            this.buttonTotal.TabIndex = 4;
+            this.buttonTotal.Text = "Show Total";
+            this.buttonTotal.UseVisualStyleBackColor = true;
+            this.buttonTotal.Click += new System.EventHandler(this.ButtonTotal_Click);
+            // 
             // dataGridViewAccounting
             // 
             this.dataGridViewAccounting.AllowUserToAddRows = false;
@@ -94,17 +105,7 @@ namespace Accounting
             this.TreeViewAccounting.Size = new System.Drawing.Size(244, 343);
             this.TreeViewAccounting.TabIndex = 1;
             this.TreeViewAccounting.NodeAdded += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeAddition);
-            // 
-            // buttonTotal
-            // 
-            this.buttonTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonTotal.Location = new System.Drawing.Point(16, 31);
-            this.buttonTotal.Name = "buttonTotal";
-            this.buttonTotal.Size = new System.Drawing.Size(239, 28);
-            this.buttonTotal.TabIndex = 4;
-            this.buttonTotal.Text = "Show Total";
-            this.buttonTotal.UseVisualStyleBackColor = true;
-            this.buttonTotal.Click += new System.EventHandler(this.ButtonTotal_Click);
+            this.TreeViewAccounting.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewAccounting_AfterExpand);
             // 
             // FormAccounting
             // 
