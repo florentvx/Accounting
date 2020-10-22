@@ -62,8 +62,9 @@ namespace Core
             return new Account("Total", Ccy, total);
         }
 
-        public void ChangeName(string before, string after, NodeAddress nodeTag)
+        public bool ChangeName(string before, string after, NodeAddress nodeTag)
         {
+            bool test = false;
             if (nodeTag.NodeType == NodeType.Category)
             {
                 if (!_Data.ContainsKey(after))
@@ -71,13 +72,16 @@ namespace Core
                     _Data[after] = _Data[before];
                     _Data.Remove(before);
                     _Data[after].CategoryName = after;
+                    test = true;
                 }
             }
             else
             {
-                _Data[nodeTag.Address[0]].ChangeName(before, after, nodeTag);
+                test = _Data[nodeTag.Address[0]].ChangeName(before, after, nodeTag);
             }
-            _Map.ChangeName(nodeTag, after);
+            if (test)
+                _Map.ChangeName(nodeTag, after);
+            return test;
         }
 
         #endregion

@@ -31,22 +31,27 @@ namespace Accounting
         {
             string before = e.Node.Text;
             string after = e.Label;
-            if (after != null && after != "")
+            await Task.Run(() =>
             {
-                await Task.Run(() =>
+                bool test = false;
+                if (after != null && after != "")
                 {
                     NodeAddress na = (NodeAddress)e.Node.Tag;
-                    _ad.ChangeName(before, after, na);
-                    na.ChangeAddress(after);
-                    _view.ChangeActive(na);
-                    _view.SetUpTree(_ad.Map);
-                });
-            }
-            else
-            {
-                e.CancelEdit = true;
-            }
-
+                    if (_ad.ChangeName(before, after, na))
+                    {
+                        na.ChangeAddress(after);
+                        _view.ChangeActive(na);
+                        test = true;
+                    }
+                }
+                else
+                {
+                    e.CancelEdit = true;
+                }
+                _view.SetUpTree(_ad.Map);
+                if(!test)
+                    MessageBox.Show($"Unable to give the element [{before}] the name [{after}]");
+            });
         }
 
         internal void TreeView_NodeMouseClick(TreeNodeMouseClickEventArgs e)

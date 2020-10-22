@@ -48,6 +48,7 @@ namespace Accounting
 
         public void ShowElement(NodeAddress na)
         {
+            labelTable.Text = na.GetLabelText();
             dataGridViewAccounting.ShowElement(Data.GetElement(na), Data.Map.GetElement(na));
         }
 

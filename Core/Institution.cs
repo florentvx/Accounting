@@ -136,7 +136,7 @@ namespace Core
             return AddAccount(newName);
         }
 
-        public void ChangeName(string before, string after, NodeAddress nodeTag)
+        public bool ChangeName(string before, string after, NodeAddress nodeTag)
         {
             if (nodeTag.NodeType != NodeType.Account)
                 throw new Exception($"Node Tag Unknown! [{nodeTag.NodeType}]");
@@ -144,7 +144,9 @@ namespace Core
             {
                 var acc = Accounts.Where(x => x.AccountName == before).FirstOrDefault();
                 acc.AccountName = after;
+                return true;
             }
+            return false;
         }
     }
 }

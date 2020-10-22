@@ -13,6 +13,6 @@ namespace Core.Interfaces
         IEnumerable<ICategory> Categories { get; }
         ICategory GetFirstCategory();
         IAccount Total();
-        void ChangeName(string before, string after, NodeAddress nodeType);
+        bool ChangeName(string before, string after, NodeAddress nodeType);
     }
 }

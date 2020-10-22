@@ -128,8 +128,9 @@ namespace Core
             instit.AddAccount(name, instit.Ccy);
         }
 
-        public void ChangeName(string before, string after, NodeAddress nodeTag)
+        public bool ChangeName(string before, string after, NodeAddress nodeTag)
         {
+            bool test = false;
             if (nodeTag.NodeType == NodeType.Institution)
             {
                 if (_Institutions.ContainsKey(before) && !_Institutions.ContainsKey(after))
@@ -137,12 +138,14 @@ namespace Core
                     _Institutions[after] = _Institutions[before];
                     _Institutions[after].InstitutionName = after;
                     _Institutions.Remove(before);
+                    test = true;
                 }
             }
             else
             {
-                _Institutions[nodeTag.Address[1]].ChangeName(before, after, nodeTag);
+                test = _Institutions[nodeTag.Address[1]].ChangeName(before, after, nodeTag);
             }
+            return test;
         }
 
        
