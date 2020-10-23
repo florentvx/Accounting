@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Core.Interfaces;
 
 namespace Core
@@ -170,6 +171,29 @@ namespace Core
                     break;
             }
             throw new Exception("Issue");
+        }
+
+        public NodeAddress DeleteItem(NodeAddress na)
+        {
+            NodeAddress res;
+            if (na.NodeType == NodeType.Category)
+            {
+                if (_Data.Count > 1)
+                {
+                    _Data.Remove(na.Address[0]);
+                    res = _Map.DeleteNode(na);
+                }
+                else
+                    res = na;
+            }
+            else
+            {
+                GetElement(na.GetParent()).Delete(na.GetLast());
+                res= _Map.DeleteNode(na);
+            }
+            if (res.IsEqual(na))
+                MessageBox.Show($"You cannot delete {na.GetLast()} as it is the last element of [{na.GetParent().GetLabelText()}]!");
+            return res;
         }
     }
 }

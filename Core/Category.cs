@@ -80,6 +80,14 @@ namespace Core
             }
         }
 
+        public void Delete(string v)
+        {
+            if (GetItemList().Count() > 1)
+            {
+                _Institutions.Remove(v);
+            }
+        }
+
         #endregion
 
         public Category(string name, Currency ccy = Currency.USD)

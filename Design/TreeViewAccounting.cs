@@ -97,6 +97,22 @@ namespace Design
             OnNodeAddition(Obj);
         }
 
+        public event TreeNodeMouseClickEventHandler NodeDeleted;
+
+        public virtual void OnNodeDeletion(TreeNodeMouseClickEventArgs e)
+        {
+            TreeNodeMouseClickEventHandler handler = NodeDeleted;
+            handler?.Invoke(this, e);
+        }
+
+        private void ContextMenu_DeleteItem(object sender, EventArgs e)
+        {
+            var MI = (MenuItem)sender;
+            TreeNodeMouseClickEventArgs Obj = (TreeNodeMouseClickEventArgs)MI.Tag;
+            LabelEdit = true;
+            OnNodeDeletion(Obj);
+        }
+
         public void NodeMouseRightClick(TreeNodeMouseClickEventArgs e)
         {
             ContextMenu cm = new ContextMenu();
@@ -106,6 +122,8 @@ namespace Design
             cm.MenuItems.Add(rename);
             MenuItem addItem = new MenuItem("Add Item", ContextMenu_AddItem) { Tag = e };
             cm.MenuItems.Add(addItem);
+            MenuItem deleteItem = new MenuItem("Delete Item", ContextMenu_DeleteItem) { Tag = e };
+            cm.MenuItems.Add(deleteItem);
             cm.Show(this, new Point(e.X, e.Y), LeftRightAlignment.Right);
         }
     }

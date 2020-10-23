@@ -105,6 +105,7 @@ namespace Accounting
             this.TreeViewAccounting.Size = new System.Drawing.Size(244, 343);
             this.TreeViewAccounting.TabIndex = 1;
             this.TreeViewAccounting.NodeAdded += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeAddition);
+            this.TreeViewAccounting.NodeDeleted += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeDeletion);
             this.TreeViewAccounting.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewAccounting_AfterExpand);
             // 
             // FormAccounting

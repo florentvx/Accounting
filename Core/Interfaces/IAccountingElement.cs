@@ -16,5 +16,6 @@ namespace Core.Interfaces
         IAccount GetTotalAccount(string name);
         void ModifyAmount(string v, object valueAmount);
         void ModifyCcy(string v, object valueCcy, bool isLastRow);
+        void Delete(string v); //Delete an item from the ItemList
     }
 }

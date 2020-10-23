@@ -77,6 +77,11 @@ namespace Core
             throw new NotImplementedException();
         }
 
+        public void Delete(string v)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         public Account(string name, Currency ccy, double amount = 0, bool isCalculatedAccount = false)

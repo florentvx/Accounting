@@ -11,6 +11,25 @@ namespace Core.Interfaces
         All, Category, Institution, Account
     }
 
+    static class NodeTypeProperties
+    {
+        public static NodeType GetNext(this NodeType nt)
+        {
+            switch (nt)
+            {
+                case NodeType.All:
+                    return NodeType.Category;
+                case NodeType.Category:
+                    return NodeType.Institution;
+                case NodeType.Institution:
+                    return NodeType.Account;
+                case NodeType.Account:
+                default:
+                    throw new Exception("Impossible");
+            }
+        }
+    }
+
     public class NodeAddress
     {
         public static char Separator = '/';
@@ -23,9 +42,12 @@ namespace Core.Interfaces
         {
             _NodeType = nt;
             Address = new List<string> { };
-            var res = path.Split(Separator);
-            for (int i = 0; i < res.Length; i++)
-                Address.Add(res[i]);
+            if (path != null)
+            {
+                var res = path.Split(Separator);
+                for (int i = 0; i < res.Length; i++)
+                    Address.Add(res[i]);
+            }   
         }
 
         public void ChangeAddress(string label)
@@ -35,6 +57,8 @@ namespace Core.Interfaces
 
         public string GetLabelText()
         {
+            if (NodeType == NodeType.All)
+                return "Root";
             NodeType nt = NodeType;
             if (_NodeType == NodeType.Account)
                 nt = NodeType.Institution;
@@ -52,7 +76,7 @@ namespace Core.Interfaces
                 case NodeType.All:
                     return null;
                 case NodeType.Category:
-                    return new NodeAddress(NodeType.All, "");
+                    return new NodeAddress(NodeType.All, null);
                 case NodeType.Institution:
                     return new NodeAddress(NodeType.Category, Address[0]);
                 case NodeType.Account:
@@ -60,6 +84,29 @@ namespace Core.Interfaces
                 default:
                     return null;
             }
+        }
+
+        public string GetLast()
+        {
+            return Address.Last();
+        }
+
+        internal bool IsEqual(NodeAddress na)
+        {
+            if (NodeType == na.NodeType && Address.Count == na.Address.Count)
+            {
+                bool test = true;
+                for (int i = 0; i < na.Address.Count; i++)
+                    test = Address[i] == na.Address[i];
+                return test;
+            }
+            return false;
+        }
+
+        internal void AddLast(string v)
+        {
+            _NodeType = NodeType.GetNext();
+            Address.Add(v);
         }
     }
 }

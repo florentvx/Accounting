@@ -101,6 +101,16 @@ namespace Core
             }
             return res;
         }
+
+        internal string Delete(string v)
+        {
+            if (Nodes.Count > 1)
+            {
+                Nodes.Remove(GetElement(v));
+                return Nodes[0].Name;
+            }
+            return v;
+        }
     }
 
     public class TreeViewMapping : IEnumerable<TreeViewMappingElement>
@@ -176,5 +186,12 @@ namespace Core
             TreeViewMappingElement newElmt = elmt.AddElement(nodeAddress.Address.Last(), TreeViewMappingElement.CreateElement(iNewAcc));
         }
 
+        internal NodeAddress DeleteNode(NodeAddress na)
+        {
+            NodeAddress refNode = na.GetParent();
+            TreeViewMappingElement tvme = GetElement(refNode);
+            refNode.AddLast(tvme.Delete(na.GetLast()));
+            return refNode;
+        }
     }
 }

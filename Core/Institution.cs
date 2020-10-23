@@ -47,8 +47,6 @@ namespace Core
             return TotalAccount("Total");
         }
 
-        
-
         #endregion
 
         #region IAccountingElement
@@ -88,6 +86,15 @@ namespace Core
             {
                 Account acc = GetAccount(accountName);
                 acc.Ccy = CurrencyFunctions.ToCurrency(value);
+            }
+        }
+
+        public void Delete(string v)
+        {
+            if(GetItemList().Count() > 1)
+            {
+                Account accDel = _Accounts.Where(x => x.AccountName == v).First();
+                _Accounts.Remove(accDel);
             }
         }
 

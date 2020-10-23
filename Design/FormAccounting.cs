@@ -97,6 +97,14 @@ namespace Accounting
             ChangeActive(newNode);
         }
 
+        public void TreeView_NodeDeletion(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            NodeAddress na = (NodeAddress)e.Node.Tag;
+            NodeAddress newActive = Data.DeleteItem(na);
+            SetUpTree(Data.Map);
+            ChangeActive(newActive);
+        }
+
         delegate void DelegateTree();
         delegate void DelegateTreeWithInput(TreeViewMapping tvm);
         delegate void DelegateTable(NodeAddress na);
