@@ -39,12 +39,12 @@ namespace Core
         {
             if (Nodes == null)
                 return null;
-            foreach (var item in Nodes)
-            {
-                if (name == item.Name)
-                    return item;
-            }
-            return null;
+            return Nodes.Where(x => x.Name == name).First();
+        }
+
+        internal int GetElementIndex(string name)
+        {
+            return Nodes.FindIndex(x => x.Name == name);
         }
 
         internal void AddElement(TreeViewMappingElement elmt)
@@ -110,6 +110,42 @@ namespace Core
                 return Nodes[0].Name;
             }
             return v;
+        }
+
+        internal void MoveNode(string v1, string v2)
+        {
+            int tvme1_i = GetElementIndex(v1);
+            int tvme2_i = GetElementIndex(v2);
+            TreeViewMappingElement memo = Nodes[tvme1_i];
+            if (tvme1_i < tvme2_i)
+            {
+                for (int i = tvme1_i; i < tvme2_i; i++)
+                {
+                    Nodes[i] = Nodes[i + 1];
+                }
+                Nodes[tvme2_i] = memo;
+            }
+            else
+            {
+                for (int i = tvme1_i; i > tvme2_i; i--)
+                {
+                    Nodes[i] = Nodes[i - 1];
+                }
+                Nodes[tvme2_i + 1] = memo;
+            }
+        }
+
+        internal void MoveNode(string v1)
+        {
+            TreeViewMappingElement memo = Nodes[0];
+            int tvme_1 = GetElementIndex(v1);
+            Nodes[0] = Nodes[tvme_1];
+            for (int i = 0; i < tvme_1; i++)
+            {
+                var temp = Nodes[i + 1];
+                Nodes[i + 1] = memo;
+                memo = temp;
+            }
         }
     }
 
@@ -192,6 +228,21 @@ namespace Core
             TreeViewMappingElement tvme = GetElement(refNode);
             refNode.AddLast(tvme.Delete(na.GetLast()));
             return refNode;
+        }
+
+        public void MoveNode(NodeAddress draggedNode, NodeAddress refNode)
+        {
+            NodeAddress parent = draggedNode.GetParent();
+            if (parent.IsEqual(refNode.GetParent()))
+            {
+                TreeViewMappingElement tvme = GetElement(parent);
+                tvme.MoveNode(draggedNode.GetLast(), refNode.GetLast());
+            }
+            if (parent.IsEqual(refNode))
+            {
+                TreeViewMappingElement tvme = GetElement(parent);
+                tvme.MoveNode(draggedNode.GetLast());
+            }
         }
     }
 }

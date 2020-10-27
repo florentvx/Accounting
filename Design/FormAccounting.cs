@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using Core;
@@ -111,7 +112,55 @@ namespace Accounting
 
         private void TreeViewAccounting_AfterExpand(object sender, TreeViewEventArgs e)
         {
-            Data.Map.GetElement((NodeAddress)e.Node.Tag).Expand = true;
+            NodeAddress na = (NodeAddress)e.Node.Tag;
+            TreeViewMappingElement tvme = Data.Map.GetElement(na);
+            tvme.Expand = true;
+        }
+
+        private void TreeViewAccounting_AfterCollapse(object sender, TreeViewEventArgs e)
+        {
+            NodeAddress na = (NodeAddress)e.Node.Tag;
+            TreeViewMappingElement tvme = Data.Map.GetElement(na);
+            tvme.Expand = false;
+        }
+
+        private void TreeViewAccounting_DragDrop(object sender, DragEventArgs e)
+        {
+            // Retrieve the client coordinates of the drop location.
+            Point targetPoint = TreeViewAccounting.PointToClient(new Point(e.X, e.Y));
+
+            // Retrieve the node at the drop location.
+            TreeNode targetNode = TreeViewAccounting.GetNodeAt(targetPoint);
+
+            // Retrieve the node that was dragged.
+            TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+
+            // Confirm that the node at the drop location is not 
+            // the dragged node and that target node isn't null
+            // (for example if you drag outside the control)
+            if (!draggedNode.Equals(targetNode) && targetNode != null)
+            {
+                Data.Map.MoveNode((NodeAddress)draggedNode.Tag, (NodeAddress)targetNode.Tag);
+                SetUpTree(Data.Map);
+                TreeViewAccounting.ResetGraphics();
+            }   
+        }
+
+        private void TreeViewAccounting_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            DoDragDrop(e.Item, DragDropEffects.Move);
+        }
+
+        private void TreeViewAccounting_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+            TreeViewAccounting.DefineRef(e);
+        }
+
+        private void TreeViewAccounting_DragOver(object sender, DragEventArgs e)
+        {
+            Point pt = TreeViewAccounting.PointToClient(new Point(e.X, e.Y));
+            TreeViewAccounting.ShowLine(pt);
         }
     }
 }

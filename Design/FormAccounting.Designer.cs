@@ -100,13 +100,19 @@ namespace Accounting
             // 
             // TreeViewAccounting
             // 
+            this.TreeViewAccounting.AllowDrop = true;
             this.TreeViewAccounting.Location = new System.Drawing.Point(12, 65);
             this.TreeViewAccounting.Name = "TreeViewAccounting";
             this.TreeViewAccounting.Size = new System.Drawing.Size(244, 343);
             this.TreeViewAccounting.TabIndex = 1;
             this.TreeViewAccounting.NodeAdded += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeAddition);
             this.TreeViewAccounting.NodeDeleted += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeDeletion);
+            this.TreeViewAccounting.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewAccounting_AfterCollapse);
             this.TreeViewAccounting.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewAccounting_AfterExpand);
+            this.TreeViewAccounting.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.TreeViewAccounting_ItemDrag);
+            this.TreeViewAccounting.DragDrop += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragDrop);
+            this.TreeViewAccounting.DragEnter += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragEnter);
+            this.TreeViewAccounting.DragOver += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragOver);
             // 
             // FormAccounting
             // 

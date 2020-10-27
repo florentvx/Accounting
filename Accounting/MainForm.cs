@@ -29,6 +29,7 @@ namespace Accounting
             Category category2 = new Category("Investing");
             category2.AddInstitution("Fidelity");
             category2.AddAccount("ETF", "Fidelity");
+            category2.AddAccount("Bitcoin", "Fidelity");
             List<Category> cats = new List<Category> { category, category2 };
             Data = new AccountingData(cats);
         }

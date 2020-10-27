@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,15 @@ namespace Design
 
     public class TreeViewAccounting : TreeView
     {
+        Graphics _Graphics;
+        TreeNode DragRefNode = null;
+        TreeNode LastDraggedOverNode = null;
+
+        public TreeViewAccounting(): base()
+        {
+            _Graphics = this.CreateGraphics();
+        }
+
         public void Reset()
         {
             Nodes.Clear();
@@ -125,6 +135,34 @@ namespace Design
             MenuItem deleteItem = new MenuItem("Delete Item", ContextMenu_DeleteItem) { Tag = e };
             cm.MenuItems.Add(deleteItem);
             cm.Show(this, new Point(e.X, e.Y), LeftRightAlignment.Right);
+        }
+
+        internal void ResetGraphics()
+        {
+            DragRefNode = null;
+            LastDraggedOverNode = null;
+            _Graphics.Dispose();
+        }
+
+        internal void ShowLine(Point pt)
+        {
+            SelectedNode = GetNodeAt(pt);
+            if (DragRefNode != null && SelectedNode != LastDraggedOverNode)
+            {
+                Invalidate();
+                LastDraggedOverNode = SelectedNode;
+            }
+            Pen customPen = new Pen(Color.DimGray, 1) { DashStyle = DashStyle.Dash };
+            _Graphics.DrawLine(customPen, new Point(0, SelectedNode.Bounds.Bottom),
+                new Point(1000, SelectedNode.Bounds.Bottom));
+            customPen.Dispose();
+        }
+
+        internal void DefineRef(DragEventArgs e)
+        {
+            Point pt = PointToClient(new Point(e.X, e.Y));
+            DragRefNode = GetNodeAt(pt);
+            _Graphics = this.CreateGraphics();
         }
     }
 }
