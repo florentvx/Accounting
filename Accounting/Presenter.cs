@@ -21,8 +21,9 @@ namespace Accounting
 
         public void LoadAccounts()
         {
-            _view.Reset();
             ICategory icat = _ad.GetFirstCategory();
+            _view.Reset();
+            _view.SetUpMarket(_ad.Market);
             _view.SetUpTree(_ad.Map);
             _view.ShowElement(new NodeAddress(NodeType.Category, icat.CategoryName));
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
+using Core.Finance;
 
 namespace Core
 {
@@ -12,6 +13,7 @@ namespace Core
         string _AccountName;
         Currency _Ccy;
         double _Amount;
+        double _ConvertedAmount;
         bool _IsCalculatedAccount;
 
         #region IAccount
@@ -34,6 +36,12 @@ namespace Core
             set { _Amount = value; }
         }
 
+        public double ConvertedAmount
+        {
+            get { return _ConvertedAmount; }
+        }
+
+
         public bool IsCalculatedAccount
         {
             get { return _IsCalculatedAccount; }
@@ -44,6 +52,8 @@ namespace Core
         #region IAccountingElement
 
         public string GetName() { return AccountName; }
+
+        public Currency CcyRef { get { return _Ccy; } }
 
         public IEnumerable<IAccountingElement> GetItemList()
         {
@@ -57,22 +67,22 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Account; }
 
-        public IAccount GetTotalAccount()
+        public IAccount GetTotalAccount(Market mkt, Currency convCcy)
         {
             return this;
         }
 
-        public IAccount GetTotalAccount(string name)
+        public IAccount GetTotalAccount(Market mkt, Currency convCcy, string name)
         {
             return this;
         }
 
-        public void ModifyAmount(string v, object valueAmount)
+        public void ModifyAmount(Market mkt, string v, object valueAmount)
         {
             throw new NotImplementedException();
         }
 
-        public void ModifyCcy(string v, object valueCcy, bool isLastRow)
+        public void ModifyCcy(Market mkt, string v, object valueCcy, bool isLastRow)
         {
             throw new NotImplementedException();
         }
@@ -88,9 +98,16 @@ namespace Core
         {
             _AccountName = name;
             _Ccy = ccy;
-            _Amount = amount;
             _IsCalculatedAccount = isCalculatedAccount;
+            //if (_IsCalculatedAccount)
+            //    _ConvertedAmount = amount;
+            //else
+            _Amount = amount;
         }
-        
+
+        internal void RecalculateAmount(Market mkt, Currency ccyRef)
+        {
+            _ConvertedAmount = _Amount * mkt.GetQuote(new CurrencyPair(_Ccy, ccyRef));
+        }
     }
 }

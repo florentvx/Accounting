@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Core.Finance;
 
 namespace Core.Interfaces
 {
@@ -13,6 +14,7 @@ namespace Core.Interfaces
         void ChangeActive(NodeAddress nd);
         void ShowTotal();
         void ShowElement(NodeAddress tvme);
+        void SetUpMarket(Market mkt);
         void SetUpTree(TreeViewMapping na);
         void TreeView_NodeMouseRightClick(TreeNodeMouseClickEventArgs e);
         void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e);

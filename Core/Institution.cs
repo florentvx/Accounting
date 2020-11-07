@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core.Finance;
+using Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,17 +35,19 @@ namespace Core
             return tvme.Nodes.Select(x => GetAccount(x.Name));
         }
 
-        public IAccount TotalAccount(string overrideAccountName)
+        public IAccount TotalAccount(Market mkt, Currency convCcy, string overrideAccountName)
         {
             double total = 0;
             foreach (var x in _Accounts)
-                total += x.Amount;
-            return new Account(overrideAccountName, Ccy, total, isCalculatedAccount: true);
+                total += x.ConvertedAmount;
+            Account res = new Account(overrideAccountName, Ccy, total, isCalculatedAccount: true);
+            res.RecalculateAmount(mkt, convCcy);
+            return res;
         }
 
-        public IAccount TotalAccount()
+        public IAccount TotalAccount(Market mkt, Currency convCcy)
         {
-            return TotalAccount("Total");
+            return TotalAccount(mkt, convCcy, "Total");
         }
 
         #endregion
@@ -52,6 +55,8 @@ namespace Core
         #region IAccountingElement
 
         public string GetName() { return InstitutionName; }
+
+        public Currency CcyRef { get { return _Ccy; } }
 
         public IEnumerable<IAccountingElement> GetItemList() => _Accounts;
 
@@ -62,30 +67,38 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Institution; }
 
-        public IAccount GetTotalAccount(string name)
+        public IAccount GetTotalAccount(Market mkt, Currency convCcy, string name)
         {
-            return TotalAccount(name);
+            return TotalAccount(mkt, convCcy, name);
         }
 
-        public IAccount GetTotalAccount()
+        public IAccount GetTotalAccount(Market mkt, Currency convCcy)
         {
-            return GetTotalAccount("Total");
+            return GetTotalAccount(mkt, convCcy, "Total");
         }
 
-        public void ModifyAmount(string accountName, object value)
+        public void ModifyAmount(Market mkt, string accountName, object value)
         {
             Account acc = GetAccount(accountName);
             acc.Amount = Convert.ToDouble(value);
+            acc.RecalculateAmount(mkt, Ccy);
         }
 
-        public void ModifyCcy(string accountName, object value, bool IsLastRow)
+        public void ModifyCcy(Market mkt, string accountName, object value, bool IsLastRow)
         {
             if (IsLastRow)
+            {
                 Ccy = CurrencyFunctions.ToCurrency(value);
+                foreach (Account item in Accounts)
+                {
+                    item.RecalculateAmount(mkt, Ccy);
+                }
+            }
             else
             {
                 Account acc = GetAccount(accountName);
                 acc.Ccy = CurrencyFunctions.ToCurrency(value);
+                acc.RecalculateAmount(mkt, Ccy);
             }
         }
 

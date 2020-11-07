@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Core;
+using Core.Finance;
 using Core.Interfaces;
 using Design;
 //using log4net.Config;
@@ -31,7 +32,13 @@ namespace Accounting
             category2.AddAccount("ETF", "Fidelity");
             category2.AddAccount("Bitcoin", "Fidelity");
             List<Category> cats = new List<Category> { category, category2 };
-            Data = new AccountingData(cats);
+            
+            Market market = new Market();
+            market.AddQuote(new CurrencyPair(Currency.EUR, Currency.USD), 1.2);
+            market.AddQuote(new CurrencyPair(Currency.GBP, Currency.USD), 1.4);
+            market.AddQuote(new CurrencyPair(Currency.USD, Currency.JPY), 105.0);
+
+            Data = new AccountingData(cats, market);
         }
 
         private void OnLoad()

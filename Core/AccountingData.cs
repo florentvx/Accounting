@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Core.Finance;
 using Core.Interfaces;
 
 namespace Core
@@ -14,6 +15,7 @@ namespace Core
     {
         Currency _Ccy;
         Dictionary<string, Category> _Data = new Dictionary<string, Category> { };
+        Market _Market;
         TreeViewMapping _Map;
 
         public Currency Ccy
@@ -35,6 +37,8 @@ namespace Core
         #region IAccountingData
 
         public TreeViewMapping Map { get { return _Map; } }
+
+        public Market Market { get { return _Market; } }
 
         public void ModifyCcy(object valueCcy)
         {
@@ -59,7 +63,7 @@ namespace Core
         {
             double total = 0;
             foreach (var item in _Data)
-                total += item.Value.TotalInstitution().Amount;
+                total += item.Value.TotalInstitution(_Market, Ccy).ConvertedAmount;
             return new Account("Total", Ccy, total);
         }
 
@@ -87,10 +91,11 @@ namespace Core
 
         #endregion
 
-        public AccountingData(List<Category> input)
+        public AccountingData(List<Category> input, Market mkt)
         {
             _Ccy = Currency.USD;
             _Data = input.ToDictionary(x => x.CategoryName, x => x);
+            _Market = mkt;
             _Map = new TreeViewMapping(_Data);
         }
 

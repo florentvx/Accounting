@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core.Finance;
+using Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Core
     public class Category : ICategory, IAccountingElement
     {
         private string _CategoryName;
-        Currency Ccy;
+        Currency _Ccy;
         Dictionary<string, Institution> _Institutions;
 
         #region ICategory
@@ -21,22 +22,26 @@ namespace Core
             set { _CategoryName = value; }
         }
 
+        public Currency Ccy { get { return _Ccy; } }
+
         public IEnumerable<IInstitution> GetInstitutions(TreeViewMappingElement tvme)
         {
             return tvme.Nodes.Select(x => _Institutions[x.Name]);
         }
 
-        public IAccount TotalInstitution(string overrideName)
+        public IAccount TotalInstitution(Market mkt, Currency convCcy, string overrideName)
         {
             double total = 0;
             foreach (var item in Institutions)
-                total += item.TotalAccount().Amount;
-            return new Account(overrideName, Ccy, total, true);
+                total += item.TotalAccount(mkt, Ccy).ConvertedAmount;
+            Account acc = new Account(overrideName, Ccy, total, true);
+            acc.RecalculateAmount(mkt, convCcy);
+            return acc;
         }
 
-        public IAccount TotalInstitution()
+        public IAccount TotalInstitution(Market mkt, Currency convCcy)
         {
-            return TotalInstitution("Total");
+            return TotalInstitution(mkt, convCcy, "Total");
         }
 
         #endregion
@@ -44,6 +49,8 @@ namespace Core
         #region IAccountingElement
 
         public string GetName() { return _CategoryName; }
+
+        public Currency CcyRef { get{ return Ccy; } }
 
         public IEnumerable<IAccountingElement> GetItemList()
         {
@@ -57,26 +64,26 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Category; }
 
-        public IAccount GetTotalAccount(string name)
+        public IAccount GetTotalAccount(Market mkt, Currency convCcy, string name)
         {
-            return TotalInstitution(name);
+            return TotalInstitution(mkt, convCcy, name);
         }
 
-        public IAccount GetTotalAccount()
+        public IAccount GetTotalAccount(Market mkt, Currency convCcy)
         {
-            return GetTotalAccount("Total");
+            return GetTotalAccount(mkt, convCcy, "Total");
         }
 
-        public void ModifyAmount(string v, object valueAmount)
+        public void ModifyAmount(Market mkt, string v, object valueAmount)
         {
             throw new NotImplementedException();
         }
 
-        public void ModifyCcy(string v, object valueCcy, bool isLastRow)
+        public void ModifyCcy(Market mkt, string v, object valueCcy, bool isLastRow)
         {
             if (isLastRow)
             {
-                Ccy = CurrencyFunctions.ToCurrency(valueCcy);
+                _Ccy = CurrencyFunctions.ToCurrency(valueCcy);
             }
         }
 
@@ -93,7 +100,7 @@ namespace Core
         public Category(string name, Currency ccy = Currency.USD)
         {
             _CategoryName = name;
-            Ccy = ccy;
+            _Ccy = ccy;
             _Institutions = new Dictionary<string, Institution> { };
         }
 

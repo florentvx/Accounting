@@ -44,7 +44,7 @@
     <Compile Include="Account.cs" />
     <Compile Include="AccountingData.cs" />
     <Compile Include="Category.cs" />
-    <Compile Include="Currency.cs" />
+    <Compile Include="Finance\Currency.cs" />
     <Compile Include="Institution.cs" />
     <Compile Include="Interfaces\IAccount.cs" />
     <Compile Include="Interfaces\IAccountingData.cs" />
@@ -54,6 +54,8 @@
     <Compile Include="Interfaces\ISummary.cs" />
     <Compile Include="Interfaces\IView.cs" />
     <Compile Include="Interfaces\NodeType.cs" />
+    <Compile Include="Finance\CurrencyPair.cs" />
+    <Compile Include="Finance\Market.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TreeViewMapping.cs" />
   </ItemGroup>

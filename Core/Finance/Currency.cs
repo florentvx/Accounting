@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core
+namespace Core.Finance
 {
     public enum Currency
     {
@@ -13,6 +13,11 @@ namespace Core
 
     public static class CurrencyFunctions
     {
+        public static string GetName(this Currency ccy)
+        {
+            return Enum.GetName(typeof(Currency), ccy);
+        }
+
         public static bool IsNone(this Currency ccy)
         {
             return ccy == Currency.None;

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Core;
 using Core.Interfaces;
+using Core.Finance;
 
 namespace Design
 {

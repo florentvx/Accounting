@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using Core;
+using Core.Finance;
 using Core.Interfaces;
 using Design;
 
@@ -51,6 +52,11 @@ namespace Accounting
         {
             labelTable.Text = na.GetLabelText();
             dataGridViewAccounting.ShowElement(Data.GetElement(na), Data.Map.GetElement(na));
+        }
+
+        public void SetUpMarket(Market mkt)
+        {
+            dataGridViewAccounting.SetUpMarket(mkt);
         }
 
         public void SetUpTree(TreeViewMapping tvm)

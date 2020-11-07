@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Interfaces;
+using Core.Finance;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -26,6 +27,7 @@ namespace Design
         public IAccountingData TotalShowed;
         public IAccountingElement ElementShowed;
         private TreeViewMappingElement _Memory;
+        private Market MarketUsed;
 
         private void SetUpTable()
         {
@@ -44,6 +46,11 @@ namespace Design
             SetUpTable();
         }
 
+        internal void SetUpMarket(Market mkt)
+        {
+            MarketUsed = mkt;
+        }
+
         #region ShowElement
 
         private void AddRow(IAccount item, bool isTotal = false)
@@ -52,9 +59,9 @@ namespace Design
             Rows.Add(dgvr);
         }
 
-        private void AddRow(IAccountingElement item, bool isTotal = false)
+        private void AddRow(IAccountingElement item, Currency convCcy, bool isTotal = false)
         {
-            IAccount sum = item.GetTotalAccount(item.GetName());
+            IAccount sum = item.GetTotalAccount(MarketUsed, convCcy, item.GetName());
             AddRow(sum, isTotal);
         }
 
@@ -65,8 +72,9 @@ namespace Design
                 _Memory = tvme;
             Rows.Clear();
             foreach (IAccountingElement item in iElmt.GetItemList(tvme))
-                AddRow(item);
-            AddRow(iElmt.GetTotalAccount(), isTotal: iElmt.GetNodeType() != NodeType.Account);
+                AddRow(item, iElmt.CcyRef);
+            AddRow( iElmt.GetTotalAccount(MarketUsed, iElmt.CcyRef), 
+                    isTotal: iElmt.GetNodeType() != NodeType.Account);
             ElementShowed = iElmt;
             TotalShowed = null;
             Rows[0].Cells[0].Selected = false;
@@ -76,9 +84,9 @@ namespace Design
 
         #region ShowTotal
 
-        private void AddRow(ICategory item)
+        private void AddRow(ICategory item, Currency ccy)
         {
-            IAccount sum = item.TotalInstitution(item.CategoryName);
+            IAccount sum = item.TotalInstitution(MarketUsed, ccy, item.CategoryName);
             AddRow(sum, false);
         }
 
@@ -86,7 +94,7 @@ namespace Design
         {
             Rows.Clear();
             foreach (ICategory icat in iad.Categories)
-                AddRow(icat);
+                AddRow(icat, iad.Ccy);
             AddRow(iad.Total(), isTotal: true);
             ElementShowed = null;
             TotalShowed = iad;
@@ -106,14 +114,16 @@ namespace Design
                         if (!IsLastRow && ElementShowed.GetNodeType() == NodeType.Institution)
                         {
                             var valueAmount = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-                            ElementShowed.ModifyAmount(Rows[e.RowIndex].Cells[0].Value.ToString(),
+                            ElementShowed.ModifyAmount( MarketUsed,
+                                                        Rows[e.RowIndex].Cells[0].Value.ToString(),
                                                         valueAmount);
                         }
                         break;
 
                     case DataGridViewAccountingStatics.Column_Currency:
                         var valueCcy = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-                        ElementShowed.ModifyCcy(Rows[e.RowIndex].Cells[0].Value.ToString(),
+                        ElementShowed.ModifyCcy(    MarketUsed,
+                                                    Rows[e.RowIndex].Cells[0].Value.ToString(),
                                                     valueCcy,
                                                     IsLastRow);
                         break;

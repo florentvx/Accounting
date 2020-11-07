@@ -13,10 +13,16 @@ namespace Design
         {
             CreateCells(table);
             string amount = account.Amount.ToString();
+            string convAmount = account.ConvertedAmount.ToString();
+                
             if (isTotal)
+            {
+                convAmount = amount;
                 amount = "";
+            }
+
             var titles = new object[] {
-                account.AccountName, account.Ccy, amount, account.Amount
+                account.AccountName, account.Ccy, amount, convAmount
             };
 
             SetValues(titles);
