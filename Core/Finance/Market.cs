@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,20 @@ namespace Core.Finance
     public class Market
     {
         Dictionary<CurrencyPair, double> _Data = new Dictionary<CurrencyPair, double> { };
+        List<CurrencyPair> _CcyPairs = new List<CurrencyPair> { };
 
         public Market() { }
+
+        public IEnumerable<Tuple<CurrencyPair, double>> EnumerateData()
+        {
+            return _CcyPairs.Select(x => new Tuple<CurrencyPair, double>(x, _Data[x]));
+        }
+
+        public void Reset()
+        {
+            _Data = new Dictionary<CurrencyPair, double> { };
+            _CcyPairs = new List<CurrencyPair> { };
+        }
 
         public double GetQuote(CurrencyPair ccyPair)
         {
@@ -55,10 +68,13 @@ namespace Core.Finance
                 if (presentData[0].IsEqual(ccyPair))
                     _Data[presentData[0]] = value;
                 else
-                    _Data[presentData[0]] = 1/value;
+                    _Data[presentData[0]] = 1 / value;
             }
             else if (presentData.Count() == 0)
+            {
                 _Data[ccyPair] = value;
+                _CcyPairs.Add(ccyPair);
+            }
         }
     }
 }

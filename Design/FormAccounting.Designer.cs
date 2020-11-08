@@ -37,8 +37,11 @@ namespace Accounting
             this.buttonTotal = new System.Windows.Forms.Button();
             this.dataGridViewAccounting = new Design.DataGridViewAccounting();
             this.TreeViewAccounting = new Design.TreeViewAccounting();
+            this.dataGridViewMarket = new Design.DataGridViewMarket();
+            this.labelMarket = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMarket)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -48,7 +51,7 @@ namespace Accounting
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(929, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1185, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -94,6 +97,7 @@ namespace Accounting
             this.dataGridViewAccounting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewAccounting.Location = new System.Drawing.Point(276, 65);
             this.dataGridViewAccounting.Name = "dataGridViewAccounting";
+            this.dataGridViewAccounting.RowHeadersVisible = false;
             this.dataGridViewAccounting.RowTemplate.Height = 24;
             this.dataGridViewAccounting.Size = new System.Drawing.Size(641, 343);
             this.dataGridViewAccounting.TabIndex = 2;
@@ -114,11 +118,37 @@ namespace Accounting
             this.TreeViewAccounting.DragEnter += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragEnter);
             this.TreeViewAccounting.DragOver += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragOver);
             // 
+            // dataGridViewMarket
+            // 
+            this.dataGridViewMarket.AllowUserToAddRows = false;
+            this.dataGridViewMarket.AllowUserToDeleteRows = false;
+            this.dataGridViewMarket.AllowUserToResizeColumns = false;
+            this.dataGridViewMarket.AllowUserToResizeRows = false;
+            this.dataGridViewMarket.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewMarket.Location = new System.Drawing.Point(933, 65);
+            this.dataGridViewMarket.Name = "dataGridViewMarket";
+            this.dataGridViewMarket.RowHeadersVisible = false;
+            this.dataGridViewMarket.RowTemplate.Height = 24;
+            this.dataGridViewMarket.Size = new System.Drawing.Size(240, 343);
+            this.dataGridViewMarket.TabIndex = 5;
+            // 
+            // labelMarket
+            // 
+            this.labelMarket.AutoSize = true;
+            this.labelMarket.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMarket.Location = new System.Drawing.Point(930, 34);
+            this.labelMarket.Name = "labelMarket";
+            this.labelMarket.Size = new System.Drawing.Size(54, 18);
+            this.labelMarket.TabIndex = 6;
+            this.labelMarket.Text = "Market";
+            // 
             // FormAccounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(929, 420);
+            this.ClientSize = new System.Drawing.Size(1185, 420);
+            this.Controls.Add(this.labelMarket);
+            this.Controls.Add(this.dataGridViewMarket);
             this.Controls.Add(this.buttonTotal);
             this.Controls.Add(this.labelTable);
             this.Controls.Add(this.dataGridViewAccounting);
@@ -130,6 +160,7 @@ namespace Accounting
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMarket)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -144,6 +175,8 @@ namespace Accounting
         protected System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         protected System.Windows.Forms.Label labelTable;
         private System.Windows.Forms.Button buttonTotal;
+        protected DataGridViewMarket dataGridViewMarket;
+        private System.Windows.Forms.Label labelMarket;
     }
 }
 

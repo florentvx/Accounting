@@ -19,7 +19,6 @@ namespace Design
         public const int Column_Amount = 2;
         public const int Column_ConvertedAmount = 3;
         public const int ColumnNumber = 4;
-
     }
 
     public class DataGridViewAccounting: DataGridView

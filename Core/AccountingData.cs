@@ -113,6 +113,7 @@ namespace Core
         {
             _Data = new Dictionary<string, Category> { };
             Map.Reset();
+            _Market.Reset();
             AddItem(new NodeAddress(NodeType.Category, "TEMP"));
         }
 

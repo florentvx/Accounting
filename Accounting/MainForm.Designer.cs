@@ -41,7 +41,7 @@ namespace Accounting
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.ClientSize = new System.Drawing.Size(929, 425);
+            this.ClientSize = new System.Drawing.Size(1187, 425);
             this.Name = "MainForm";
             this.ResumeLayout(false);
             this.PerformLayout();

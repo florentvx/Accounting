@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataGridViewComboBoxCellAccounting.cs" />
+    <Compile Include="DataGridViewMarket.cs" />
     <Compile Include="DataGridViewRowAccounting.cs" />
     <Compile Include="DataGridViewAccounting.cs" />
     <Compile Include="FormAccounting.cs">

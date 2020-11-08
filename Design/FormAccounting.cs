@@ -57,6 +57,7 @@ namespace Accounting
         public void SetUpMarket(Market mkt)
         {
             dataGridViewAccounting.SetUpMarket(mkt);
+            dataGridViewMarket.ShowMarket(mkt);
         }
 
         public void SetUpTree(TreeViewMapping tvm)
