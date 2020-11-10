@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Core.Finance;
+using Core.Interfaces;
 
 namespace Design
 {
@@ -19,6 +20,8 @@ namespace Design
 
     public class DataGridViewMarket : DataGridView
     {
+        public IMarket MarketShowed;
+
         private void SetUpTable()
         {
             ColumnCount = DataGridViewMarketStatics.ColumnNumber;
@@ -40,6 +43,7 @@ namespace Design
 
         public void ShowMarket(Market mkt)
         {
+            MarketShowed = mkt;
             Rows.Clear();
             foreach (var item in mkt.EnumerateData())
             {
@@ -57,7 +61,29 @@ namespace Design
         protected override void OnCellMouseClick(DataGridViewCellMouseEventArgs e)
         {
             DataGridViewCell cell = Rows[e.RowIndex].Cells[e.ColumnIndex];
-            cell.Selected = false;
+            switch (e.ColumnIndex)
+            {
+                case DataGridViewMarketStatics.Column_Value:
+                    cell.Selected = true;
+                    BeginEdit(true);
+                    break;
+                default:
+                    cell.Selected = false;
+                    break;
+            }
+        }
+
+        public event DataGridViewCellEventHandler ValueChanged;
+
+        protected override void OnCellValueChanged(DataGridViewCellEventArgs e)
+        {
+            switch (e.ColumnIndex)
+            {
+                case DataGridViewMarketStatics.Column_Value:
+                    DataGridViewCellEventHandler handler = ValueChanged;
+                    handler?.Invoke(this, e);
+                    break;
+            }
         }
     }
 }

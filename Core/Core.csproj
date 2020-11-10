@@ -51,6 +51,7 @@
     <Compile Include="Interfaces\IAccountingElement.cs" />
     <Compile Include="Interfaces\ICategory.cs" />
     <Compile Include="Interfaces\IInstitution.cs" />
+    <Compile Include="Interfaces\IMarket.cs" />
     <Compile Include="Interfaces\ISummary.cs" />
     <Compile Include="Interfaces\IView.cs" />
     <Compile Include="Interfaces\NodeType.cs" />

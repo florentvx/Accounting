@@ -102,6 +102,14 @@ namespace Design
 
         #endregion
 
+        public void ShowActive()
+        {
+            if (ElementShowed != null)
+                ShowElement(ElementShowed);
+            else
+                ShowTotal(TotalShowed);
+        }
+
         protected override void OnCellValueChanged(DataGridViewCellEventArgs e)
         {
             bool IsLastRow = e.RowIndex == Rows.Count - 1;
@@ -152,7 +160,7 @@ namespace Design
                 switch (cell.ColumnIndex)
                 {
                     case DataGridViewAccountingStatics.Column_Amount:
-                        if (ElementShowed.GetNodeType() == NodeType.Institution && !IsLastRow)
+                        if (ElementShowed != null && ElementShowed.GetNodeType() == NodeType.Institution && !IsLastRow)
                         {
                             cell.Selected = true;
                             BeginEdit(true);

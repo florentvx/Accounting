@@ -32,7 +32,7 @@ namespace Core.Finance
             return res;
         }
 
-        internal static Currency ToCurrency(object value)
+        public static Currency ToCurrency(object value)
         {
             return (Currency)Enum.Parse(typeof(Currency), Convert.ToString(value));
         }

@@ -94,6 +94,9 @@ namespace Accounting
             // dataGridViewAccounting
             // 
             this.dataGridViewAccounting.AllowUserToAddRows = false;
+            this.dataGridViewAccounting.AllowUserToDeleteRows = false;
+            this.dataGridViewAccounting.AllowUserToResizeColumns = false;
+            this.dataGridViewAccounting.AllowUserToResizeRows = false;
             this.dataGridViewAccounting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewAccounting.Location = new System.Drawing.Point(276, 65);
             this.dataGridViewAccounting.Name = "dataGridViewAccounting";
@@ -131,6 +134,7 @@ namespace Accounting
             this.dataGridViewMarket.RowTemplate.Height = 24;
             this.dataGridViewMarket.Size = new System.Drawing.Size(240, 343);
             this.dataGridViewMarket.TabIndex = 5;
+            this.dataGridViewMarket.ValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewMarket_ValueChanged);
             // 
             // labelMarket
             // 

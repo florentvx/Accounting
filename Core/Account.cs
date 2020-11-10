@@ -67,14 +67,15 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Account; }
 
-        public IAccount GetTotalAccount(Market mkt, Currency convCcy)
+        public IAccount GetTotalAccount(Market mkt, Currency convCcy, string name)
         {
+            RecalculateAmount(mkt, convCcy);
             return this;
         }
 
-        public IAccount GetTotalAccount(Market mkt, Currency convCcy, string name)
+        public IAccount GetTotalAccount(Market mkt, Currency convCcy)
         {
-            return this;
+            return GetTotalAccount(mkt, convCcy, null);
         }
 
         public void ModifyAmount(Market mkt, string v, object valueAmount)

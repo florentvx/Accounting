@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Interfaces;
 
 namespace Core.Finance
 {
-    public class Market
+    public class Market : IMarket
     {
         Dictionary<CurrencyPair, double> _Data = new Dictionary<CurrencyPair, double> { };
         List<CurrencyPair> _CcyPairs = new List<CurrencyPair> { };

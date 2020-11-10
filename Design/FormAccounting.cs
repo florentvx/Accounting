@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -40,6 +41,11 @@ namespace Accounting
                     na = na.GetParent();
                 dataGridViewAccounting.ShowElement(Data.GetElement(na), Data.Map.GetElement(na));
             }
+        }
+
+        public void ShowActive()
+        {
+            dataGridViewAccounting.ShowActive();
         }
 
         public void ShowTotal()
@@ -168,6 +174,20 @@ namespace Accounting
         {
             Point pt = TreeViewAccounting.PointToClient(new Point(e.X, e.Y));
             TreeViewAccounting.ShowLine(pt);
+        }
+
+        private void DataGridViewMarket_ValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            Currency ccy1 = CurrencyFunctions.ToCurrency(dataGridViewMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset1].Value);
+            Currency ccy2 = CurrencyFunctions.ToCurrency(dataGridViewMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset2].Value);
+            double rate = Convert.ToDouble(dataGridViewMarket.Rows[e.RowIndex].Cells[e.ColumnIndex].Value);
+            switch (e.ColumnIndex)
+            {
+                case DataGridViewMarketStatics.Column_Value:
+                    Data.Market.AddQuote(new CurrencyPair(ccy1, ccy2), rate);
+                    ShowActive();
+                    break;
+            }
         }
     }
 }
