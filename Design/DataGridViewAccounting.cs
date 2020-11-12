@@ -27,6 +27,7 @@ namespace Design
         public IAccountingElement ElementShowed;
         private TreeViewMappingElement _Memory;
         private Market MarketUsed;
+        public IEnumerable<string> Ccies;
 
         private void SetUpTable()
         {
@@ -48,6 +49,12 @@ namespace Design
         internal void SetUpMarket(Market mkt)
         {
             MarketUsed = mkt;
+            Ccies = mkt.GetAvailableCurrencies();
+        }
+
+        public string CcyToString(Currency ccy, double value)
+        {
+            return MarketUsed.CcyToString(ccy, value);
         }
 
         #region ShowElement
@@ -110,6 +117,22 @@ namespace Design
                 ShowTotal(TotalShowed);
         }
 
+        private double ValueFromStringToDouble(object value)
+        {
+            try
+            {
+                return Convert.ToDouble(value);
+            }
+            catch (Exception)
+            {
+                string valueStr = "";
+                foreach (var c in Convert.ToString(value))
+                    if (Char.IsDigit(c) || c == '.')
+                        valueStr += c;
+                return Convert.ToDouble(valueStr);
+            }
+        }
+
         protected override void OnCellValueChanged(DataGridViewCellEventArgs e)
         {
             bool IsLastRow = e.RowIndex == Rows.Count - 1;
@@ -123,7 +146,7 @@ namespace Design
                             var valueAmount = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
                             ElementShowed.ModifyAmount( MarketUsed,
                                                         Rows[e.RowIndex].Cells[0].Value.ToString(),
-                                                        valueAmount);
+                                                        ValueFromStringToDouble(valueAmount));
                         }
                         break;
 

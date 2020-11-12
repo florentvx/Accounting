@@ -23,7 +23,7 @@ namespace Core.Finance
 
         public override string ToString()
         {
-            return $"{Ccy1.GetName()}/{Ccy2.GetName()}";
+            return $"{Ccy1.ToString()}/{Ccy2.ToString()}";
         }
 
         internal bool Contains(Currency ccy)

@@ -13,6 +13,7 @@ namespace Core
         string _AccountName;
         Currency _Ccy;
         double _Amount;
+        Currency _ConvertedCcy;
         double _ConvertedAmount;
         bool _IsCalculatedAccount;
 
@@ -28,6 +29,12 @@ namespace Core
         {
             get { return _Ccy; }
             set { _Ccy = value; }
+        }
+
+        public Currency ConvertedCcy
+        {
+            get { return _ConvertedCcy; }
+            set { _ConvertedCcy = value; }
         }
 
         public double Amount
@@ -99,15 +106,14 @@ namespace Core
         {
             _AccountName = name;
             _Ccy = ccy;
+            _ConvertedCcy = ccy;
             _IsCalculatedAccount = isCalculatedAccount;
-            //if (_IsCalculatedAccount)
-            //    _ConvertedAmount = amount;
-            //else
             _Amount = amount;
         }
 
         internal void RecalculateAmount(Market mkt, Currency ccyRef)
         {
+            _ConvertedCcy = ccyRef;
             _ConvertedAmount = _Amount * mkt.GetQuote(new CurrencyPair(_Ccy, ccyRef));
         }
     }

@@ -6,35 +6,54 @@ using System.Threading.Tasks;
 
 namespace Core.Finance
 {
-    public enum Currency
+    public class Currency : IEquatable<Currency>
     {
-        USD,EUR,GBP,JPY,None
-    }
+        string _Ccy;
 
-    public static class CurrencyFunctions
-    {
-        public static string GetName(this Currency ccy)
+        public Currency(string ccy)
         {
-            return Enum.GetName(typeof(Currency), ccy);
+            _Ccy = ccy.ToUpper();
         }
 
-        public static bool IsNone(this Currency ccy)
+        public Currency(object ccy)
         {
-            return ccy == Currency.None;
+            _Ccy = Convert.ToString(ccy).ToUpper();
         }
 
-        public static List<Currency> GetCurrencyList(bool withoutNone = true)
+        public bool IsNone { get { return _Ccy == "NONE"; } }
+
+        public override string ToString() { return _Ccy; }
+
+        public bool Equals(Currency ccy)
         {
-            List<Currency> res = new List<Currency> { };
-            foreach (Currency ccy in Enum.GetValues(typeof(Currency)))
-                if (!(withoutNone && ccy.IsNone()))
-                    res.Add(ccy);
-            return res;
+            if (ccy == null)
+                return false;
+            return _Ccy == ccy._Ccy;
         }
 
-        public static Currency ToCurrency(object value)
+        public override bool Equals(object obj)
         {
-            return (Currency)Enum.Parse(typeof(Currency), Convert.ToString(value));
+            return this.Equals(obj as Currency);
+        }
+
+        public override int GetHashCode()
+        {
+            return _Ccy.GetHashCode();
+        }
+
+        public static bool operator ==(Currency ccy1, Currency ccy2)
+        {
+            if (ccy1 is null)
+            {
+                if (ccy2 is null){ return true; }
+                return false;
+            }
+            return ccy1.Equals(ccy2);
+        }
+
+        public static bool operator !=(Currency ccy1, Currency ccy2)
+        {
+            return !(ccy1 == ccy2);
         }
     }
 }

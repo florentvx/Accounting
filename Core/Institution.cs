@@ -88,7 +88,7 @@ namespace Core
         {
             if (IsLastRow)
             {
-                Ccy = CurrencyFunctions.ToCurrency(value);
+                Ccy = new Currency(value);
                 foreach (Account item in Accounts)
                 {
                     item.RecalculateAmount(mkt, Ccy);
@@ -97,7 +97,7 @@ namespace Core
             else
             {
                 Account acc = GetAccount(accountName);
-                acc.Ccy = CurrencyFunctions.ToCurrency(value);
+                acc.Ccy = new Currency(value);
                 acc.RecalculateAmount(mkt, Ccy);
             }
         }
@@ -128,9 +128,9 @@ namespace Core
             throw new Exception($"Account Name [{accountName}] not found in Insitution [{InstitutionName}]");
         }
 
-        public Account AddAccount(string name, Currency currency = Currency.None)
+        public Account AddAccount(string name, Currency currency = null)
         {
-            if (currency == Currency.None)
+            if (currency == null)
                 currency = Ccy;
             Account account = new Account(name, currency);
             _Accounts.Add(account);

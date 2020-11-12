@@ -23,22 +23,24 @@ namespace Accounting
 
         private void LoadTestData()
         {
-            Category category = new Category("Banks");
+            Category category = new Category("Banks", new Currency("USD"));
             category.AddInstitution("Toto Bank");
             category.AddAccount("Checking", "Toto Bank");
             category.AddAccount("Saving", "Toto Bank");
-            Category category2 = new Category("Investing");
+            Category category2 = new Category("Investing", new Currency("USD"));
             category2.AddInstitution("Fidelity");
             category2.AddAccount("ETF", "Fidelity");
             category2.AddAccount("Bitcoin", "Fidelity");
             List<Category> cats = new List<Category> { category, category2 };
             
             Market market = new Market();
-            market.AddQuote(new CurrencyPair(Currency.EUR, Currency.USD), 1.2);
-            market.AddQuote(new CurrencyPair(Currency.GBP, Currency.USD), 1.4);
-            market.AddQuote(new CurrencyPair(Currency.USD, Currency.JPY), 105.0);
+            market.AddQuote(new CurrencyPair(new Currency("EUR"), new Currency("USD")), 1.2);
+            market.AddQuote(new CurrencyPair(new Currency("GBP"), new Currency("USD")), 1.4);
+            market.AddQuote(new CurrencyPair(new Currency("USD"), new Currency("JPY")), 105.0);
 
-            Data = new AccountingData(cats, market);
+            CurrencyStaticsDataBase ccyDB = new CurrencyStaticsDataBase();
+
+            Data = new AccountingData(cats, market, ccyDB);
         }
 
         private void OnLoad()
@@ -52,6 +54,12 @@ namespace Accounting
         {
             Data.Reset();
             MainPresenter.LoadAccounts();
+        }
+
+        protected override void AddQuoteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = new Form();
+            form.Show(this);
         }
 
         protected override void ButtonTotal_Click(object sender, EventArgs e)

@@ -12,6 +12,7 @@ namespace Core.Finance
     {
         Dictionary<CurrencyPair, double> _Data = new Dictionary<CurrencyPair, double> { };
         List<CurrencyPair> _CcyPairs = new List<CurrencyPair> { };
+        CurrencyStaticsDataBase _CcyDB = new CurrencyStaticsDataBase();
 
         public Market() { }
 
@@ -61,6 +62,11 @@ namespace Core.Finance
             }
         }
 
+        public string CcyToString(Currency ccy, double value)
+        {
+            return _CcyDB.CcyToString(ccy, value);
+        }
+
         public void AddQuote(CurrencyPair ccyPair, double value)
         {
             var presentData = _Data.Where(x => x.Key.IsEquivalent(ccyPair)).Select(x=> x.Key).ToList();
@@ -76,6 +82,11 @@ namespace Core.Finance
                 _Data[ccyPair] = value;
                 _CcyPairs.Add(ccyPair);
             }
+        }
+
+        public IEnumerable<string> GetAvailableCurrencies()
+        {
+            return _CcyDB.GetAvailableCurrencies();
         }
     }
 }

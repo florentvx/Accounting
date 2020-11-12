@@ -83,7 +83,7 @@ namespace Core
         {
             if (isLastRow)
             {
-                _Ccy = CurrencyFunctions.ToCurrency(valueCcy);
+                _Ccy = new Currency(valueCcy);
             }
         }
 
@@ -97,7 +97,7 @@ namespace Core
 
         #endregion
 
-        public Category(string name, Currency ccy = Currency.USD)
+        public Category(string name, Currency ccy)
         {
             _CategoryName = name;
             _Ccy = ccy;
@@ -114,9 +114,9 @@ namespace Core
             return _Institutions[name];
         }
 
-        public void AddInstitution(string name, Currency currency = Currency.None)
+        public void AddInstitution(string name, Currency currency = null)
         {
-            if (currency == Currency.None)
+            if (currency == null)
                 currency = Ccy;
             Institution instit = new Institution(name, currency);
             _Institutions.Add(instit.InstitutionName, instit);

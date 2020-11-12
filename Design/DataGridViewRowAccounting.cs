@@ -12,8 +12,8 @@ namespace Design
                                             bool isTotal = false)
         {
             CreateCells(table);
-            string amount = account.Amount.ToString();
-            string convAmount = account.ConvertedAmount.ToString();
+            string amount = table.CcyToString(account.Ccy, account.Amount);
+            string convAmount = table.CcyToString(account.ConvertedCcy, account.ConvertedAmount);
                 
             if (isTotal)
             {
@@ -28,7 +28,7 @@ namespace Design
             SetValues(titles);
             if (!account.IsCalculatedAccount || isTotal)    
                 Cells[DataGridViewAccountingStatics.Column_Currency] = 
-                    new DataGridViewComboBoxCellAccounting(account.Ccy);
+                    new DataGridViewComboBoxCellAccounting(account.Ccy, table.Ccies);
             if (account.IsCalculatedAccount)
                 Cells[DataGridViewAccountingStatics.Column_Amount].ReadOnly = true;
             Cells[DataGridViewAccountingStatics.Column_ConvertedAmount].ReadOnly = true;

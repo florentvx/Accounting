@@ -33,6 +33,8 @@ namespace Accounting
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.marketToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addQuoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelTable = new System.Windows.Forms.Label();
             this.buttonTotal = new System.Windows.Forms.Button();
             this.dataGridViewAccounting = new Design.DataGridViewAccounting();
@@ -48,7 +50,8 @@ namespace Accounting
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.marketToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1185, 28);
@@ -69,6 +72,21 @@ namespace Accounting
             this.newToolStripMenuItem.Size = new System.Drawing.Size(114, 26);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
+            // 
+            // marketToolStripMenuItem
+            // 
+            this.marketToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addQuoteToolStripMenuItem});
+            this.marketToolStripMenuItem.Name = "marketToolStripMenuItem";
+            this.marketToolStripMenuItem.Size = new System.Drawing.Size(67, 24);
+            this.marketToolStripMenuItem.Text = "Market";
+            // 
+            // addQuoteToolStripMenuItem
+            // 
+            this.addQuoteToolStripMenuItem.Name = "addQuoteToolStripMenuItem";
+            this.addQuoteToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.addQuoteToolStripMenuItem.Text = "Add Quote";
+            this.addQuoteToolStripMenuItem.Click += new System.EventHandler(this.AddQuoteToolStripMenuItem_Click);
             // 
             // labelTable
             // 
@@ -181,6 +199,8 @@ namespace Accounting
         private System.Windows.Forms.Button buttonTotal;
         protected DataGridViewMarket dataGridViewMarket;
         private System.Windows.Forms.Label labelMarket;
+        private System.Windows.Forms.ToolStripMenuItem marketToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addQuoteToolStripMenuItem;
     }
 }
 

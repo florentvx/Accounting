@@ -10,14 +10,13 @@ namespace Design
 {
     public class DataGridViewComboBoxCellAccounting : DataGridViewComboBoxCell
     {
-        public DataGridViewComboBoxCellAccounting(Currency ccy): base()
+        public DataGridViewComboBoxCellAccounting(Currency ccy, IEnumerable<string> ccies): base()
         {
-            var ccyList = CurrencyFunctions.GetCurrencyList();
-            foreach (Currency item in ccyList)
+            foreach (string item in ccies)
             {
                 Items.Add(item);
             }
-            Value = ccy;
+            Value = ccy.ToString();
             FlatStyle = FlatStyle.Flat;
         }
     }

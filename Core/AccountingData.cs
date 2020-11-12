@@ -14,6 +14,7 @@ namespace Core
     public class AccountingData : IAccountingData
     {
         Currency _Ccy;
+        CurrencyStaticsDataBase _CcyDB;
         Dictionary<string, Category> _Data = new Dictionary<string, Category> { };
         Market _Market;
         TreeViewMapping _Map;
@@ -42,7 +43,7 @@ namespace Core
 
         public void ModifyCcy(object valueCcy)
         {
-            _Ccy = CurrencyFunctions.ToCurrency(valueCcy);
+            _Ccy = new Currency(valueCcy);
         }
 
         public ICategory GetFirstCategory()
@@ -91,12 +92,13 @@ namespace Core
 
         #endregion
 
-        public AccountingData(List<Category> input, Market mkt)
+        public AccountingData(List<Category> input, Market mkt, CurrencyStaticsDataBase ccyDB)
         {
-            _Ccy = Currency.USD;
+            _Ccy = new Currency("USD");
             _Data = input.ToDictionary(x => x.CategoryName, x => x);
             _Market = mkt;
             _Map = new TreeViewMapping(_Data);
+            _CcyDB = ccyDB;
         }
 
         public IAccountingElement GetInstitution(NodeAddress na)
@@ -145,7 +147,7 @@ namespace Core
                 i++;
                 newName = $"{newNameRef} - {i}";
             }
-            Category cat = new Category(newName);
+            Category cat = new Category(newName, Ccy);
             cat.AddInstitution("New Institution");
             cat.AddAccount("New Account", "New Institution");
             _Data.Add(cat.CategoryName, cat);

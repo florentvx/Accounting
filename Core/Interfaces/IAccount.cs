@@ -11,6 +11,7 @@ namespace Core.Interfaces
     {
         string AccountName { get; set; }
         Currency Ccy { get; }
+        Currency ConvertedCcy { get; }
         double Amount { get; }
         double ConvertedAmount { get; }
         bool IsCalculatedAccount { get; }

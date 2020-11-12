@@ -101,6 +101,7 @@ namespace Accounting
         #endregion
 
         virtual protected void NewToolStripMenuItem_Click(object sender, System.EventArgs e) { }
+        virtual protected void AddQuoteToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void ButtonTotal_Click(object sender, System.EventArgs e) { }
 
         public void TreeView_NodeAddition(object sender, TreeNodeMouseClickEventArgs e)
@@ -178,8 +179,8 @@ namespace Accounting
 
         private void DataGridViewMarket_ValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            Currency ccy1 = CurrencyFunctions.ToCurrency(dataGridViewMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset1].Value);
-            Currency ccy2 = CurrencyFunctions.ToCurrency(dataGridViewMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset2].Value);
+            Currency ccy1 = new Currency(dataGridViewMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset1].Value);
+            Currency ccy2 = new Currency(dataGridViewMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset2].Value);
             double rate = Convert.ToDouble(dataGridViewMarket.Rows[e.RowIndex].Cells[e.ColumnIndex].Value);
             switch (e.ColumnIndex)
             {

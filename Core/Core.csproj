@@ -45,6 +45,7 @@
     <Compile Include="AccountingData.cs" />
     <Compile Include="Category.cs" />
     <Compile Include="Finance\Currency.cs" />
+    <Compile Include="Finance\CurrencyStatics.cs" />
     <Compile Include="Institution.cs" />
     <Compile Include="Interfaces\IAccount.cs" />
     <Compile Include="Interfaces\IAccountingData.cs" />
