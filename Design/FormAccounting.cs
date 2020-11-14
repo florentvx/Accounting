@@ -101,7 +101,7 @@ namespace Accounting
         #endregion
 
         virtual protected void NewToolStripMenuItem_Click(object sender, System.EventArgs e) { }
-        virtual protected void AddQuoteToolStripMenuItem_Click(object sender, EventArgs e) { }
+        virtual protected void AddCurrencyToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void ButtonTotal_Click(object sender, System.EventArgs e) { }
 
         public void TreeView_NodeAddition(object sender, TreeNodeMouseClickEventArgs e)

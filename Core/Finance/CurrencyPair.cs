@@ -15,6 +15,11 @@ namespace Core.Finance
             _Data = new Tuple<Currency, Currency>(ccy1, ccy2);
         }
 
+        public CurrencyPair(string ccy1, string ccy2)
+        {
+            _Data = new Tuple<Currency, Currency>(new Currency(ccy1), new Currency(ccy2));
+        }
+
         public Currency Ccy1 { get { return _Data.Item1; } }
 
         public Currency Ccy2 { get { return _Data.Item2; } }

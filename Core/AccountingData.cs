@@ -14,7 +14,6 @@ namespace Core
     public class AccountingData : IAccountingData
     {
         Currency _Ccy;
-        CurrencyStaticsDataBase _CcyDB;
         Dictionary<string, Category> _Data = new Dictionary<string, Category> { };
         Market _Market;
         TreeViewMapping _Map;
@@ -33,6 +32,11 @@ namespace Core
         private Institution GetInstitution(string catName, string institName)
         {
             return GetCategory(catName).GetInstitution(institName);
+        }
+
+        public IEnumerable<string> GetAvailableCurrencies()
+        {
+            return Market.GetAvailableCurrencies();
         }
 
         #region IAccountingData
@@ -90,15 +94,25 @@ namespace Core
             return test;
         }
 
+        public void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair cp, double cpValue)
+        {
+            bool testAdd = _Market.AddCcy(ccyName, ccyStatics);
+            if (!testAdd)
+                MessageBox.Show($"The new Currency [{ccyName}] does already exist.");
+            else
+            {
+                _Market.AddQuote(cp, cpValue);
+            }
+        }
+
         #endregion
 
-        public AccountingData(List<Category> input, Market mkt, CurrencyStaticsDataBase ccyDB)
+        public AccountingData(List<Category> input, Market mkt)
         {
             _Ccy = new Currency("USD");
             _Data = input.ToDictionary(x => x.CategoryName, x => x);
             _Market = mkt;
             _Map = new TreeViewMapping(_Data);
-            _CcyDB = ccyDB;
         }
 
         public IAccountingElement GetInstitution(NodeAddress na)

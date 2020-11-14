@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Core.Finance;
 using Core.Interfaces;
 
 namespace Accounting
@@ -66,6 +67,12 @@ namespace Accounting
         internal void ButtonTotal()
         {
             _view.ShowTotal();
+        }
+
+        internal void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair ccyPair, double ccyPairQuote)
+        {
+            _ad.AddNewCcy(ccyName, ccyStatics, ccyPair, ccyPairQuote);
+            _view.SetUpMarket(_ad.Market);
         }
     }
 }

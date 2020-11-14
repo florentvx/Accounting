@@ -12,19 +12,36 @@ namespace Core.Finance
     {
         Dictionary<CurrencyPair, double> _Data = new Dictionary<CurrencyPair, double> { };
         List<CurrencyPair> _CcyPairs = new List<CurrencyPair> { };
-        CurrencyStaticsDataBase _CcyDB = new CurrencyStaticsDataBase();
+        CurrencyStaticsDataBase _CcyDB;
 
         public Market() { }
+
+        public Market(CurrencyStaticsDataBase ccyDB)
+        {
+            _CcyDB = ccyDB;
+        }
 
         public IEnumerable<Tuple<CurrencyPair, double>> EnumerateData()
         {
             return _CcyPairs.Select(x => new Tuple<CurrencyPair, double>(x, _Data[x]));
         }
 
+        public bool AddCcy(string newCcy, CurrencyStatics statics)
+        {
+            return _CcyDB.AddCcy(newCcy, statics);
+        }
+
+        public bool AddCcy(string newCcy, string symbol, int thousandMark, int decNb)
+        {
+            return _CcyDB.AddCcy(newCcy, new CurrencyStatics(symbol, thousandMark, decNb));
+        }
+
         public void Reset()
         {
             _Data = new Dictionary<CurrencyPair, double> { };
             _CcyPairs = new List<CurrencyPair> { };
+            _CcyDB.Reset();
+            AddCcy("USD", "$", 3, 2);
         }
 
         public double GetQuote(CurrencyPair ccyPair)

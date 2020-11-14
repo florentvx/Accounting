@@ -32,15 +32,19 @@ namespace Accounting
             category2.AddAccount("ETF", "Fidelity");
             category2.AddAccount("Bitcoin", "Fidelity");
             List<Category> cats = new List<Category> { category, category2 };
-            
-            Market market = new Market();
+
+            CurrencyStaticsDataBase ccyDB = new CurrencyStaticsDataBase();
+            ccyDB.AddCcy("USD", new CurrencyStatics("$", 3, 2));
+            ccyDB.AddCcy("EUR", new CurrencyStatics("€", 3, 2));
+            ccyDB.AddCcy("GBP", new CurrencyStatics("£", 3, 2));
+            ccyDB.AddCcy("JPY", new CurrencyStatics("¥", 4, 0));
+
+            Market market = new Market(ccyDB);
             market.AddQuote(new CurrencyPair(new Currency("EUR"), new Currency("USD")), 1.2);
             market.AddQuote(new CurrencyPair(new Currency("GBP"), new Currency("USD")), 1.4);
             market.AddQuote(new CurrencyPair(new Currency("USD"), new Currency("JPY")), 105.0);
 
-            CurrencyStaticsDataBase ccyDB = new CurrencyStaticsDataBase();
-
-            Data = new AccountingData(cats, market, ccyDB);
+            Data = new AccountingData(cats, market);
         }
 
         private void OnLoad()
@@ -56,10 +60,17 @@ namespace Accounting
             MainPresenter.LoadAccounts();
         }
 
-        protected override void AddQuoteToolStripMenuItem_Click(object sender, EventArgs e)
+        protected override void AddCurrencyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form form = new Form();
-            form.Show(this);
+            
+            using (AddCcyForm form = new AddCcyForm(Data.GetAvailableCurrencies()))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    MainPresenter.AddNewCcy(form.CcyName, form.CcyStatics, form.CcyPair, form.CcyPairQuote);
+                }
+            }
+                
         }
 
         protected override void ButtonTotal_Click(object sender, EventArgs e)

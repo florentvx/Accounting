@@ -55,7 +55,6 @@ namespace Design
                 dgvr.SetValues(titles);
                 Rows.Add(dgvr);
             }
-            Rows[Rows.Count - 1].Selected = true;
         }
 
         protected override void OnCellMouseClick(DataGridViewCellMouseEventArgs e)

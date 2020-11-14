@@ -34,7 +34,7 @@ namespace Accounting
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.marketToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addQuoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addCurrencyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelTable = new System.Windows.Forms.Label();
             this.buttonTotal = new System.Windows.Forms.Button();
             this.dataGridViewAccounting = new Design.DataGridViewAccounting();
@@ -76,17 +76,17 @@ namespace Accounting
             // marketToolStripMenuItem
             // 
             this.marketToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addQuoteToolStripMenuItem});
+            this.addCurrencyToolStripMenuItem});
             this.marketToolStripMenuItem.Name = "marketToolStripMenuItem";
             this.marketToolStripMenuItem.Size = new System.Drawing.Size(67, 24);
             this.marketToolStripMenuItem.Text = "Market";
             // 
-            // addQuoteToolStripMenuItem
+            // addCurrencyToolStripMenuItem
             // 
-            this.addQuoteToolStripMenuItem.Name = "addQuoteToolStripMenuItem";
-            this.addQuoteToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.addQuoteToolStripMenuItem.Text = "Add Quote";
-            this.addQuoteToolStripMenuItem.Click += new System.EventHandler(this.AddQuoteToolStripMenuItem_Click);
+            this.addCurrencyToolStripMenuItem.Name = "addCurrencyToolStripMenuItem";
+            this.addCurrencyToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.addCurrencyToolStripMenuItem.Text = "Add Currency";
+            this.addCurrencyToolStripMenuItem.Click += new System.EventHandler(this.AddCurrencyToolStripMenuItem_Click);
             // 
             // labelTable
             // 
@@ -200,7 +200,7 @@ namespace Accounting
         protected DataGridViewMarket dataGridViewMarket;
         private System.Windows.Forms.Label labelMarket;
         private System.Windows.Forms.ToolStripMenuItem marketToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addQuoteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addCurrencyToolStripMenuItem;
     }
 }
 

@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace Core.Finance
 {
-    class CurrencyStatics
+    public class CurrencyStatics
     {
         private string _Symbol;
         private int _ThousandMark;
         private int _DecimalNumber;
+
+        public CurrencyStatics() { }
 
         public CurrencyStatics(string symbol, int thousandMark, int decNb)
         {
@@ -78,26 +80,62 @@ namespace Core.Finance
             }
             return _Symbol + " " + res;
         }
+
+        public Tuple<bool, string> Load(string symbol, string thousandMarker, string decimalNumber)
+        {
+            // Symbol
+            if (symbol.Length < 6)
+            {
+                _Symbol = symbol;
+            }
+            else
+                return new Tuple<bool, string>(false, $"Symbol [{symbol}] is more than 5 characters.");
+            
+            // Thousand Marker
+            try
+            {
+                int tMkNb = Convert.ToInt32(thousandMarker);
+                _ThousandMark = tMkNb;
+            }
+            catch(Exception)
+            {
+                throw new Exception($"The thousand Marker [{thousandMarker}] needs to be a number.");
+            }
+
+            // Decimal Number
+            try
+            {
+                int dNb = Convert.ToInt32(decimalNumber);
+                _DecimalNumber = dNb;
+            }
+            catch (Exception)
+            {
+                throw new Exception($"The thousand Marker [{_DecimalNumber}] needs to be a number.");
+            }
+            return new Tuple<bool, string>(true, null);
+        }
     }
 
     public class CurrencyStaticsDataBase
     {
         Dictionary<string, CurrencyStatics> DataBase = new Dictionary<string, CurrencyStatics> { };
 
-        public CurrencyStaticsDataBase()
-        {
-            DataBase.Add("USD", new CurrencyStatics("$", 3, 2));
-            DataBase.Add("EUR", new CurrencyStatics("€", 3, 2));
-            DataBase.Add("GBP", new CurrencyStatics("£", 3, 2));
-            DataBase.Add("JPY", new CurrencyStatics("¥", 4, 0));
+        public CurrencyStaticsDataBase() {}
 
-            string test0 = CcyToString(new Currency("USD"), 0);
-            string test1 = CcyToString(new Currency("USD"), 1);
-            string test2 = CcyToString(new Currency("USD"), 12);
-            string test3 = CcyToString(new Currency("USD"), 123);
-            string test4 = CcyToString(new Currency("USD"), 1234);
-            string test5 = CcyToString(new Currency("USD"), 123456789);
-            Console.Write("STOP");
+        public void Reset()
+        {
+            DataBase = new Dictionary<string, CurrencyStatics> { };
+        }
+
+        public bool AddCcy(string newCcy, CurrencyStatics cs)
+        {
+            if (DataBase.ContainsKey(newCcy))
+                return false;
+            else
+            {
+                DataBase.Add(newCcy, cs);
+                return true;
+            }
         }
 
         public IEnumerable<string> GetAvailableCurrencies()
