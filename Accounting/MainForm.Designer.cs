@@ -34,14 +34,13 @@ namespace Accounting
             // 
             // TreeViewAccounting
             // 
-            this.TreeViewAccounting.LineColor = System.Drawing.Color.Black;
             this.TreeViewAccounting.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.TreeView_AfterLabelEdit);
             this.TreeViewAccounting.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeMouseClick);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.ClientSize = new System.Drawing.Size(1187, 425);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.ClientSize = new System.Drawing.Size(895, 350);
             this.Name = "MainForm";
             this.ResumeLayout(false);
             this.PerformLayout();

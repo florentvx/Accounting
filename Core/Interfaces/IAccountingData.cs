@@ -17,5 +17,6 @@ namespace Core.Interfaces
         ICategory GetFirstCategory();
         IAccount Total();
         bool ChangeName(string before, string after, NodeAddress nodeType);
+        void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair ccyPair, double ccyPairQuote);
     }
 }
