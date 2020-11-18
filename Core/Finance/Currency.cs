@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Interfaces;
 
 namespace Core.Finance
 {
-    public class Currency : IEquatable<Currency>
+    public class Currency : IEquatable<Currency>, ICcyAsset
     {
         string _Ccy;
 
@@ -19,6 +20,10 @@ namespace Core.Finance
         {
             _Ccy = Convert.ToString(ccy).ToUpper();
         }
+
+        public Currency Ccy => this;
+
+        public Asset Asset => null;
 
         public bool IsNone { get { return _Ccy == "NONE"; } }
 
@@ -41,6 +46,11 @@ namespace Core.Finance
             return _Ccy.GetHashCode();
         }
 
+        public bool IsCcy()
+        {
+            return true;
+        }
+
         public static bool operator ==(Currency ccy1, Currency ccy2)
         {
             if (ccy1 is null)
@@ -54,6 +64,11 @@ namespace Core.Finance
         public static bool operator !=(Currency ccy1, Currency ccy2)
         {
             return !(ccy1 == ccy2);
+        }
+
+        public IMarketInput CreateMarketInput(Currency ccyRef)
+        {
+            return new CurrencyPair(this, ccyRef);
         }
     }
 }

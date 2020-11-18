@@ -26,8 +26,13 @@ namespace Design
         public IAccountingData TotalShowed;
         public IAccountingElement ElementShowed;
         private TreeViewMappingElement _Memory;
-        private Market MarketUsed;
+        private FXMarket FXMarketUsed;
+        private AssetMarket AssetMarketUsed;
         public IEnumerable<string> Ccies;
+        public IEnumerable<string> Assets;
+
+        public IEnumerable<string> CciesAndAssets { get { return Ccies.Union(Assets); } }
+
 
         private void SetUpTable()
         {
@@ -46,15 +51,20 @@ namespace Design
             SetUpTable();
         }
 
-        internal void SetUpMarket(Market mkt)
+        internal void SetUpMarkets(FXMarket mkt, AssetMarket aMkt)
         {
-            MarketUsed = mkt;
+            FXMarketUsed = mkt;
+            AssetMarketUsed = aMkt;
             Ccies = mkt.GetAvailableCurrencies();
+            Assets = aMkt.GetAvailableAssets();
         }
 
-        public string CcyToString(Currency ccy, double value)
+        public string CcyToString(ICcyAsset ccy, double value)
         {
-            return MarketUsed.CcyToString(ccy, value);
+            if (ccy.IsCcy())
+                return FXMarketUsed.CcyToString(ccy.Ccy, value);
+            else
+                return Convert.ToString(value);
         }
 
         #region ShowElement
@@ -65,9 +75,9 @@ namespace Design
             Rows.Add(dgvr);
         }
 
-        private void AddRow(IAccountingElement item, Currency convCcy, bool isTotal = false)
+        private void AddRow(IAccountingElement item, ICcyAsset convCcy, bool isTotal = false)
         {
-            IAccount sum = item.GetTotalAccount(MarketUsed, convCcy, item.GetName());
+            IAccount sum = item.GetTotalAccount(FXMarketUsed, AssetMarketUsed, convCcy, item.GetName());
             AddRow(sum, isTotal);
         }
 
@@ -79,7 +89,7 @@ namespace Design
             Rows.Clear();
             foreach (IAccountingElement item in iElmt.GetItemList(tvme))
                 AddRow(item, iElmt.CcyRef);
-            AddRow( iElmt.GetTotalAccount(MarketUsed, iElmt.CcyRef), 
+            AddRow( iElmt.GetTotalAccount(FXMarketUsed, AssetMarketUsed, iElmt.CcyRef), 
                     isTotal: iElmt.GetNodeType() != NodeType.Account);
             ElementShowed = iElmt;
             TotalShowed = null;
@@ -92,7 +102,7 @@ namespace Design
 
         private void AddRow(ICategory item, Currency ccy)
         {
-            IAccount sum = item.TotalInstitution(MarketUsed, ccy, item.CategoryName);
+            IAccount sum = item.TotalInstitution(FXMarketUsed, AssetMarketUsed, ccy, item.CategoryName);
             AddRow(sum, false);
         }
 
@@ -144,7 +154,8 @@ namespace Design
                         if (!IsLastRow && ElementShowed.GetNodeType() == NodeType.Institution)
                         {
                             var valueAmount = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-                            ElementShowed.ModifyAmount( MarketUsed,
+                            ElementShowed.ModifyAmount( FXMarketUsed,
+                                                        AssetMarketUsed,
                                                         Rows[e.RowIndex].Cells[0].Value.ToString(),
                                                         ValueFromStringToDouble(valueAmount));
                         }
@@ -152,9 +163,13 @@ namespace Design
 
                     case DataGridViewAccountingStatics.Column_Currency:
                         var valueCcy = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-                        ElementShowed.ModifyCcy(    MarketUsed,
+                        ICcyAsset ccyAsset = new Currency(valueCcy);
+                        if (Assets.Contains(valueCcy))
+                            ccyAsset = new Asset(valueCcy);
+                        ElementShowed.ModifyCcy(    FXMarketUsed,
+                                                    AssetMarketUsed,
                                                     Rows[e.RowIndex].Cells[0].Value.ToString(),
-                                                    valueCcy,
+                                                    ccyAsset,
                                                     IsLastRow);
                         break;
                 }

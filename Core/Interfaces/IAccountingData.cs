@@ -11,7 +11,8 @@ namespace Core.Interfaces
     {
         Currency Ccy { get; }
         TreeViewMapping Map { get; }
-        Market Market { get; }
+        FXMarket FXMarket { get; }
+        AssetMarket AssetMarket { get; }
         void ModifyCcy(object valueCcy);
         IEnumerable<ICategory> Categories { get; }
         ICategory GetFirstCategory();

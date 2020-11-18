@@ -15,7 +15,8 @@ namespace Core
     {
         Currency _Ccy;
         Dictionary<string, Category> _Data = new Dictionary<string, Category> { };
-        Market _Market;
+        FXMarket _FXMarket;
+        AssetMarket _AssetMarket;
         TreeViewMapping _Map;
 
         public Currency Ccy
@@ -36,14 +37,16 @@ namespace Core
 
         public IEnumerable<string> GetAvailableCurrencies()
         {
-            return Market.GetAvailableCurrencies();
+            return FXMarket.GetAvailableCurrencies();
         }
 
         #region IAccountingData
 
         public TreeViewMapping Map { get { return _Map; } }
 
-        public Market Market { get { return _Market; } }
+        public FXMarket FXMarket { get { return _FXMarket; } }
+
+        public AssetMarket AssetMarket { get { return _AssetMarket; } }
 
         public void ModifyCcy(object valueCcy)
         {
@@ -68,7 +71,7 @@ namespace Core
         {
             double total = 0;
             foreach (var item in _Data)
-                total += item.Value.TotalInstitution(_Market, Ccy).ConvertedAmount;
+                total += item.Value.TotalInstitution(_FXMarket, _AssetMarket, Ccy).ConvertedAmount;
             return new Account("Total", Ccy, total);
         }
 
@@ -96,22 +99,23 @@ namespace Core
 
         public void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair cp, double cpValue)
         {
-            bool testAdd = _Market.AddCcy(ccyName, ccyStatics);
+            bool testAdd = _FXMarket.AddCcy(ccyName, ccyStatics);
             if (!testAdd)
                 MessageBox.Show($"The new Currency [{ccyName}] does already exist.");
             else
             {
-                _Market.AddQuote(cp, cpValue);
+                _FXMarket.AddQuote(cp, cpValue);
             }
         }
 
         #endregion
 
-        public AccountingData(List<Category> input, Market mkt)
+        public AccountingData(List<Category> input, FXMarket mkt, AssetMarket aMkt)
         {
             _Ccy = new Currency("USD");
             _Data = input.ToDictionary(x => x.CategoryName, x => x);
-            _Market = mkt;
+            _FXMarket = mkt;
+            _AssetMarket = aMkt;
             _Map = new TreeViewMapping(_Data);
         }
 
@@ -129,7 +133,7 @@ namespace Core
         {
             _Data = new Dictionary<string, Category> { };
             Map.Reset();
-            _Market.Reset();
+            _FXMarket.Reset();
             AddItem(new NodeAddress(NodeType.Category, "TEMP"));
         }
 

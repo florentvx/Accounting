@@ -29,19 +29,19 @@ namespace Core
             return tvme.Nodes.Select(x => _Institutions[x.Name]);
         }
 
-        public IAccount TotalInstitution(Market mkt, Currency convCcy, string overrideName)
+        public IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideName)
         {
             double total = 0;
             foreach (var item in Institutions)
-                total += item.TotalAccount(mkt, Ccy).ConvertedAmount;
+                total += item.TotalAccount(mkt, aMkt, Ccy).ConvertedAmount;
             Account acc = new Account(overrideName, Ccy, total, true);
             acc.RecalculateAmount(mkt, convCcy);
             return acc;
         }
 
-        public IAccount TotalInstitution(Market mkt, Currency convCcy)
+        public IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy)
         {
-            return TotalInstitution(mkt, convCcy, "Total");
+            return TotalInstitution(mkt, aMkt, convCcy, "Total");
         }
 
         #endregion
@@ -50,7 +50,7 @@ namespace Core
 
         public string GetName() { return _CategoryName; }
 
-        public Currency CcyRef { get{ return Ccy; } }
+        public ICcyAsset CcyRef { get{ return Ccy; } }
 
         public IEnumerable<IAccountingElement> GetItemList()
         {
@@ -64,26 +64,26 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Category; }
 
-        public IAccount GetTotalAccount(Market mkt, Currency convCcy, string name)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name)
         {
-            return TotalInstitution(mkt, convCcy, name);
+            return TotalInstitution(mkt, aMkt, convCcy.Ccy, name);
         }
 
-        public IAccount GetTotalAccount(Market mkt, Currency convCcy)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy)
         {
-            return GetTotalAccount(mkt, convCcy, "Total");
+            return GetTotalAccount(mkt, aMkt, convCcy, "Total");
         }
 
-        public void ModifyAmount(Market mkt, string v, object valueAmount)
+        public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string v, object valueAmount)
         {
             throw new NotImplementedException();
         }
 
-        public void ModifyCcy(Market mkt, string v, object valueCcy, bool isLastRow)
+        public void ModifyCcy(FXMarket mkt, AssetMarket aMkt, string v, ICcyAsset valueCcy, bool isLastRow)
         {
             if (isLastRow)
             {
-                _Ccy = new Currency(valueCcy);
+                _Ccy = valueCcy.Ccy;
             }
         }
 

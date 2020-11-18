@@ -14,7 +14,7 @@ namespace Core.Interfaces
         void ChangeActive(NodeAddress nd);
         void ShowTotal();
         void ShowElement(NodeAddress tvme);
-        void SetUpMarket(Market mkt);
+        void SetUpMarkets(FXMarket mkt, AssetMarket aMkt);
         void SetUpTree(TreeViewMapping na);
         void TreeView_NodeMouseRightClick(TreeNodeMouseClickEventArgs e);
         void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e);

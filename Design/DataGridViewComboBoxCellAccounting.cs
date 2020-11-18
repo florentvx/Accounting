@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Core.Finance;
+using Core.Interfaces;
 
 namespace Design
 {
     public class DataGridViewComboBoxCellAccounting : DataGridViewComboBoxCell
     {
-        public DataGridViewComboBoxCellAccounting(Currency ccy, IEnumerable<string> ccies): base()
+        public DataGridViewComboBoxCellAccounting(ICcyAsset ccy, IEnumerable<string> ccies): base()
         {
             foreach (string item in ccies)
             {

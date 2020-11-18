@@ -13,7 +13,7 @@ namespace Core.Interfaces
         Currency Ccy { get; }
         IEnumerable<IAccount> Accounts { get; }
         IEnumerable<IAccount> GetAccounts(TreeViewMappingElement tvme);
-        IAccount TotalAccount(Market mkt, Currency convCcy, string overrideAccountName);
-        IAccount TotalAccount(Market mkt, Currency convCcy);
+        IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideAccountName);
+        IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy);
     }
 }

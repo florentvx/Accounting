@@ -24,7 +24,7 @@ namespace Accounting
         {
             ICategory icat = _ad.GetFirstCategory();
             _view.Reset();
-            _view.SetUpMarket(_ad.Market);
+            _view.SetUpMarkets(_ad.FXMarket, _ad.AssetMarket);
             _view.SetUpTree(_ad.Map);
             _view.ShowElement(new NodeAddress(NodeType.Category, icat.CategoryName));
         }
@@ -72,7 +72,7 @@ namespace Accounting
         internal void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair ccyPair, double ccyPairQuote)
         {
             _ad.AddNewCcy(ccyName, ccyStatics, ccyPair, ccyPairQuote);
-            _view.SetUpMarket(_ad.Market);
+            _view.SetUpMarkets(_ad.FXMarket, _ad.AssetMarket);
         }
     }
 }

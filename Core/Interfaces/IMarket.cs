@@ -9,6 +9,8 @@ namespace Core.Interfaces
 {
     public interface IMarket
     {
-        void AddQuote(CurrencyPair cp, double value);
+        void AddQuote(IMarketInput mi, double value);
+        double GetQuote(IMarketInput mi);
+        IEnumerable<Tuple<IMarketInput, double>> EnumerateData();
     }
 }

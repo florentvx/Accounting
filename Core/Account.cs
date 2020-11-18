@@ -11,7 +11,7 @@ namespace Core
     public class Account : IAccount, IAccountingElement
     {
         string _AccountName;
-        Currency _Ccy;
+        ICcyAsset _Ccy;
         double _Amount;
         Currency _ConvertedCcy;
         double _ConvertedAmount;
@@ -25,7 +25,7 @@ namespace Core
             set { _AccountName = value; }
         }
 
-        public Currency Ccy
+        public ICcyAsset Ccy
         {
             get { return _Ccy; }
             set { _Ccy = value; }
@@ -60,7 +60,7 @@ namespace Core
 
         public string GetName() { return AccountName; }
 
-        public Currency CcyRef { get { return _Ccy; } }
+        public ICcyAsset CcyRef { get { return _Ccy; } }
 
         public IEnumerable<IAccountingElement> GetItemList()
         {
@@ -74,23 +74,26 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Account; }
 
-        public IAccount GetTotalAccount(Market mkt, Currency convCcy, string name)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name)
         {
-            RecalculateAmount(mkt, convCcy);
+            if (Ccy.IsCcy())
+                RecalculateAmount(mkt, convCcy.Ccy);
+            else
+                RecalculateAmount(aMkt, convCcy.Ccy);
             return this;
         }
 
-        public IAccount GetTotalAccount(Market mkt, Currency convCcy)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy)
         {
-            return GetTotalAccount(mkt, convCcy, null);
+            return GetTotalAccount(mkt, aMkt, convCcy, null);
         }
 
-        public void ModifyAmount(Market mkt, string v, object valueAmount)
+        public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string v, object valueAmount)
         {
             throw new NotImplementedException();
         }
 
-        public void ModifyCcy(Market mkt, string v, object valueCcy, bool isLastRow)
+        public void ModifyCcy(FXMarket mkt, AssetMarket aMkt, string v, ICcyAsset valueCcy, bool isLastRow)
         {
             throw new NotImplementedException();
         }
@@ -111,10 +114,10 @@ namespace Core
             _Amount = amount;
         }
 
-        internal void RecalculateAmount(Market mkt, Currency ccyRef)
+        internal void RecalculateAmount(IMarket mkt, Currency ccyRef)
         {
             _ConvertedCcy = ccyRef;
-            _ConvertedAmount = _Amount * mkt.GetQuote(new CurrencyPair(_Ccy, ccyRef));
+            _ConvertedAmount = _Amount * mkt.GetQuote(_Ccy.CreateMarketInput(ccyRef));
         }
     }
 }

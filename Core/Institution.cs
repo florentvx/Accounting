@@ -35,19 +35,19 @@ namespace Core
             return tvme.Nodes.Select(x => GetAccount(x.Name));
         }
 
-        public IAccount TotalAccount(Market mkt, Currency convCcy, string overrideAccountName)
+        public IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideAccountName)
         {
             double total = 0;
             foreach (var x in _Accounts)
-                total += x.GetTotalAccount(mkt, Ccy).ConvertedAmount;
+                total += x.GetTotalAccount(mkt, aMkt, Ccy).ConvertedAmount;
             Account res = new Account(overrideAccountName, Ccy, total, isCalculatedAccount: true);
             res.RecalculateAmount(mkt, convCcy);
             return res;
         }
 
-        public IAccount TotalAccount(Market mkt, Currency convCcy)
+        public IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy)
         {
-            return TotalAccount(mkt, convCcy, "Total");
+            return TotalAccount(mkt, aMkt, convCcy, "Total");
         }
 
         #endregion
@@ -56,7 +56,7 @@ namespace Core
 
         public string GetName() { return InstitutionName; }
 
-        public Currency CcyRef { get { return _Ccy; } }
+        public ICcyAsset CcyRef { get { return _Ccy; } }
 
         public IEnumerable<IAccountingElement> GetItemList() => _Accounts;
 
@@ -67,38 +67,46 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Institution; }
 
-        public IAccount GetTotalAccount(Market mkt, Currency convCcy, string name)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name)
         {
-            return TotalAccount(mkt, convCcy, name);
+            return TotalAccount(mkt, aMkt, convCcy.Ccy, name);
         }
 
-        public IAccount GetTotalAccount(Market mkt, Currency convCcy)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy)
         {
-            return GetTotalAccount(mkt, convCcy, "Total");
+            return GetTotalAccount(mkt, aMkt, convCcy, "Total");
         }
 
-        public void ModifyAmount(Market mkt, string accountName, object value)
+        public void RecalculateAmount(Account acc, FXMarket mkt, AssetMarket aMkt)
+        {
+            if (acc.Ccy.IsCcy())
+                acc.RecalculateAmount(mkt, Ccy);
+            else
+                acc.RecalculateAmount(aMkt, Ccy);
+        }
+
+        public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string accountName, object value)
         {
             Account acc = GetAccount(accountName);
             acc.Amount = Convert.ToDouble(value);
-            acc.RecalculateAmount(mkt, Ccy);
+            RecalculateAmount(acc, mkt, aMkt);
         }
 
-        public void ModifyCcy(Market mkt, string accountName, object value, bool IsLastRow)
+        public void ModifyCcy(FXMarket mkt, AssetMarket aMkt, string accountName, ICcyAsset value, bool IsLastRow)
         {
             if (IsLastRow)
             {
-                Ccy = new Currency(value);
+                Ccy = value.Ccy;
                 foreach (Account item in Accounts)
                 {
-                    item.RecalculateAmount(mkt, Ccy);
+                    RecalculateAmount(item, mkt, aMkt);
                 }
             }
             else
             {
                 Account acc = GetAccount(accountName);
-                acc.Ccy = new Currency(value);
-                acc.RecalculateAmount(mkt, Ccy);
+                acc.Ccy = value;
+                RecalculateAmount(acc, mkt, aMkt);
             }
         }
 

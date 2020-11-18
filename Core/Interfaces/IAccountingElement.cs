@@ -10,14 +10,14 @@ namespace Core.Interfaces
     public interface IAccountingElement
     {
         string GetName();
-        Currency CcyRef { get; }
+        ICcyAsset CcyRef { get; }
         IEnumerable<IAccountingElement> GetItemList();
         IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme);
         NodeType GetNodeType();
-        IAccount GetTotalAccount(Market mkt, Currency ccyConv);
-        IAccount GetTotalAccount(Market mkt, Currency ccyConv, string name);
-        void ModifyAmount(Market mkt, string v, object valueAmount);
-        void ModifyCcy(Market mkt, string v, object valueCcy, bool isLastRow);
+        IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset ccyConv);
+        IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset ccyConv, string name);
+        void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string v, object valueAmount);
+        void ModifyCcy(FXMarket mkt, AssetMarket aMkt, string v, ICcyAsset valueCcy, bool isLastRow);
         void Delete(string v); //Delete an item from the ItemList
     }
 }

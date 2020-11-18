@@ -12,7 +12,7 @@ namespace Core.Interfaces
         string CategoryName { get; }
         Currency Ccy { get; }
         IEnumerable<IInstitution> GetInstitutions(TreeViewMappingElement tvm);
-        IAccount TotalInstitution(Market mkt, Currency convCcy);
-        IAccount TotalInstitution(Market mkt, Currency convCcy, string overrideName);
+        IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy);
+        IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideName);
     }
 }

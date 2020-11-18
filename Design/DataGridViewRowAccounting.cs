@@ -28,7 +28,8 @@ namespace Design
             SetValues(titles);
             if (!account.IsCalculatedAccount || isTotal)    
                 Cells[DataGridViewAccountingStatics.Column_Currency] = 
-                    new DataGridViewComboBoxCellAccounting(account.Ccy, table.Ccies);
+                    new DataGridViewComboBoxCellAccounting( account.Ccy, 
+                                                            isTotal? table.Ccies : table.CciesAndAssets);
             if (account.IsCalculatedAccount)
                 Cells[DataGridViewAccountingStatics.Column_Amount].ReadOnly = true;
             Cells[DataGridViewAccountingStatics.Column_ConvertedAmount].ReadOnly = true;

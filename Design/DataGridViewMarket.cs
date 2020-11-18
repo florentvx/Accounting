@@ -41,14 +41,14 @@ namespace Design
             SetUpTable();
         }
 
-        public void ShowMarket(Market mkt)
+        public void ShowMarket(IMarket mkt)
         {
             MarketShowed = mkt;
             Rows.Clear();
             foreach (var item in mkt.EnumerateData())
             {
                 var titles = new object[] {
-                    item.Item1.Ccy1.ToString(), item.Item1.Ccy2.ToString(), item.Item2
+                    item.Item1.Item1.ToString(), item.Item1.Ccy2.ToString(), item.Item2
                 };
                 DataGridViewRow dgvr = new DataGridViewRow();
                 dgvr.CreateCells(this);

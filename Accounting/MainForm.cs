@@ -39,12 +39,16 @@ namespace Accounting
             ccyDB.AddCcy("GBP", new CurrencyStatics("£", 3, 2));
             ccyDB.AddCcy("JPY", new CurrencyStatics("¥", 4, 0));
 
-            Market market = new Market(ccyDB);
+            FXMarket market = new FXMarket(ccyDB);
             market.AddQuote(new CurrencyPair(new Currency("EUR"), new Currency("USD")), 1.2);
             market.AddQuote(new CurrencyPair(new Currency("GBP"), new Currency("USD")), 1.4);
             market.AddQuote(new CurrencyPair(new Currency("USD"), new Currency("JPY")), 105.0);
 
-            Data = new AccountingData(cats, market);
+            AssetMarket aMarket = new AssetMarket();
+            aMarket.AddQuote(new AssetCcyPair(new Asset("BTC"), new Currency("USD")), 15000);
+            aMarket.PopulateWithFXMarket(market);
+
+            Data = new AccountingData(cats, market, aMarket);
         }
 
         private void OnLoad()

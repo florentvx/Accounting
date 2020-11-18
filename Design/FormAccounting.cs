@@ -60,10 +60,11 @@ namespace Accounting
             dataGridViewAccounting.ShowElement(Data.GetElement(na), Data.Map.GetElement(na));
         }
 
-        public void SetUpMarket(Market mkt)
+        public void SetUpMarkets(FXMarket mkt, AssetMarket aMkt)
         {
-            dataGridViewAccounting.SetUpMarket(mkt);
+            dataGridViewAccounting.SetUpMarkets(mkt, aMkt);
             dataGridViewMarket.ShowMarket(mkt);
+            dataGridViewAssetMarket.ShowMarket(aMkt);
         }
 
         public void SetUpTree(TreeViewMapping tvm)
@@ -185,7 +186,7 @@ namespace Accounting
             switch (e.ColumnIndex)
             {
                 case DataGridViewMarketStatics.Column_Value:
-                    Data.Market.AddQuote(new CurrencyPair(ccy1, ccy2), rate);
+                    Data.FXMarket.AddQuote(new CurrencyPair(ccy1, ccy2), rate);
                     ShowActive();
                     break;
             }
