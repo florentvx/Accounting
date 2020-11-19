@@ -221,5 +221,10 @@ namespace Core
                 MessageBox.Show($"You cannot delete {na.GetLast()} as it is the last element of [{na.GetParent().GetLabelText()}]!");
             return res;
         }
+
+        public void UpdateAssetMarket()
+        {
+            _AssetMarket.PopulateWithFXMarket(_FXMarket);
+        }
     }
 }

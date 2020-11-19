@@ -40,16 +40,16 @@ namespace Accounting
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.dataGridViewMarket = new Design.DataGridViewMarket();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.dataGridViewAssetMarket = new Design.DataGridViewMarket();
             this.dataGridViewAccounting = new Design.DataGridViewAccounting();
             this.TreeViewAccounting = new Design.TreeViewAccounting();
+            this.dataGridViewFXMarket = new Design.DataGridViewMarket(true);
+            this.dataGridViewAssetMarket = new Design.DataGridViewMarket(false);
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMarket)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewFXMarket)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssetMarket)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).BeginInit();
@@ -145,28 +145,28 @@ namespace Accounting
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.dataGridViewMarket);
+            this.panel1.Controls.Add(this.dataGridViewFXMarket);
             this.panel1.Location = new System.Drawing.Point(-5, 6);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(251, 351);
             this.panel1.TabIndex = 0;
             // 
-            // dataGridViewMarket
+            // dataGridViewFXMarket
             // 
-            this.dataGridViewMarket.AllowUserToAddRows = false;
-            this.dataGridViewMarket.AllowUserToDeleteRows = false;
-            this.dataGridViewMarket.AllowUserToResizeColumns = false;
-            this.dataGridViewMarket.AllowUserToResizeRows = false;
-            this.dataGridViewMarket.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewMarket.Location = new System.Drawing.Point(11, 4);
-            this.dataGridViewMarket.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.dataGridViewMarket.Name = "dataGridViewMarket";
-            this.dataGridViewMarket.RowHeadersVisible = false;
-            this.dataGridViewMarket.RowTemplate.Height = 24;
-            this.dataGridViewMarket.Size = new System.Drawing.Size(235, 343);
-            this.dataGridViewMarket.TabIndex = 5;
-            this.dataGridViewMarket.ValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewMarket_ValueChanged);
+            this.dataGridViewFXMarket.AllowUserToAddRows = false;
+            this.dataGridViewFXMarket.AllowUserToDeleteRows = false;
+            this.dataGridViewFXMarket.AllowUserToResizeColumns = false;
+            this.dataGridViewFXMarket.AllowUserToResizeRows = false;
+            this.dataGridViewFXMarket.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewFXMarket.Location = new System.Drawing.Point(11, 4);
+            this.dataGridViewFXMarket.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dataGridViewFXMarket.Name = "dataGridViewFXMarket";
+            this.dataGridViewFXMarket.RowHeadersVisible = false;
+            this.dataGridViewFXMarket.RowTemplate.Height = 24;
+            this.dataGridViewFXMarket.Size = new System.Drawing.Size(235, 343);
+            this.dataGridViewFXMarket.TabIndex = 5;
+            this.dataGridViewFXMarket.ValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewFXMarket_ValueChanged);
             // 
             // tabPage2
             // 
@@ -183,6 +183,9 @@ namespace Accounting
             // dataGridViewAssetMarket
             // 
             this.dataGridViewAssetMarket.AllowUserToAddRows = false;
+            this.dataGridViewAssetMarket.AllowUserToDeleteRows = false;
+            this.dataGridViewAssetMarket.AllowUserToResizeColumns = false;
+            this.dataGridViewAssetMarket.AllowUserToResizeRows = false;
             this.dataGridViewAssetMarket.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewAssetMarket.Location = new System.Drawing.Point(4, 10);
             this.dataGridViewAssetMarket.Margin = new System.Windows.Forms.Padding(4);
@@ -190,6 +193,7 @@ namespace Accounting
             this.dataGridViewAssetMarket.RowHeadersVisible = false;
             this.dataGridViewAssetMarket.Size = new System.Drawing.Size(235, 343);
             this.dataGridViewAssetMarket.TabIndex = 0;
+            this.dataGridViewAssetMarket.ValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAssetMarket_ValueChanged);
             // 
             // dataGridViewAccounting
             // 
@@ -243,7 +247,7 @@ namespace Accounting
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMarket)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewFXMarket)).EndInit();
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssetMarket)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).EndInit();
@@ -261,7 +265,7 @@ namespace Accounting
         protected System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         protected System.Windows.Forms.Label labelTable;
         private System.Windows.Forms.Button buttonTotal;
-        protected DataGridViewMarket dataGridViewMarket;
+        protected DataGridViewMarket dataGridViewFXMarket;
         private System.Windows.Forms.ToolStripMenuItem marketToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addCurrencyToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl1;

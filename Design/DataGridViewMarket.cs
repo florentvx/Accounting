@@ -11,7 +11,8 @@ namespace Design
 {
     static class DataGridViewMarketStatics
     {
-        public static string[] ColumnNames = { "Asset1", "Asset2", "Value"};
+        public static string[] FXColumnNames = { "Ccy1", "Ccy2", "Value"};
+        public static string[] AssetColumnNames = { "Asset", "Ccy", "Value" };
         public const int Column_Asset1 = 0;
         public const int Column_Asset2 = 1;
         public const int Column_Value = 2;
@@ -20,13 +21,15 @@ namespace Design
 
     public class DataGridViewMarket : DataGridView
     {
+        private bool _IsFX;
         public IMarket MarketShowed;
+        public bool IsFX => _IsFX;
 
         private void SetUpTable()
         {
             ColumnCount = DataGridViewMarketStatics.ColumnNumber;
             for (int i = 0; i < ColumnCount; i++)
-                Columns[i].Name = DataGridViewMarketStatics.ColumnNames[i];
+                Columns[i].Name = IsFX ? DataGridViewMarketStatics.FXColumnNames[i] : DataGridViewMarketStatics.AssetColumnNames[i];
             AllowUserToAddRows = false;
             foreach (DataGridViewColumn column in Columns)
             {
@@ -36,8 +39,9 @@ namespace Design
             RowHeadersVisible = false;
         }
 
-        public DataGridViewMarket() : base()
+        public DataGridViewMarket(bool isFX) : base()
         {
+            _IsFX = isFX;
             SetUpTable();
         }
 

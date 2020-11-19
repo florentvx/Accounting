@@ -34,6 +34,7 @@ namespace Core.Finance
 
         public void PopulateWithFXMarket(FXMarket market)
         {
+            _FXData = new Dictionary<IMarketInput, double> { };
             var dataKeys = _Data.Keys.ToList();
             foreach (IMarketInput item in dataKeys)
             {

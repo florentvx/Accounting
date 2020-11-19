@@ -63,7 +63,7 @@ namespace Accounting
         public void SetUpMarkets(FXMarket mkt, AssetMarket aMkt)
         {
             dataGridViewAccounting.SetUpMarkets(mkt, aMkt);
-            dataGridViewMarket.ShowMarket(mkt);
+            dataGridViewFXMarket.ShowMarket(mkt);
             dataGridViewAssetMarket.ShowMarket(aMkt);
         }
 
@@ -178,15 +178,31 @@ namespace Accounting
             TreeViewAccounting.ShowLine(pt);
         }
 
-        private void DataGridViewMarket_ValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void DataGridViewFXMarket_ValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            Currency ccy1 = new Currency(dataGridViewMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset1].Value);
-            Currency ccy2 = new Currency(dataGridViewMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset2].Value);
-            double rate = Convert.ToDouble(dataGridViewMarket.Rows[e.RowIndex].Cells[e.ColumnIndex].Value);
+            Currency ccy1 = new Currency(dataGridViewFXMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset1].Value);
+            Currency ccy2 = new Currency(dataGridViewFXMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset2].Value);
+            double rate = Convert.ToDouble(dataGridViewFXMarket.Rows[e.RowIndex].Cells[e.ColumnIndex].Value);
             switch (e.ColumnIndex)
             {
                 case DataGridViewMarketStatics.Column_Value:
                     Data.FXMarket.AddQuote(new CurrencyPair(ccy1, ccy2), rate);
+                    Data.UpdateAssetMarket();
+                    ShowActive();
+                    break;
+            }
+        }
+
+        private void DataGridViewAssetMarket_ValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            Asset asset = new Asset(dataGridViewAssetMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset1].Value);
+            Currency ccy2 = new Currency(dataGridViewAssetMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset2].Value);
+            double rate = Convert.ToDouble(dataGridViewAssetMarket.Rows[e.RowIndex].Cells[e.ColumnIndex].Value);
+            switch (e.ColumnIndex)
+            {
+                case DataGridViewMarketStatics.Column_Value:
+                    Data.AssetMarket.AddQuote(new AssetCcyPair(asset, ccy2), rate);
+                    Data.UpdateAssetMarket();
                     ShowActive();
                     break;
             }
