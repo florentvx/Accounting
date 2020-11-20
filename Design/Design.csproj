@@ -42,6 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddAssetForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddAssetForm.Designer.cs">
+      <DependentUpon>AddAssetForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="AddCcyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +68,9 @@
     <Compile Include="TreeViewAccounting.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AddAssetForm.resx">
+      <DependentUpon>AddAssetForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddCcyForm.resx">
       <DependentUpon>AddCcyForm.cs</DependentUpon>
     </EmbeddedResource>

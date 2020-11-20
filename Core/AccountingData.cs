@@ -108,6 +108,17 @@ namespace Core
             }
         }
 
+        public void AddNewAsset(string assetName, AssetCcyPair acp, double acpValue)
+        {
+            bool testAdd = _AssetMarket.ContainsAsset(assetName);
+            if (testAdd)
+                MessageBox.Show($"The new Asset [{assetName}] does already exist.");
+            else
+            {
+                _AssetMarket.AddQuote(acp, acpValue);
+            }
+        }
+
         #endregion
 
         public AccountingData(List<Category> input, FXMarket mkt, AssetMarket aMkt)

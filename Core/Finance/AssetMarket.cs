@@ -22,6 +22,11 @@ namespace Core.Finance
             return EnumerateData().Select(x => x.Item1.Asset1.ToString());
         }
 
+        internal bool ContainsAsset(string assetName)
+        {
+            return GetAvailableAssets().Contains(assetName);
+        }
+
         public double GetQuote(IMarketInput mi)
         {
             var miList = _FXData  .Where(x => x.Key.Asset1 == mi.Asset1 && x.Key.Ccy2 == mi.Ccy2)

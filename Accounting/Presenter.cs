@@ -74,5 +74,12 @@ namespace Accounting
             _ad.AddNewCcy(ccyName, ccyStatics, ccyPair, ccyPairQuote);
             _view.SetUpMarkets(_ad.FXMarket, _ad.AssetMarket);
         }
+
+        internal void AddNewAsset(string assetName, AssetCcyPair assetCcyPair, double assetCcyPairQuote)
+        {
+            _ad.AddNewAsset(assetName, assetCcyPair, assetCcyPairQuote);
+            _ad.AssetMarket.PopulateWithFXMarket(_ad.FXMarket);
+            _view.SetUpMarkets(_ad.FXMarket, _ad.AssetMarket);
+        }
     }
 }

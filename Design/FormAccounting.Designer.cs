@@ -43,8 +43,9 @@ namespace Accounting
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridViewAccounting = new Design.DataGridViewAccounting();
             this.TreeViewAccounting = new Design.TreeViewAccounting();
-            this.dataGridViewFXMarket = new Design.DataGridViewMarket(true);
-            this.dataGridViewAssetMarket = new Design.DataGridViewMarket(false);
+            this.dataGridViewFXMarket = new Design.DataGridViewFXMarket();
+            this.dataGridViewAssetMarket = new Design.DataGridViewAssetMarket();
+            this.addAssetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -86,7 +87,8 @@ namespace Accounting
             // marketToolStripMenuItem
             // 
             this.marketToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addCurrencyToolStripMenuItem});
+            this.addCurrencyToolStripMenuItem,
+            this.addAssetToolStripMenuItem});
             this.marketToolStripMenuItem.Name = "marketToolStripMenuItem";
             this.marketToolStripMenuItem.Size = new System.Drawing.Size(67, 24);
             this.marketToolStripMenuItem.Text = "Market";
@@ -94,7 +96,7 @@ namespace Accounting
             // addCurrencyToolStripMenuItem
             // 
             this.addCurrencyToolStripMenuItem.Name = "addCurrencyToolStripMenuItem";
-            this.addCurrencyToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.addCurrencyToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.addCurrencyToolStripMenuItem.Text = "Add Currency";
             this.addCurrencyToolStripMenuItem.Click += new System.EventHandler(this.AddCurrencyToolStripMenuItem_Click);
             // 
@@ -227,6 +229,13 @@ namespace Accounting
             this.TreeViewAccounting.DragEnter += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragEnter);
             this.TreeViewAccounting.DragOver += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragOver);
             // 
+            // addAssetToolStripMenuItem
+            // 
+            this.addAssetToolStripMenuItem.Name = "addAssetToolStripMenuItem";
+            this.addAssetToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.addAssetToolStripMenuItem.Text = "Add Asset";
+            this.addAssetToolStripMenuItem.Click += new System.EventHandler(this.AddAssetToolStripMenuItem_Click);
+            // 
             // FormAccounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -264,15 +273,16 @@ namespace Accounting
         protected System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         protected System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         protected System.Windows.Forms.Label labelTable;
-        private System.Windows.Forms.Button buttonTotal;
-        protected DataGridViewMarket dataGridViewFXMarket;
+        protected System.Windows.Forms.Button buttonTotal;
+        protected DataGridViewFXMarket dataGridViewFXMarket;
+        protected DataGridViewAssetMarket dataGridViewAssetMarket;
         private System.Windows.Forms.ToolStripMenuItem marketToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addCurrencyToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Panel panel1;
-        private DataGridViewMarket dataGridViewAssetMarket;
+        private System.Windows.Forms.ToolStripMenuItem addAssetToolStripMenuItem;
     }
 }
 

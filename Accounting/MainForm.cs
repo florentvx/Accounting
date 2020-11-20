@@ -65,16 +65,25 @@ namespace Accounting
         }
 
         protected override void AddCurrencyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
+        {   
             using (AddCcyForm form = new AddCcyForm(Data.GetAvailableCurrencies()))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     MainPresenter.AddNewCcy(form.CcyName, form.CcyStatics, form.CcyPair, form.CcyPairQuote);
                 }
+            }   
+        }
+
+        protected override void AddAssetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (AddAssetForm form = new AddAssetForm(Data.GetAvailableCurrencies()))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    MainPresenter.AddNewAsset(form.AssetName, form.AssetCcyPair, form.AssetCcyPairQuote);
+                }
             }
-                
         }
 
         protected override void ButtonTotal_Click(object sender, EventArgs e)

@@ -11,7 +11,7 @@ namespace Design
 {
     static class DataGridViewMarketStatics
     {
-        public static string[] FXColumnNames = { "Ccy1", "Ccy2", "Value"};
+        public static string[] FXColumnNames = { "Ccy1", "Ccy2", "Value" };
         public static string[] AssetColumnNames = { "Asset", "Ccy", "Value" };
         public const int Column_Asset1 = 0;
         public const int Column_Asset2 = 1;
@@ -88,5 +88,15 @@ namespace Design
                     break;
             }
         }
+    }
+
+    public class DataGridViewFXMarket : DataGridViewMarket
+    {
+        public DataGridViewFXMarket() : base(true) { }
+    }
+
+    public class DataGridViewAssetMarket : DataGridViewMarket
+    {
+        public DataGridViewAssetMarket() : base(false) { }
     }
 }
