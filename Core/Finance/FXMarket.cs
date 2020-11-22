@@ -39,9 +39,7 @@ namespace Core.Finance
         public override void Reset()
         {
             base.Reset();
-            //_CcyPairs = new List<CurrencyPair> { };
             _CcyDB.Reset();
-            AddCcy("USD", "$", 3, 2);
         }
 
         private IEnumerable<ICcyAsset> GetAllConnectedCcy(ICcyAsset ccy, List<ICcyAsset> excludedCcies)

@@ -108,6 +108,14 @@ namespace Core
             }
         }
 
+        public void AddRefCcy(string ccyName, CurrencyStatics ccyStatics)
+        {
+            bool testAdd = _FXMarket.AddCcy(ccyName, ccyStatics);
+            if (!testAdd)
+                throw new Exception($"Add Ref Ccy Error {ccyName}");
+            _Ccy = new Currency(ccyName);
+        }
+
         public void AddNewAsset(string assetName, AssetCcyPair acp, double acpValue)
         {
             bool testAdd = _AssetMarket.ContainsAsset(assetName);
@@ -117,6 +125,17 @@ namespace Core
             {
                 _AssetMarket.AddQuote(acp, acpValue);
             }
+        }
+
+        public void Reset(string ccy, CurrencyStatics cs)
+        {
+            _Data = new Dictionary<string, Category> { };
+            Map.Reset();
+            _FXMarket.Reset();
+            _FXMarket.AddCcy(ccy, cs);
+            _AssetMarket.Reset();
+            _Ccy = new Currency(ccy);
+            AddItem(new NodeAddress(NodeType.Category, "TEMP"));
         }
 
         #endregion
@@ -138,14 +157,6 @@ namespace Core
         public Category GetCategory(NodeAddress na)
         {
             return GetCategory(na.Address[0]);
-        }
-
-        public void Reset()
-        {
-            _Data = new Dictionary<string, Category> { };
-            Map.Reset();
-            _FXMarket.Reset();
-            AddItem(new NodeAddress(NodeType.Category, "TEMP"));
         }
 
         public IAccountingElement GetElement(NodeAddress na)

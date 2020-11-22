@@ -81,5 +81,11 @@ namespace Accounting
             _ad.AssetMarket.PopulateWithFXMarket(_ad.FXMarket);
             _view.SetUpMarkets(_ad.FXMarket, _ad.AssetMarket);
         }
+
+        internal void AddRefCcy(string ccyName, CurrencyStatics ccyStatics)
+        {
+            _ad.Reset(ccyName, ccyStatics);
+            _view.SetUpMarkets(_ad.FXMarket, _ad.AssetMarket);
+        }
     }
 }

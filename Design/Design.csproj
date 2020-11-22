@@ -48,6 +48,12 @@
     <Compile Include="SubForms\AddAssetForm.Designer.cs">
       <DependentUpon>AddAssetForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SubForms\AddCcyRefForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SubForms\AddCcyRefForm.Designer.cs">
+      <DependentUpon>AddCcyRefForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SubForms\AddCcyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,6 +76,9 @@
   <ItemGroup>
     <EmbeddedResource Include="SubForms\AddAssetForm.resx">
       <DependentUpon>AddAssetForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubForms\AddCcyRefForm.resx">
+      <DependentUpon>AddCcyRefForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SubForms\AddCcyForm.resx">
       <DependentUpon>AddCcyForm.cs</DependentUpon>

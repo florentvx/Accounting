@@ -20,5 +20,6 @@ namespace Core.Interfaces
         bool ChangeName(string before, string after, NodeAddress nodeType);
         void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair ccyPair, double ccyPairQuote);
         void AddNewAsset(string assetName, AssetCcyPair assetCcyPair, double assetCcyPairQuote);
+        void Reset(string ccyName, CurrencyStatics ccyStatics);
     }
 }

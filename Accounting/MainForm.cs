@@ -7,7 +7,7 @@ using Core;
 using Core.Finance;
 using Core.Interfaces;
 using Design;
-//using log4net.Config;
+using Design.SubForm;
 
 namespace Accounting
 {
@@ -58,10 +58,16 @@ namespace Accounting
             MainPresenter.LoadAccounts();
         }
 
-        protected override void NewToolStripMenuItem_Click(object sender, System.EventArgs e)
+        protected override void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Data.Reset();
-            MainPresenter.LoadAccounts();
+            using (AddCcyRefForm form = new AddCcyRefForm())
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    MainPresenter.AddRefCcy(form.CcyName, form.CcyStatics);
+                    MainPresenter.LoadAccounts();
+                }
+            }
         }
 
         protected override void AddCurrencyToolStripMenuItem_Click(object sender, EventArgs e)
