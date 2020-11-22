@@ -18,20 +18,26 @@ namespace Core.Finance
             Ccy = ccy;
         }
 
+        #region IMarketInput
+
         public Currency Ccy1 => null;
 
         public Asset Asset1 => Asset;
 
         public Currency Ccy2 => Ccy;
 
-        object IMarketInput.Item1 { get => Asset1; set => throw new NotImplementedException(); }
+        public object Item1 { get => Asset1; }
+
+        public ICcyAsset OtherAsset(ICcyAsset ccy)
+        {
+            if (ccy.Ccy == Ccy)
+                return Asset;
+            if (ccy.Asset == Asset)
+                return Ccy;
+            throw new Exception();
+        }
 
         public bool IsIdentity => false;
-
-        public bool Contains(Currency ccy)
-        {
-            return Ccy.Equals(ccy);
-        }
 
         public bool IsEqual(IMarketInput other)
         {
@@ -42,6 +48,13 @@ namespace Core.Finance
         {
             return IsEqual(other);
         }
+        
+        public bool Contains(ICcyAsset ccy)
+        {
+            return ccy.Ccy == Ccy || ccy.Asset == Asset;
+        }
+
+        #endregion
 
     }
 }

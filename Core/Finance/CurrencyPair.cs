@@ -26,25 +26,26 @@ namespace Core.Finance
             _Data = new Tuple<Currency, Currency>(new Currency(ccy1), new Currency(ccy2));
         }
 
+        #region IMarketInput
+
         public Currency Ccy1 { get { return _Data.Item1; } }
 
         public Asset Asset1 { get { return null; } }
 
         public Currency Ccy2 { get { return _Data.Item2; } }
 
-        object IMarketInput.Item1 { get => Ccy1; set => throw new NotImplementedException(); }
+        public object Item1 { get => Ccy1; }
+
+        public ICcyAsset OtherAsset(ICcyAsset ccy)
+        {
+            if (ccy.Ccy == Ccy1)
+                return Ccy2;
+            if (ccy.Ccy == Ccy2)
+                return Ccy1;
+            throw new Exception();
+        }
 
         public bool IsIdentity { get { return Ccy1 == Ccy2; } }
-
-        public override string ToString()
-        {
-            return $"{Ccy1.ToString()}/{Ccy2.ToString()}";
-        }
-
-        public bool Contains(Currency ccy)
-        {
-            return ccy == Ccy1 || ccy == Ccy2;
-        }
 
         internal bool IsEqual(CurrencyPair ccyPair)
         {
@@ -57,11 +58,6 @@ namespace Core.Finance
                 return IsEqual((CurrencyPair)imi);
             else
                 return false;
-        }
-
-        internal CurrencyPair GetInverse()
-        {
-            return new CurrencyPair(Ccy2, Ccy1);
         }
 
         internal bool IsEquivalent(CurrencyPair ccyPair)
@@ -81,6 +77,28 @@ namespace Core.Finance
                 return IsEquivalent((CurrencyPair)imi);
             else
                 return false;
+        }
+
+        public bool Contains(ICcyAsset ccy)
+        {
+            return (ccy.Ccy == Ccy1 || ccy.Ccy == Ccy2);
+        }
+
+        #endregion
+
+        public override string ToString()
+        {
+            return $"{Ccy1.ToString()}/{Ccy2.ToString()}";
+        }
+
+        public bool Contains(Currency ccy)
+        {
+            return ccy == Ccy1 || ccy == Ccy2;
+        }
+
+        internal CurrencyPair GetInverse()
+        {
+            return new CurrencyPair(Ccy2, Ccy1);
         }
     }
 }

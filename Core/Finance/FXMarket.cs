@@ -44,6 +44,34 @@ namespace Core.Finance
             AddCcy("USD", "$", 3, 2);
         }
 
+        private IEnumerable<ICcyAsset> GetAllConnectedCcy(ICcyAsset ccy, List<ICcyAsset> excludedCcies)
+        {
+            return _Data.Where(x => x.Key.Contains(ccy) && !excludedCcies.Contains(x.Key.OtherAsset(ccy)))
+                        .Select(x => x.Key.OtherAsset(ccy));
+        }
+
+        private double Aux_GetQuote(ICcyAsset ccy, ICcyAsset ccy2, List<ICcyAsset> excludedCcies)
+        {
+            var connectedCcies = GetAllConnectedCcy(ccy, excludedCcies);
+            if (connectedCcies.Count() == 0)
+                return 0;
+            else if (connectedCcies.Contains(ccy2))
+                return GetQuote(new CurrencyPair(ccy, ccy2));
+            else
+            {
+                foreach (var ccy_k in connectedCcies)
+                {
+                    List<ICcyAsset> exL_k = excludedCcies.Select(x => (ICcyAsset)x.Ccy.Clone()).ToList();
+                    exL_k.Add(ccy);
+                    double value = GetQuote(new CurrencyPair(ccy, ccy_k));
+                    value *= Aux_GetQuote(ccy_k.Ccy, ccy2, exL_k);
+                    if (value != 0)
+                        return value;
+                }
+            }
+            throw new Exception("Error in Aux_GetQuote()");
+        }
+
         public double GetQuote(IMarketInput ccyPair)
         {
             if (ccyPair.IsIdentity)
@@ -68,10 +96,7 @@ namespace Core.Finance
             
             try
             {
-                Currency ccy3 = ccyData.GroupBy(x => x).Where(x => x.Count() > 1).Select(x => x.First()).First();
-                double ccy1ccy3 = GetQuote(new CurrencyPair(ccyPair.Ccy1, ccy3));
-                double ccy3ccy2 = GetQuote(new CurrencyPair(ccy3, ccyPair.Ccy2));
-                return ccy1ccy3 * ccy3ccy2;
+                return Aux_GetQuote(ccyPair.Ccy1, ccyPair.Ccy2, new List<ICcyAsset> { });
             }
             catch (Exception)
             {

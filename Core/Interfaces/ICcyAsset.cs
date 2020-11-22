@@ -11,7 +11,7 @@ namespace Core.Interfaces
     {
         Currency Ccy { get; }
         Asset Asset { get; }
-        IMarketInput CreateMarketInput(Currency ccyRef);
         bool IsCcy();
+        IMarketInput CreateMarketInput(Currency ccyRef);
     }
 }

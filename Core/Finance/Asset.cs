@@ -7,7 +7,7 @@ using Core.Interfaces;
 
 namespace Core.Finance
 {
-    public class Asset: IEquatable<Asset>, ICcyAsset
+    public class Asset: ICcyAsset, IEquatable<Asset>
     {
         string _Name;
 
@@ -23,19 +23,30 @@ namespace Core.Finance
             _Name = Convert.ToString(asset).ToUpper();
         }
 
+        public override string ToString()
+        {
+            return _Name;
+        }
+
+        #region ICcyAsset
+
         public Currency Ccy => null;
 
         Asset ICcyAsset.Asset => this;
+
+        public bool IsCcy()
+        {
+            return false;
+        }
 
         public IMarketInput CreateMarketInput(Currency ccyRef)
         {
             return new AssetCcyPair(this, ccyRef);
         }
 
-        public override string ToString()
-        {
-            return _Name;
-        }
+        #endregion
+
+        #region IEquatable
 
         public bool Equals(Asset other)
         {
@@ -52,11 +63,6 @@ namespace Core.Finance
             return _Name.GetHashCode();
         }
 
-        public bool IsCcy()
-        {
-            return false;
-        }
-
         public static bool operator ==(Asset asset1, Asset asset2)
         {
             if (asset1 is null)
@@ -71,5 +77,7 @@ namespace Core.Finance
         {
             return !(asset1 == asset2);
         }
+
+        #endregion
     }
 }

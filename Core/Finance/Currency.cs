@@ -7,7 +7,7 @@ using Core.Interfaces;
 
 namespace Core.Finance
 {
-    public class Currency : IEquatable<Currency>, ICcyAsset
+    public class Currency : ICcyAsset, IEquatable<Currency>, ICloneable
     {
         string _Ccy;
 
@@ -21,13 +21,29 @@ namespace Core.Finance
             _Ccy = Convert.ToString(ccy).ToUpper();
         }
 
+        public bool IsNone { get { return _Ccy == "NONE"; } }
+
+        public override string ToString() { return _Ccy; }
+
+        #region ICcyAsset
+
         public Currency Ccy => this;
 
         public Asset Asset => null;
 
-        public bool IsNone { get { return _Ccy == "NONE"; } }
+        public bool IsCcy()
+        {
+            return true;
+        }
 
-        public override string ToString() { return _Ccy; }
+        public IMarketInput CreateMarketInput(Currency ccyRef)
+        {
+            return new CurrencyPair(this, ccyRef);
+        }
+
+        #endregion
+
+        #region IEquatable
 
         public bool Equals(Currency ccy)
         {
@@ -46,16 +62,11 @@ namespace Core.Finance
             return _Ccy.GetHashCode();
         }
 
-        public bool IsCcy()
-        {
-            return true;
-        }
-
         public static bool operator ==(Currency ccy1, Currency ccy2)
         {
             if (ccy1 is null)
             {
-                if (ccy2 is null){ return true; }
+                if (ccy2 is null) { return true; }
                 return false;
             }
             return ccy1.Equals(ccy2);
@@ -66,9 +77,15 @@ namespace Core.Finance
             return !(ccy1 == ccy2);
         }
 
-        public IMarketInput CreateMarketInput(Currency ccyRef)
+        #endregion
+
+        #region ICloneable
+
+        public object Clone()
         {
-            return new CurrencyPair(this, ccyRef);
+            return new Currency(_Ccy);
         }
+
+        #endregion
     }
 }

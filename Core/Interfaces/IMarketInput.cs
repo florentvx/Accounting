@@ -12,10 +12,11 @@ namespace Core.Interfaces
         Currency Ccy1 { get; }
         Asset Asset1 { get; }
         Currency Ccy2 { get; }
-        object Item1 { get; set; }
+        object Item1 { get; }
+        ICcyAsset OtherAsset(ICcyAsset ccy);
         bool IsEqual(IMarketInput other);
         bool IsEquivalent(IMarketInput other);
         bool IsIdentity { get; }
-        bool Contains(Currency ccy);
+        bool Contains(ICcyAsset ccy);
     }
 }
