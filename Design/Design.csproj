@@ -42,16 +42,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddAssetForm.cs">
+    <Compile Include="SubForms\AddAssetForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddAssetForm.Designer.cs">
+    <Compile Include="SubForms\AddAssetForm.Designer.cs">
       <DependentUpon>AddAssetForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="AddCcyForm.cs">
+    <Compile Include="SubForms\AddCcyForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddCcyForm.Designer.cs">
+    <Compile Include="SubForms\AddCcyForm.Designer.cs">
       <DependentUpon>AddCcyForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DataGridViewComboBoxCellAccounting.cs" />
@@ -68,10 +68,10 @@
     <Compile Include="TreeViewAccounting.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="AddAssetForm.resx">
+    <EmbeddedResource Include="SubForms\AddAssetForm.resx">
       <DependentUpon>AddAssetForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddCcyForm.resx">
+    <EmbeddedResource Include="SubForms\AddCcyForm.resx">
       <DependentUpon>AddCcyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DataGridViewAccounting.resx">

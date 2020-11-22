@@ -1,4 +1,4 @@
-﻿namespace Design
+﻿namespace Design.SubForm
 {
     partial class AddCcyForm
     {

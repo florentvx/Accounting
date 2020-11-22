@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Core.Finance;
 
-namespace Design
+namespace Design.SubForm
 {
     public partial class AddAssetForm : Form
     {
