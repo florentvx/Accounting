@@ -124,7 +124,8 @@ namespace Design
             if (ElementShowed != null)
                 ShowElement(ElementShowed);
             else
-                ShowTotal(TotalShowed);
+                if (TotalShowed != null)
+                    ShowTotal(TotalShowed);
         }
 
         private double ValueFromStringToDouble(object value)

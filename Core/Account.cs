@@ -105,11 +105,11 @@ namespace Core
 
         #endregion
 
-        public Account(string name, Currency ccy, double amount = 0, bool isCalculatedAccount = false)
+        public Account(string name, ICcyAsset ccy, double amount = 0, bool isCalculatedAccount = false)
         {
             _AccountName = name;
             _Ccy = ccy;
-            _ConvertedCcy = ccy;
+            _ConvertedCcy = ccy.Ccy;
             _IsCalculatedAccount = isCalculatedAccount;
             _Amount = amount;
         }
@@ -118,6 +118,11 @@ namespace Core
         {
             _ConvertedCcy = ccyRef;
             _ConvertedAmount = _Amount * mkt.GetQuote(_Ccy.CreateMarketInput(ccyRef));
+        }
+
+        internal Account Copy()
+        {
+            return new Account(_AccountName, _Ccy, _Amount, false);
         }
     }
 }

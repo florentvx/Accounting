@@ -33,6 +33,12 @@ namespace Accounting
             category2.AddAccount("Bitcoin", "Fidelity");
             List<Category> cats = new List<Category> { category, category2 };
 
+            List<Category> cats2 = new List<Category> { };
+            foreach (var item in cats)
+            {
+                cats2.Add(item.Copy());
+            }
+
             CurrencyStaticsDataBase ccyDB = new CurrencyStaticsDataBase();
             ccyDB.AddCcy("USD", new CurrencyStatics("$", 3, 2));
             ccyDB.AddCcy("EUR", new CurrencyStatics("€", 3, 2));
@@ -44,11 +50,21 @@ namespace Accounting
             market.AddQuote(new CurrencyPair(new Currency("GBP"), new Currency("USD")), 1.4);
             market.AddQuote(new CurrencyPair(new Currency("USD"), new Currency("JPY")), 105.0);
 
+            FXMarket market2 = new FXMarket(ccyDB);
+            market2.AddQuote(new CurrencyPair(new Currency("EUR"), new Currency("USD")), 1.25);
+            market2.AddQuote(new CurrencyPair(new Currency("GBP"), new Currency("USD")), 1.5);
+            market2.AddQuote(new CurrencyPair(new Currency("USD"), new Currency("JPY")), 100.0);
+
             AssetMarket aMarket = new AssetMarket();
             aMarket.AddQuote(new AssetCcyPair(new Asset("BTC"), new Currency("USD")), 15000);
             aMarket.PopulateWithFXMarket(market);
 
-            Data = new AccountingData(cats, market, aMarket);
+            AssetMarket aMarket2 = new AssetMarket();
+            aMarket2.AddQuote(new AssetCcyPair(new Asset("BTC"), new Currency("USD")), 20000);
+            aMarket2.PopulateWithFXMarket(market2);
+
+            AddAccountingData(DateTime.Today.AddMonths(-1), new AccountingData(cats, market, aMarket));
+            AddAccountingData(DateTime.Today, new AccountingData(cats2, market2, aMarket2));
         }
 
         private void OnLoad()
@@ -97,7 +113,18 @@ namespace Accounting
             MainPresenter.ButtonTotal();
         }
 
-        private void TreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        protected override void ComboBoxDates_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _CurrentDate = DateTime.Parse(ComboBoxDates.SelectedItem.ToString());
+            if (MainPresenter != null)
+            {
+                MainPresenter.SetAccountingData(Data);
+                MainPresenter.LoadAccounts();
+            }
+        }
+        
+
+    private void TreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             MainPresenter.TreeView_AfterLabelEdit(e);
             TreeViewAccounting.LabelEdit = false;

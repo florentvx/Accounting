@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Core;
 using Core.Finance;
 using Core.Interfaces;
 
@@ -86,6 +87,11 @@ namespace Accounting
         {
             _ad.Reset(ccyName, ccyStatics);
             _view.SetUpMarkets(_ad.FXMarket, _ad.AssetMarket);
+        }
+
+        internal void SetAccountingData(AccountingData data)
+        {
+            _ad = data;
         }
     }
 }

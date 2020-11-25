@@ -35,17 +35,19 @@ namespace Accounting
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.marketToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addCurrencyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addAssetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelTable = new System.Windows.Forms.Label();
             this.buttonTotal = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.dataGridViewFXMarket = new Design.DataGridViewFXMarket();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.dataGridViewAssetMarket = new Design.DataGridViewAssetMarket();
             this.dataGridViewAccounting = new Design.DataGridViewAccounting();
             this.TreeViewAccounting = new Design.TreeViewAccounting();
-            this.dataGridViewFXMarket = new Design.DataGridViewFXMarket();
-            this.dataGridViewAssetMarket = new Design.DataGridViewAssetMarket();
-            this.addAssetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelDate = new System.Windows.Forms.Label();
+            this.ComboBoxDates = new System.Windows.Forms.ComboBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -96,9 +98,16 @@ namespace Accounting
             // addCurrencyToolStripMenuItem
             // 
             this.addCurrencyToolStripMenuItem.Name = "addCurrencyToolStripMenuItem";
-            this.addCurrencyToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.addCurrencyToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.addCurrencyToolStripMenuItem.Text = "Add Currency";
             this.addCurrencyToolStripMenuItem.Click += new System.EventHandler(this.AddCurrencyToolStripMenuItem_Click);
+            // 
+            // addAssetToolStripMenuItem
+            // 
+            this.addAssetToolStripMenuItem.Name = "addAssetToolStripMenuItem";
+            this.addAssetToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.addAssetToolStripMenuItem.Text = "Add Asset";
+            this.addAssetToolStripMenuItem.Click += new System.EventHandler(this.AddAssetToolStripMenuItem_Click);
             // 
             // labelTable
             // 
@@ -113,7 +122,7 @@ namespace Accounting
             // buttonTotal
             // 
             this.buttonTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonTotal.Location = new System.Drawing.Point(16, 31);
+            this.buttonTotal.Location = new System.Drawing.Point(678, 34);
             this.buttonTotal.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonTotal.Name = "buttonTotal";
             this.buttonTotal.Size = new System.Drawing.Size(239, 28);
@@ -229,18 +238,32 @@ namespace Accounting
             this.TreeViewAccounting.DragEnter += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragEnter);
             this.TreeViewAccounting.DragOver += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragOver);
             // 
-            // addAssetToolStripMenuItem
+            // labelDate
             // 
-            this.addAssetToolStripMenuItem.Name = "addAssetToolStripMenuItem";
-            this.addAssetToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.addAssetToolStripMenuItem.Text = "Add Asset";
-            this.addAssetToolStripMenuItem.Click += new System.EventHandler(this.AddAssetToolStripMenuItem_Click);
+            this.labelDate.AutoSize = true;
+            this.labelDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDate.Location = new System.Drawing.Point(12, 35);
+            this.labelDate.Name = "labelDate";
+            this.labelDate.Size = new System.Drawing.Size(39, 18);
+            this.labelDate.TabIndex = 8;
+            this.labelDate.Text = "Date";
+            // 
+            // ComboBoxDates
+            // 
+            this.ComboBoxDates.FormattingEnabled = true;
+            this.ComboBoxDates.Location = new System.Drawing.Point(80, 34);
+            this.ComboBoxDates.Name = "ComboBoxDates";
+            this.ComboBoxDates.Size = new System.Drawing.Size(179, 24);
+            this.ComboBoxDates.TabIndex = 9;
+            this.ComboBoxDates.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDates_SelectedIndexChanged);
             // 
             // FormAccounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1205, 431);
+            this.Controls.Add(this.ComboBoxDates);
+            this.Controls.Add(this.labelDate);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.buttonTotal);
             this.Controls.Add(this.labelTable);
@@ -275,14 +298,16 @@ namespace Accounting
         protected System.Windows.Forms.Label labelTable;
         protected System.Windows.Forms.Button buttonTotal;
         protected DataGridViewFXMarket dataGridViewFXMarket;
-        protected DataGridViewAssetMarket dataGridViewAssetMarket;
+        protected System.Windows.Forms.ComboBox ComboBoxDates;
         private System.Windows.Forms.ToolStripMenuItem marketToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addCurrencyToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripMenuItem addAssetToolStripMenuItem;
+        private System.Windows.Forms.Label labelDate;
+        private System.Windows.Forms.TabPage tabPage2;
+        protected DataGridViewAssetMarket dataGridViewAssetMarket;
     }
 }
 

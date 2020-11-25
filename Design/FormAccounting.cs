@@ -13,11 +13,16 @@ namespace Accounting
 {
     public partial class FormAccounting : Form, IView
     {
-        protected AccountingData Data;
+        protected SortedDictionary<DateTime, AccountingData> _DataHistory;
+        protected DateTime? _CurrentDate;
+
+        public AccountingData Data { get { return _DataHistory[_CurrentDate.Value]; } }
 
         public FormAccounting() : base()
         {
             InitializeComponent();
+            _DataHistory = new SortedDictionary<DateTime, AccountingData> { };
+            _CurrentDate = null;
         }
 
         #region IView
@@ -101,10 +106,36 @@ namespace Accounting
 
         #endregion
 
+        private void UpdateComboBoxDates()
+        {
+            ComboBoxDates.Items.Clear();
+            int i = 0;
+            foreach (DateTime item in _DataHistory.Keys)
+            {
+                ComboBoxDates.Items.Add(item.ToLongDateString());
+                if (item == _CurrentDate)
+                    ComboBoxDates.SelectedIndex = i;
+                i++;
+            }
+        }
+
+        public void AddAccountingData(DateTime date, AccountingData ad, bool selectNewDate = true)
+        {
+            if (!_DataHistory.ContainsKey(date))
+                _DataHistory[date] = ad;
+            else
+                throw new Exception($"the Following date already exists {date}");
+            if (selectNewDate)
+                _CurrentDate = date;
+            UpdateComboBoxDates();
+        }
+
         virtual protected void NewToolStripMenuItem_Click(object sender, System.EventArgs e) { }
         virtual protected void AddCurrencyToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void AddAssetToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void ButtonTotal_Click(object sender, System.EventArgs e) { }
+        virtual protected void ComboBoxDates_SelectedIndexChanged(object sender, EventArgs e) { }
+
 
         public void TreeView_NodeAddition(object sender, TreeNodeMouseClickEventArgs e)
         {

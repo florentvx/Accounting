@@ -145,6 +145,11 @@ namespace Core
             return account;
         }
 
+        private void AddAccount(Account acc)
+        {
+            _Accounts.Add(acc);
+        }
+
         private string GetNewAccountName()
         {
             int i = 0;
@@ -175,6 +180,16 @@ namespace Core
                 return true;
             }
             return false;
+        }
+
+        internal Institution Copy()
+        {
+            Institution res = new Institution(_InstitutionName, (Currency)_Ccy.Clone());
+            foreach (var item in _Accounts)
+            {
+                res.AddAccount(item.Copy());
+            }
+            return res;
         }
     }
 }

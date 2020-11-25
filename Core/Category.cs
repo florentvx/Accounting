@@ -122,6 +122,11 @@ namespace Core
             _Institutions.Add(instit.InstitutionName, instit);
         }
 
+        private void AddInstitution(string name, Institution instit)
+        {
+            _Institutions.Add(name, instit);
+        }
+
         public Institution AddNewInstitution()
         {
             int i = 0;
@@ -163,6 +168,14 @@ namespace Core
             return test;
         }
 
-       
+        public Category Copy()
+        {
+            Category res = new Category(_CategoryName, (Currency)_Ccy.Clone());
+            foreach (string item in _Institutions.Keys)
+            {
+                res.AddInstitution(item, _Institutions[item].Copy());
+            }
+            return res;
+        }
     }
 }
