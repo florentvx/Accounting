@@ -14,6 +14,7 @@ namespace Core
     public class AccountingData : IAccountingData
     {
         Currency _Ccy;
+        CurrencyStaticsDataBase _CcyDB;
         Dictionary<string, Category> _Data = new Dictionary<string, Category> { };
         FXMarket _FXMarket;
         AssetMarket _AssetMarket;
@@ -23,6 +24,11 @@ namespace Core
         {
             get { return _Ccy; }
             set { _Ccy = value; }
+        }
+
+        public void SetCcyDB(CurrencyStaticsDataBase ccyDB)
+        {
+            _CcyDB = ccyDB;
         }
 
         private Category GetCategory(string catName)
@@ -99,7 +105,7 @@ namespace Core
 
         public void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair cp, double cpValue)
         {
-            bool testAdd = _FXMarket.AddCcy(ccyName, ccyStatics);
+            bool testAdd = _CcyDB.AddCcy(ccyName, ccyStatics);
             if (!testAdd)
                 MessageBox.Show($"The new Currency [{ccyName}] does already exist.");
             else
@@ -110,10 +116,11 @@ namespace Core
 
         public void AddRefCcy(string ccyName, CurrencyStatics ccyStatics)
         {
-            bool testAdd = _FXMarket.AddCcy(ccyName, ccyStatics);
+            bool testAdd = _CcyDB.AddCcy(ccyName, ccyStatics);
             if (!testAdd)
                 throw new Exception($"Add Ref Ccy Error {ccyName}");
             _Ccy = new Currency(ccyName);
+            _FXMarket.SetCcyRef(_Ccy);
         }
 
         public void AddNewAsset(string assetName, AssetCcyPair acp, double acpValue)
@@ -132,13 +139,24 @@ namespace Core
             _Data = new Dictionary<string, Category> { };
             Map.Reset();
             _FXMarket.Reset();
-            _FXMarket.AddCcy(ccy, cs);
+            _CcyDB.AddRefCcy(ccy, cs);
             _AssetMarket.Reset();
             _Ccy = new Currency(ccy);
             AddItem(new NodeAddress(NodeType.Category, "TEMP"));
         }
 
         #endregion
+
+        public AccountingData(CurrencyStaticsDataBase ccyDB)
+        {
+            _CcyDB = ccyDB;
+            _Ccy = ccyDB.RefCcy;
+            _Data = new Dictionary<string, Category> { };
+            _FXMarket = new FXMarket(Ccy);
+            _AssetMarket = new AssetMarket();
+            AddNewCategory();
+            _Map = new TreeViewMapping(_Data);
+        }
 
         public AccountingData(List<Category> input, FXMarket mkt, AssetMarket aMkt)
         {

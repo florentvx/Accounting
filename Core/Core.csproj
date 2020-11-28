@@ -50,12 +50,14 @@
     <Compile Include="Finance\Currency.cs" />
     <Compile Include="Finance\CurrencyStatics.cs" />
     <Compile Include="Finance\Market.cs" />
+    <Compile Include="HistoricalAccoutingData.cs" />
     <Compile Include="Institution.cs" />
     <Compile Include="Interfaces\IAccount.cs" />
     <Compile Include="Interfaces\IAccountingData.cs" />
     <Compile Include="Interfaces\IAccountingElement.cs" />
     <Compile Include="Interfaces\ICategory.cs" />
     <Compile Include="Interfaces\ICcyAsset.cs" />
+    <Compile Include="Interfaces\IHistoricalAccountingData.cs" />
     <Compile Include="Interfaces\IInstitution.cs" />
     <Compile Include="Interfaces\IMarket.cs" />
     <Compile Include="Interfaces\IMarketInput.cs" />

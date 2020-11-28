@@ -28,6 +28,7 @@ namespace Design
         private TreeViewMappingElement _Memory;
         private FXMarket FXMarketUsed;
         private AssetMarket AssetMarketUsed;
+        private CurrencyStaticsDataBase _CcyDB;
         public IEnumerable<string> Ccies;
         public IEnumerable<string> Assets;
 
@@ -51,8 +52,9 @@ namespace Design
             SetUpTable();
         }
 
-        internal void SetUpMarkets(FXMarket mkt, AssetMarket aMkt)
+        internal void SetUpMarkets(CurrencyStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt)
         {
+            _CcyDB = ccyDB;
             FXMarketUsed = mkt;
             AssetMarketUsed = aMkt;
             Ccies = mkt.GetAvailableCurrencies();
@@ -62,7 +64,7 @@ namespace Design
         public string CcyToString(ICcyAsset ccy, double value)
         {
             if (ccy.IsCcy())
-                return FXMarketUsed.CcyToString(ccy.Ccy, value);
+                return _CcyDB.CcyToString(ccy.Ccy, value);
             else
                 return Convert.ToString(value);
         }

@@ -13,15 +13,18 @@ namespace Accounting
 {
     public partial class FormAccounting : Form, IView
     {
-        protected SortedDictionary<DateTime, AccountingData> _DataHistory;
+        protected HistoricalAccoutingData _DataHistory;
         protected DateTime? _CurrentDate;
 
-        public AccountingData Data { get { return _DataHistory[_CurrentDate.Value]; } }
+        public DateTime CurrentDate { get { return _CurrentDate.Value; } }
+
+        public CurrencyStaticsDataBase CcyDB { get { return _DataHistory.CcyDB; } }
+        public AccountingData Data { get { return _DataHistory.GetData(_CurrentDate.Value); } }
 
         public FormAccounting() : base()
         {
             InitializeComponent();
-            _DataHistory = new SortedDictionary<DateTime, AccountingData> { };
+            _DataHistory = new HistoricalAccoutingData();
             _CurrentDate = null;
         }
 
@@ -30,6 +33,15 @@ namespace Accounting
         public void Reset()
         {
             TreeViewAccounting.Reset();
+            //UpdateComboBoxDates();
+            //_DataHistory.Clear();
+            //_CurrentDate = DateTime.Today;
+            //_DataHistory[_CurrentDate.Value] = new AccountingData();
+        }
+
+        public void UpdateDates()
+        {
+            UpdateComboBoxDates();
         }
 
         public void ChangeActive(NodeAddress na)
@@ -65,9 +77,10 @@ namespace Accounting
             dataGridViewAccounting.ShowElement(Data.GetElement(na), Data.Map.GetElement(na));
         }
 
-        public void SetUpMarkets(FXMarket mkt, AssetMarket aMkt)
+        public void SetUpMarkets(CurrencyStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt)
         {
-            dataGridViewAccounting.SetUpMarkets(mkt, aMkt);
+            Data.SetCcyDB(ccyDB);
+            dataGridViewAccounting.SetUpMarkets(ccyDB, mkt, aMkt);
             dataGridViewFXMarket.ShowMarket(mkt);
             dataGridViewAssetMarket.ShowMarket(aMkt);
         }
@@ -81,6 +94,12 @@ namespace Accounting
             }
             else
                 TreeViewAccounting.SetUpTree(tvm);
+        }
+
+        public void SetUpAccountingData(CurrencyStaticsDataBase ccyDB, IAccountingData iad)
+        {
+            SetUpMarkets(ccyDB, iad.FXMarket, iad.AssetMarket);
+            SetUpTree(iad.Map);
         }
 
         public void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e)
@@ -110,7 +129,7 @@ namespace Accounting
         {
             ComboBoxDates.Items.Clear();
             int i = 0;
-            foreach (DateTime item in _DataHistory.Keys)
+            foreach (DateTime item in _DataHistory.Dates)
             {
                 ComboBoxDates.Items.Add(item.ToLongDateString());
                 if (item == _CurrentDate)
@@ -121,10 +140,7 @@ namespace Accounting
 
         public void AddAccountingData(DateTime date, AccountingData ad, bool selectNewDate = true)
         {
-            if (!_DataHistory.ContainsKey(date))
-                _DataHistory[date] = ad;
-            else
-                throw new Exception($"the Following date already exists {date}");
+            _DataHistory.AddData(date, ad);   
             if (selectNewDate)
                 _CurrentDate = date;
             UpdateComboBoxDates();

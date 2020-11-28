@@ -120,11 +120,19 @@ namespace Core.Finance
     {
         Dictionary<string, CurrencyStatics> DataBase = new Dictionary<string, CurrencyStatics> { };
 
+        public Currency RefCcy { get; set; }
+
         public CurrencyStaticsDataBase() {}
 
         public void Reset()
         {
             DataBase = new Dictionary<string, CurrencyStatics> { };
+        }
+
+        internal void AddRefCcy(string ccy, CurrencyStatics cs)
+        {
+            RefCcy = new Currency(ccy);
+            AddCcy(ccy, cs);
         }
 
         public bool AddCcy(string newCcy, CurrencyStatics cs)
@@ -143,7 +151,7 @@ namespace Core.Finance
             return DataBase.Keys;
         }
 
-        internal string CcyToString(Currency ccy, double value)
+        public string CcyToString(Currency ccy, double value)
         {
             CurrencyStatics cs = DataBase[ccy.ToString()];
             return cs.ValueToString(value);

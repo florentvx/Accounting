@@ -13,20 +13,20 @@ namespace Accounting
     public class Presenter
     {
         private readonly IView _view;
-        private IAccountingData _ad;
+        private IHistoricalAccountingData _had;
+        private IAccountingData _ad { get { return _had.GetData(_view.CurrentDate); } }
 
-        public Presenter(IView view, IAccountingData ad)
+        public Presenter(IView view, IHistoricalAccountingData had)
         {
             _view = view;
-            _ad = ad;
+            _had = had;
         }
 
         public void LoadAccounts()
         {
             ICategory icat = _ad.GetFirstCategory();
             _view.Reset();
-            _view.SetUpMarkets(_ad.FXMarket, _ad.AssetMarket);
-            _view.SetUpTree(_ad.Map);
+            _view.SetUpAccountingData(_view.CcyDB, _ad);
             _view.ShowElement(new NodeAddress(NodeType.Category, icat.CategoryName));
         }
 
@@ -73,25 +73,21 @@ namespace Accounting
         internal void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair ccyPair, double ccyPairQuote)
         {
             _ad.AddNewCcy(ccyName, ccyStatics, ccyPair, ccyPairQuote);
-            _view.SetUpMarkets(_ad.FXMarket, _ad.AssetMarket);
+            _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket);
         }
 
         internal void AddNewAsset(string assetName, AssetCcyPair assetCcyPair, double assetCcyPairQuote)
         {
             _ad.AddNewAsset(assetName, assetCcyPair, assetCcyPairQuote);
             _ad.AssetMarket.PopulateWithFXMarket(_ad.FXMarket);
-            _view.SetUpMarkets(_ad.FXMarket, _ad.AssetMarket);
+            _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket);
         }
 
-        internal void AddRefCcy(string ccyName, CurrencyStatics ccyStatics)
+        internal void ResetAndAddRefCcy(DateTime date, string ccyName, CurrencyStatics ccyStatics)
         {
-            _ad.Reset(ccyName, ccyStatics);
-            _view.SetUpMarkets(_ad.FXMarket, _ad.AssetMarket);
-        }
-
-        internal void SetAccountingData(AccountingData data)
-        {
-            _ad = data;
+            _had.Reset(date, ccyName, ccyStatics);
+            _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket);
+            _view.UpdateDates();
         }
     }
 }

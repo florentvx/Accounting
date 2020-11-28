@@ -10,13 +10,17 @@ namespace Core.Interfaces
 {
     public interface IView
     {
+        CurrencyStaticsDataBase CcyDB { get; }
+        DateTime CurrentDate { get; }
         void Reset();
         void ChangeActive(NodeAddress nd);
         void ShowTotal();
         void ShowElement(NodeAddress tvme);
-        void SetUpMarkets(FXMarket mkt, AssetMarket aMkt);
+        void SetUpMarkets(CurrencyStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt);
         void SetUpTree(TreeViewMapping na);
         void TreeView_NodeMouseRightClick(TreeNodeMouseClickEventArgs e);
+        void SetUpAccountingData(CurrencyStaticsDataBase ccyDb, IAccountingData ad);
         void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e);
+        void UpdateDates();
     }
 }

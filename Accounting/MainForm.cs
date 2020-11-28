@@ -44,13 +44,16 @@ namespace Accounting
             ccyDB.AddCcy("EUR", new CurrencyStatics("€", 3, 2));
             ccyDB.AddCcy("GBP", new CurrencyStatics("£", 3, 2));
             ccyDB.AddCcy("JPY", new CurrencyStatics("¥", 4, 0));
+            ccyDB.RefCcy = new Currency("USD");
+            _DataHistory.SetCcyDB(ccyDB);
+            
 
-            FXMarket market = new FXMarket(ccyDB);
+            FXMarket market = new FXMarket(CcyDB.RefCcy);
             market.AddQuote(new CurrencyPair(new Currency("EUR"), new Currency("USD")), 1.2);
             market.AddQuote(new CurrencyPair(new Currency("GBP"), new Currency("USD")), 1.4);
             market.AddQuote(new CurrencyPair(new Currency("USD"), new Currency("JPY")), 105.0);
 
-            FXMarket market2 = new FXMarket(ccyDB);
+            FXMarket market2 = new FXMarket(CcyDB.RefCcy);
             market2.AddQuote(new CurrencyPair(new Currency("EUR"), new Currency("USD")), 1.25);
             market2.AddQuote(new CurrencyPair(new Currency("GBP"), new Currency("USD")), 1.5);
             market2.AddQuote(new CurrencyPair(new Currency("USD"), new Currency("JPY")), 100.0);
@@ -63,14 +66,19 @@ namespace Accounting
             aMarket2.AddQuote(new AssetCcyPair(new Asset("BTC"), new Currency("USD")), 20000);
             aMarket2.PopulateWithFXMarket(market2);
 
-            AddAccountingData(DateTime.Today.AddMonths(-1), new AccountingData(cats, market, aMarket));
-            AddAccountingData(DateTime.Today, new AccountingData(cats2, market2, aMarket2));
+            AccountingData ad1 = new AccountingData(cats, market, aMarket);
+            ad1.SetCcyDB(CcyDB);
+            AccountingData ad2 = new AccountingData(cats2, market2, aMarket2);
+            ad2.SetCcyDB(CcyDB);
+
+            AddAccountingData(DateTime.Today.AddMonths(-2), ad1);
+            AddAccountingData(DateTime.Today.AddMonths(-1), ad2);
         }
 
         private void OnLoad()
         {
             LoadTestData();
-            MainPresenter = new Presenter(this, Data);
+            MainPresenter = new Presenter(this, _DataHistory);
             MainPresenter.LoadAccounts();
         }
 
@@ -80,7 +88,8 @@ namespace Accounting
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    MainPresenter.AddRefCcy(form.CcyName, form.CcyStatics);
+                    _CurrentDate = DateTime.Today;
+                    MainPresenter.ResetAndAddRefCcy(CurrentDate, form.CcyName, form.CcyStatics);
                     MainPresenter.LoadAccounts();
                 }
             }
@@ -93,6 +102,7 @@ namespace Accounting
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     MainPresenter.AddNewCcy(form.CcyName, form.CcyStatics, form.CcyPair, form.CcyPairQuote);
+                    MainPresenter.LoadAccounts();
                 }
             }   
         }
@@ -118,7 +128,6 @@ namespace Accounting
             _CurrentDate = DateTime.Parse(ComboBoxDates.SelectedItem.ToString());
             if (MainPresenter != null)
             {
-                MainPresenter.SetAccountingData(Data);
                 MainPresenter.LoadAccounts();
             }
         }
