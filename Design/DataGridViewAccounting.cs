@@ -1,6 +1,8 @@
 ﻿using Core;
 using Core.Interfaces;
 using Core.Finance;
+using Core.Statics;
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -28,7 +30,7 @@ namespace Design
         private TreeViewMappingElement _Memory;
         private FXMarket FXMarketUsed;
         private AssetMarket AssetMarketUsed;
-        private CurrencyStaticsDataBase _CcyDB;
+        private CurrencyAssetStaticsDataBase _CcyDB;
         public IEnumerable<string> Ccies;
         public IEnumerable<string> Assets;
 
@@ -52,7 +54,7 @@ namespace Design
             SetUpTable();
         }
 
-        internal void SetUpMarkets(CurrencyStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt)
+        internal void SetUpMarkets(CurrencyAssetStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt)
         {
             _CcyDB = ccyDB;
             FXMarketUsed = mkt;

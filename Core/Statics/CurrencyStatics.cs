@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Finance
+namespace Core.Statics
 {
     public class CurrencyStatics
     {
@@ -113,48 +113,6 @@ namespace Core.Finance
                 throw new Exception($"The thousand Marker [{_DecimalNumber}] needs to be a number.");
             }
             return new Tuple<bool, string>(true, null);
-        }
-    }
-
-    public class CurrencyStaticsDataBase
-    {
-        Dictionary<string, CurrencyStatics> DataBase = new Dictionary<string, CurrencyStatics> { };
-
-        public Currency RefCcy { get; set; }
-
-        public CurrencyStaticsDataBase() {}
-
-        public void Reset()
-        {
-            DataBase = new Dictionary<string, CurrencyStatics> { };
-        }
-
-        internal void AddRefCcy(string ccy, CurrencyStatics cs)
-        {
-            RefCcy = new Currency(ccy);
-            AddCcy(ccy, cs);
-        }
-
-        public bool AddCcy(string newCcy, CurrencyStatics cs)
-        {
-            if (DataBase.ContainsKey(newCcy))
-                return false;
-            else
-            {
-                DataBase.Add(newCcy, cs);
-                return true;
-            }
-        }
-
-        public IEnumerable<string> GetAvailableCurrencies()
-        {
-            return DataBase.Keys;
-        }
-
-        public string CcyToString(Currency ccy, double value)
-        {
-            CurrencyStatics cs = DataBase[ccy.ToString()];
-            return cs.ValueToString(value);
         }
     }
 }

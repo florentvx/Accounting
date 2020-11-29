@@ -4,21 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
-using Core.Finance;
+using Core.Statics;
 
 namespace Core
 {
     public class HistoricalAccoutingData: IHistoricalAccountingData
     {
         SortedDictionary<DateTime, AccountingData> _Data;
-        CurrencyStaticsDataBase _CcyDB;
+        CurrencyAssetStaticsDataBase _CcyDB;
 
-        public CurrencyStaticsDataBase CcyDB { get { return _CcyDB; } }
+        public CurrencyAssetStaticsDataBase CcyDB { get { return _CcyDB; } }
 
         public HistoricalAccoutingData()
         {
             _Data = new SortedDictionary<DateTime, AccountingData> { };
-            _CcyDB = new CurrencyStaticsDataBase();
+            _CcyDB = new CurrencyAssetStaticsDataBase();
         }
 
         public IEnumerable<DateTime> Dates { get { return _Data.Keys; } }
@@ -42,7 +42,7 @@ namespace Core
             _Data[date] = ad;
         }
 
-        public void SetCcyDB(CurrencyStaticsDataBase ccyDB)
+        public void SetCcyDB(CurrencyAssetStaticsDataBase ccyDB)
         {
             _CcyDB = ccyDB;
         }

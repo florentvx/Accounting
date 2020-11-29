@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Core;
 using Core.Finance;
 using Core.Interfaces;
+using Core.Statics;
 using Design;
 using Design.SubForm;
 
@@ -39,12 +40,13 @@ namespace Accounting
                 cats2.Add(item.Copy());
             }
 
-            CurrencyStaticsDataBase ccyDB = new CurrencyStaticsDataBase();
+            CurrencyAssetStaticsDataBase ccyDB = new CurrencyAssetStaticsDataBase();
             ccyDB.AddCcy("USD", new CurrencyStatics("$", 3, 2));
             ccyDB.AddCcy("EUR", new CurrencyStatics("€", 3, 2));
             ccyDB.AddCcy("GBP", new CurrencyStatics("£", 3, 2));
             ccyDB.AddCcy("JPY", new CurrencyStatics("¥", 4, 0));
             ccyDB.RefCcy = new Currency("USD");
+            ccyDB.AddAsset("BTC", new AssetStatics("BTC", new Currency("USD")));
             _DataHistory.SetCcyDB(ccyDB);
             
 
@@ -113,7 +115,7 @@ namespace Accounting
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    MainPresenter.AddNewAsset(form.AssetName, form.AssetCcyPair, form.AssetCcyPairQuote);
+                    MainPresenter.AddNewAsset(form.AssetName, form.AssetStatics, form.AssetCcyPairQuote);
                 }
             }
         }

@@ -4,9 +4,11 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
+
 using Core;
 using Core.Finance;
 using Core.Interfaces;
+using Core.Statics;
 using Design;
 
 namespace Accounting
@@ -18,7 +20,7 @@ namespace Accounting
 
         public DateTime CurrentDate { get { return _CurrentDate.Value; } }
 
-        public CurrencyStaticsDataBase CcyDB { get { return _DataHistory.CcyDB; } }
+        public CurrencyAssetStaticsDataBase CcyDB { get { return _DataHistory.CcyDB; } }
         public AccountingData Data { get { return _DataHistory.GetData(_CurrentDate.Value); } }
 
         public FormAccounting() : base()
@@ -77,7 +79,7 @@ namespace Accounting
             dataGridViewAccounting.ShowElement(Data.GetElement(na), Data.Map.GetElement(na));
         }
 
-        public void SetUpMarkets(CurrencyStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt)
+        public void SetUpMarkets(CurrencyAssetStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt)
         {
             Data.SetCcyDB(ccyDB);
             dataGridViewAccounting.SetUpMarkets(ccyDB, mkt, aMkt);
@@ -96,7 +98,7 @@ namespace Accounting
                 TreeViewAccounting.SetUpTree(tvm);
         }
 
-        public void SetUpAccountingData(CurrencyStaticsDataBase ccyDB, IAccountingData iad)
+        public void SetUpAccountingData(CurrencyAssetStaticsDataBase ccyDB, IAccountingData iad)
         {
             SetUpMarkets(ccyDB, iad.FXMarket, iad.AssetMarket);
             SetUpTree(iad.Map);

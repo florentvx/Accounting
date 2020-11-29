@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Core.Finance;
+using Core.Statics;
 
 namespace Design.SubForm
 {
@@ -16,13 +17,10 @@ namespace Design.SubForm
         public string AssetName;
         public double AssetCcyPairQuote;
 
-        public AssetCcyPair AssetCcyPair {
+        public AssetStatics AssetStatics {
             get
             {
-                //if (!CheckBoxIsInversePair.Checked)
-                return new AssetCcyPair(new Asset(AssetName), new Currency(ComboBoxOthCcy.Text));
-                //else
-                //    return new AssetCcyPair(ComboBoxOthCcy.Text, AssetName);
+                return new AssetStatics(AssetName, new Currency(ComboBoxOthCcy.Text));
             }
         }
 

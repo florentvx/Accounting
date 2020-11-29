@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Core.Finance;
+using Core.Statics;
 using Core.Interfaces;
 
 namespace Core
@@ -14,7 +15,7 @@ namespace Core
     public class AccountingData : IAccountingData
     {
         Currency _Ccy;
-        CurrencyStaticsDataBase _CcyDB;
+        CurrencyAssetStaticsDataBase _CcyDB;
         Dictionary<string, Category> _Data = new Dictionary<string, Category> { };
         FXMarket _FXMarket;
         AssetMarket _AssetMarket;
@@ -26,7 +27,7 @@ namespace Core
             set { _Ccy = value; }
         }
 
-        public void SetCcyDB(CurrencyStaticsDataBase ccyDB)
+        public void SetCcyDB(CurrencyAssetStaticsDataBase ccyDB)
         {
             _CcyDB = ccyDB;
         }
@@ -123,13 +124,14 @@ namespace Core
             _FXMarket.SetCcyRef(_Ccy);
         }
 
-        public void AddNewAsset(string assetName, AssetCcyPair acp, double acpValue)
+        public void AddNewAsset(string assetName, AssetStatics aSt, double acpValue)
         {
-            bool testAdd = _AssetMarket.ContainsAsset(assetName);
-            if (testAdd)
+            bool testAdd = _CcyDB.AddAsset(assetName, aSt);
+            if (!testAdd)
                 MessageBox.Show($"The new Asset [{assetName}] does already exist.");
             else
             {
+                AssetCcyPair acp = new AssetCcyPair(new Asset(assetName), aSt.Ccy);
                 _AssetMarket.AddQuote(acp, acpValue);
             }
         }
@@ -147,7 +149,7 @@ namespace Core
 
         #endregion
 
-        public AccountingData(CurrencyStaticsDataBase ccyDB)
+        public AccountingData(CurrencyAssetStaticsDataBase ccyDB)
         {
             _CcyDB = ccyDB;
             _Ccy = ccyDB.RefCcy;

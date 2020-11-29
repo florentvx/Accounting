@@ -48,7 +48,9 @@
     <Compile Include="Finance\AssetMarket.cs" />
     <Compile Include="Finance\AssetCcyPair.cs" />
     <Compile Include="Finance\Currency.cs" />
-    <Compile Include="Finance\CurrencyStatics.cs" />
+    <Compile Include="Statics\AssetStatics.cs" />
+    <Compile Include="Statics\CurrencyAssetStaticsDataBase.cs" />
+    <Compile Include="Statics\CurrencyStatics.cs" />
     <Compile Include="Finance\Market.cs" />
     <Compile Include="HistoricalAccoutingData.cs" />
     <Compile Include="Institution.cs" />
@@ -69,5 +71,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TreeViewMapping.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

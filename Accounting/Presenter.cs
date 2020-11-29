@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Core;
 using Core.Finance;
 using Core.Interfaces;
+using Core.Statics;
 
 namespace Accounting
 {
@@ -76,9 +77,9 @@ namespace Accounting
             _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket);
         }
 
-        internal void AddNewAsset(string assetName, AssetCcyPair assetCcyPair, double assetCcyPairQuote)
+        internal void AddNewAsset(string assetName, AssetStatics assetStatics, double assetCcyPairQuote)
         {
-            _ad.AddNewAsset(assetName, assetCcyPair, assetCcyPairQuote);
+            _ad.AddNewAsset(assetName, assetStatics, assetCcyPairQuote);
             _ad.AssetMarket.PopulateWithFXMarket(_ad.FXMarket);
             _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket);
         }
