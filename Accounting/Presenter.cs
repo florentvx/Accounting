@@ -23,12 +23,19 @@ namespace Accounting
             _had = had;
         }
 
-        public void LoadAccounts()
+        public void LoadAccounts(bool showTotal = false)
         {
-            ICategory icat = _ad.GetFirstCategory();
             _view.Reset();
             _view.SetUpAccountingData(_view.CcyDB, _ad);
-            _view.ShowElement(new NodeAddress(NodeType.Category, icat.CategoryName));
+            if (showTotal)
+            {
+                _view.ShowTotal();
+            }
+            else
+            {
+                ICategory icat = _ad.GetFirstCategory();
+                _view.ShowElement(new NodeAddress(NodeType.Category, icat.CategoryName));
+            }
         }
 
         internal async void TreeView_AfterLabelEdit(NodeLabelEditEventArgs e)

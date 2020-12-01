@@ -81,7 +81,7 @@ namespace Accounting
         {
             LoadTestData();
             MainPresenter = new Presenter(this, _DataHistory);
-            MainPresenter.LoadAccounts();
+            MainPresenter.LoadAccounts(showTotal: true);
         }
 
         protected override void NewToolStripMenuItem_Click(object sender, EventArgs e)
@@ -130,12 +130,12 @@ namespace Accounting
             _CurrentDate = DateTime.Parse(ComboBoxDates.SelectedItem.ToString());
             if (MainPresenter != null)
             {
-                MainPresenter.LoadAccounts();
+                MainPresenter.LoadAccounts(true);
             }
         }
         
 
-    private void TreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        private void TreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             MainPresenter.TreeView_AfterLabelEdit(e);
             TreeViewAccounting.LabelEdit = false;

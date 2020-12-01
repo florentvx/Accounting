@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
 using Core.Statics;
+using Core.Finance;
 
 namespace Core
 {
@@ -12,6 +13,7 @@ namespace Core
     {
         SortedDictionary<DateTime, AccountingData> _Data;
         CurrencyAssetStaticsDataBase _CcyDB;
+        Currency _TotalCcy;
 
         public CurrencyAssetStaticsDataBase CcyDB { get { return _CcyDB; } }
 
@@ -25,10 +27,23 @@ namespace Core
 
         public AccountingData GetData(DateTime date) { return _Data[date]; }
 
+        private void ModifyCcy(object sender, ModifyCcyEventArgs e)
+        {
+            foreach (var date in _Data.Keys)
+            {
+                AccountingData ad = _Data[date];
+                ad.RecalculateTotal(e.Ccy);
+            }
+        }
+
         public void AddData(DateTime date, AccountingData ad)
         {
             if (!_Data.ContainsKey(date))
+            {
+                ad.Total(_TotalCcy);
                 _Data.Add(date, ad);
+                ad.ModifyCcyEventHandler += this.ModifyCcy;
+            }
             else
                 throw new Exception($"the Following date already exists {date}");
         }
@@ -45,6 +60,7 @@ namespace Core
         public void SetCcyDB(CurrencyAssetStaticsDataBase ccyDB)
         {
             _CcyDB = ccyDB;
+            _TotalCcy = ccyDB.RefCcy;
         }
     }
 }

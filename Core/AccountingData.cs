@@ -12,10 +12,21 @@ using Core.Interfaces;
 namespace Core
 {
 
+    public class ModifyCcyEventArgs : EventArgs
+    {
+        public Currency Ccy;
+
+        public ModifyCcyEventArgs(object valueCcy)
+        {
+            Ccy = new Currency(valueCcy);
+        }
+    }
+
     public class AccountingData : IAccountingData
     {
-        Currency _Ccy;
-        CurrencyAssetStaticsDataBase _CcyDB;
+        Currency _Ccy; // Ccy Total
+        double _TotalValue; // Total value in Ccy Total
+        CurrencyAssetStaticsDataBase _CcyDB; //Copy By Ref of CcyAssetDataBase
         Dictionary<string, Category> _Data = new Dictionary<string, Category> { };
         FXMarket _FXMarket;
         AssetMarket _AssetMarket;
@@ -24,7 +35,7 @@ namespace Core
         public Currency Ccy
         {
             get { return _Ccy; }
-            set { _Ccy = value; }
+            ///set { _Ccy = value; }
         }
 
         public void SetCcyDB(CurrencyAssetStaticsDataBase ccyDB)
@@ -55,9 +66,13 @@ namespace Core
 
         public AssetMarket AssetMarket { get { return _AssetMarket; } }
 
+        public event EventHandler<ModifyCcyEventArgs> ModifyCcyEventHandler;
+
         public void ModifyCcy(object valueCcy)
         {
             _Ccy = new Currency(valueCcy);
+            ModifyCcyEventArgs e = new ModifyCcyEventArgs(valueCcy);
+            ModifyCcyEventHandler?.Invoke(this, e);
         }
 
         public ICategory GetFirstCategory()
@@ -79,7 +94,14 @@ namespace Core
             double total = 0;
             foreach (var item in _Data)
                 total += item.Value.TotalInstitution(_FXMarket, _AssetMarket, Ccy).ConvertedAmount;
+            _TotalValue = total;
             return new Account("Total", Ccy, total);
+        }
+
+        public IAccount Total(Currency TotalCcy)
+        {
+            ModifyCcy(TotalCcy);
+            return Total();
         }
 
         public bool ChangeName(string before, string after, NodeAddress nodeTag)
@@ -207,7 +229,7 @@ namespace Core
                 i++;
                 newName = $"{newNameRef} - {i}";
             }
-            Category cat = new Category(newName, Ccy);
+            Category cat = new Category(newName, _CcyDB.RefCcy);
             cat.AddInstitution("New Institution");
             cat.AddAccount("New Account", "New Institution");
             _Data.Add(cat.CategoryName, cat);
@@ -267,6 +289,13 @@ namespace Core
         public void UpdateAssetMarket()
         {
             _AssetMarket.PopulateWithFXMarket(_FXMarket);
+        }
+
+        internal void RecalculateTotal(Currency ccy)
+        {
+            if (ccy != _Ccy)
+                _TotalValue = _TotalValue * _FXMarket.GetQuote(new CurrencyPair(_Ccy, ccy));
+            _Ccy = (Currency)ccy.Clone();
         }
     }
 }
