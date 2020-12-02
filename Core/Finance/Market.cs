@@ -50,5 +50,16 @@ namespace Core.Finance
                 AddQuoteToDictionary(imi, value);
             }
         }
+
+        public void Copy(IMarket imkt)
+        {
+            _Data = new Dictionary<IMarketInput, double> { };
+            _Pairs = new List<IMarketInput> { };
+            foreach(var item in imkt.EnumerateData())
+            {
+                _Pairs.Add(item.Item1);
+                _Data.Add(item.Item1, item.Item2);
+            }
+        }
     }
 }

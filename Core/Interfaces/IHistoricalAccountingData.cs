@@ -11,5 +11,6 @@ namespace Core.Interfaces
     {
         AccountingData GetData(DateTime date);
         void Reset(DateTime date, string ccyName, CurrencyStatics ccyStatics);
+        void AddNewDate(DateTime date);
     }
 }

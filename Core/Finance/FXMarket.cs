@@ -10,33 +10,11 @@ namespace Core.Finance
 {
     public class FXMarket : Market, IMarket
     {
-        //CurrencyStaticsDataBase _CcyDB;
         Currency CcyRef;
 
         public FXMarket(Currency ccy) {
             CcyRef = ccy;
         }
-
-        //public void SetCcyStaticsDB(CurrencyStaticsDataBase ccyDB)
-        //{
-        //    _CcyDB = ccyDB;
-        //}
-
-        //public bool AddCcy(string newCcy, CurrencyStatics statics)
-        //{
-        //    return _CcyDB.AddCcy(newCcy, statics);
-        //}
-
-        //public bool AddCcy(string newCcy, string symbol, int thousandMark, int decNb)
-        //{
-        //    return _CcyDB.AddCcy(newCcy, new CurrencyStatics(symbol, thousandMark, decNb));
-        //}
-
-        //public override void Reset()
-        //{
-        //    base.Reset();
-        //    //_CcyDB.Reset();
-        //}
 
         private IEnumerable<ICcyAsset> GetAllConnectedCcy(ICcyAsset ccy, List<ICcyAsset> excludedCcies)
         {

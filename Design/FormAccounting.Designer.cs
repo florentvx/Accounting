@@ -48,6 +48,7 @@ namespace Accounting
             this.TreeViewAccounting = new Design.TreeViewAccounting();
             this.labelDate = new System.Windows.Forms.Label();
             this.ComboBoxDates = new System.Windows.Forms.ComboBox();
+            this.addDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -90,7 +91,8 @@ namespace Accounting
             // 
             this.marketToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addCurrencyToolStripMenuItem,
-            this.addAssetToolStripMenuItem});
+            this.addAssetToolStripMenuItem,
+            this.addDateToolStripMenuItem});
             this.marketToolStripMenuItem.Name = "marketToolStripMenuItem";
             this.marketToolStripMenuItem.Size = new System.Drawing.Size(67, 24);
             this.marketToolStripMenuItem.Text = "Market";
@@ -98,14 +100,14 @@ namespace Accounting
             // addCurrencyToolStripMenuItem
             // 
             this.addCurrencyToolStripMenuItem.Name = "addCurrencyToolStripMenuItem";
-            this.addCurrencyToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.addCurrencyToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.addCurrencyToolStripMenuItem.Text = "Add Currency";
             this.addCurrencyToolStripMenuItem.Click += new System.EventHandler(this.AddCurrencyToolStripMenuItem_Click);
             // 
             // addAssetToolStripMenuItem
             // 
             this.addAssetToolStripMenuItem.Name = "addAssetToolStripMenuItem";
-            this.addAssetToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.addAssetToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.addAssetToolStripMenuItem.Text = "Add Asset";
             this.addAssetToolStripMenuItem.Click += new System.EventHandler(this.AddAssetToolStripMenuItem_Click);
             // 
@@ -257,6 +259,13 @@ namespace Accounting
             this.ComboBoxDates.TabIndex = 9;
             this.ComboBoxDates.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDates_SelectedIndexChanged);
             // 
+            // addDateToolStripMenuItem
+            // 
+            this.addDateToolStripMenuItem.Name = "addDateToolStripMenuItem";
+            this.addDateToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.addDateToolStripMenuItem.Text = "Add Date";
+            this.addDateToolStripMenuItem.Click += new System.EventHandler(this.AddDateToolStripMenuItem_Click);
+            // 
             // FormAccounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -308,6 +317,7 @@ namespace Accounting
         private System.Windows.Forms.Label labelDate;
         private System.Windows.Forms.TabPage tabPage2;
         protected DataGridViewAssetMarket dataGridViewAssetMarket;
+        private System.Windows.Forms.ToolStripMenuItem addDateToolStripMenuItem;
     }
 }
 

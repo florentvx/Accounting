@@ -17,15 +17,39 @@ namespace Core
 
         public CurrencyAssetStaticsDataBase CcyDB { get { return _CcyDB; } }
 
+        public IEnumerable<DateTime> Dates { get { return _Data.Keys; } }
+
         public HistoricalAccoutingData()
         {
             _Data = new SortedDictionary<DateTime, AccountingData> { };
             _CcyDB = new CurrencyAssetStaticsDataBase();
         }
 
-        public IEnumerable<DateTime> Dates { get { return _Data.Keys; } }
+        #region IHistoricalAccountingData
 
         public AccountingData GetData(DateTime date) { return _Data[date]; }
+
+        public void Reset(DateTime date, string ccy, CurrencyStatics cs)
+        {
+            _Data.Clear();
+            _CcyDB.Reset();
+            _CcyDB.AddRefCcy(ccy, cs);
+            AccountingData ad = new AccountingData(_CcyDB);
+            _Data[date] = ad;
+        }
+
+        public void AddNewDate(DateTime date)
+        {
+            if (_Data.Count() == 0)
+                return;
+            DateTime t = _Data  .Where(x => x.Key <= date)
+                                .Select(x=>x.Key)
+                                .Last();
+            AccountingData ad = _Data[t].Copy();
+            _Data[date] = ad;
+        }
+
+        #endregion
 
         private void ModifyCcy(object sender, ModifyCcyEventArgs e)
         {
@@ -48,14 +72,6 @@ namespace Core
                 throw new Exception($"the Following date already exists {date}");
         }
 
-        public void Reset(DateTime date, string ccy, CurrencyStatics cs)
-        {
-            _Data.Clear();
-            _CcyDB.Reset();
-            _CcyDB.AddRefCcy(ccy, cs);
-            AccountingData ad = new AccountingData(_CcyDB);
-            _Data[date] = ad;
-        }
 
         public void SetCcyDB(CurrencyAssetStaticsDataBase ccyDB)
         {

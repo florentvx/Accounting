@@ -18,7 +18,10 @@ namespace Accounting
         protected HistoricalAccoutingData _DataHistory;
         protected DateTime? _CurrentDate;
 
-        public DateTime CurrentDate { get { return _CurrentDate.Value; } }
+        public DateTime CurrentDate {
+            get { return _CurrentDate.Value; }
+            set { _CurrentDate = value; }
+        }
 
         public CurrencyAssetStaticsDataBase CcyDB { get { return _DataHistory.CcyDB; } }
         public AccountingData Data { get { return _DataHistory.GetData(_CurrentDate.Value); } }
@@ -151,9 +154,9 @@ namespace Accounting
         virtual protected void NewToolStripMenuItem_Click(object sender, System.EventArgs e) { }
         virtual protected void AddCurrencyToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void AddAssetToolStripMenuItem_Click(object sender, EventArgs e) { }
+        virtual protected void AddDateToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void ButtonTotal_Click(object sender, System.EventArgs e) { }
         virtual protected void ComboBoxDates_SelectedIndexChanged(object sender, EventArgs e) { }
-
 
         public void TreeView_NodeAddition(object sender, TreeNodeMouseClickEventArgs e)
         {

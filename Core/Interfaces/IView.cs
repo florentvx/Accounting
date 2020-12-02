@@ -12,7 +12,7 @@ namespace Core.Interfaces
     public interface IView
     {
         CurrencyAssetStaticsDataBase CcyDB { get; }
-        DateTime CurrentDate { get; }
+        DateTime CurrentDate { get; set; }
         void Reset();
         void ChangeActive(NodeAddress nd);
         void ShowTotal();

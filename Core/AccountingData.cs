@@ -297,5 +297,30 @@ namespace Core
                 _TotalValue = _TotalValue * _FXMarket.GetQuote(new CurrencyPair(_Ccy, ccy));
             _Ccy = (Currency)ccy.Clone();
         }
+
+        public AccountingData Copy()
+        {
+            Dictionary<string, Category> newData = new Dictionary<string, Category> { };
+            foreach (var text in _Data.Keys)
+                newData[text] = _Data[text].Copy();
+
+            FXMarket fxmkt = new FXMarket(_CcyDB.RefCcy);
+            fxmkt.Copy(_FXMarket);
+
+            AssetMarket aMkt = new AssetMarket();
+            aMkt.Copy(_AssetMarket);
+
+            AccountingData res = new AccountingData(_CcyDB)
+            {
+                _Ccy = (Currency)_Ccy.Clone(),
+                _TotalValue = _TotalValue,
+                _Data = newData,
+                _FXMarket = fxmkt,
+                _AssetMarket = aMkt,
+                _Map = new TreeViewMapping(newData)
+            };
+            
+            return res;
+        }
     }
 }

@@ -91,6 +91,14 @@ namespace Accounting
             _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket);
         }
 
+        internal void AddNewDate(DateTime date)
+        {
+            _had.AddNewDate(date);
+            _view.CurrentDate = date;
+            _view.UpdateDates();
+            _view.SetUpAccountingData(_view.CcyDB, _ad);
+        }
+
         internal void ResetAndAddRefCcy(DateTime date, string ccyName, CurrencyStatics ccyStatics)
         {
             _had.Reset(date, ccyName, ccyStatics);

@@ -120,6 +120,11 @@ namespace Accounting
             }
         }
 
+        protected override void AddDateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MainPresenter.AddNewDate(DateTime.Today);
+        }
+
         protected override void ButtonTotal_Click(object sender, EventArgs e)
         {
             MainPresenter.ButtonTotal();
