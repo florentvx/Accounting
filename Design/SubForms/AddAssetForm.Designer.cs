@@ -1,4 +1,4 @@
-﻿namespace Design.SubForm
+﻿namespace Design.SubForms
 {
     partial class AddAssetForm
     {

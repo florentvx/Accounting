@@ -8,7 +8,7 @@ using Core.Finance;
 using Core.Interfaces;
 using Core.Statics;
 using Design;
-using Design.SubForm;
+using Design.SubForms;
 
 namespace Accounting
 {
@@ -90,7 +90,7 @@ namespace Accounting
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    _CurrentDate = DateTime.Today;
+                    _CurrentDate = form.GetDate();
                     MainPresenter.ResetAndAddRefCcy(CurrentDate, form.CcyName, form.CcyStatics);
                     MainPresenter.LoadAccounts();
                 }
@@ -122,7 +122,11 @@ namespace Accounting
 
         protected override void AddDateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MainPresenter.AddNewDate(DateTime.Today);
+            using (AddDateForm form = new AddDateForm())
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                    MainPresenter.AddNewDate(form.GetDate());
+            }
         }
 
         protected override void ButtonTotal_Click(object sender, EventArgs e)

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Core.Finance;
 using Core.Statics;
 
-namespace Design.SubForm
+namespace Design.SubForms
 {
     public partial class AddCcyForm : Form
     {

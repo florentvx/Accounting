@@ -9,12 +9,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Core.Statics;
 
-namespace Design.SubForm
+namespace Design.SubForms
 {
     public partial class AddCcyRefForm : Form
     {
         public string CcyName;
         public CurrencyStatics CcyStatics;
+        private DateTime _Date = DateTime.Today;
+
+        public DateTime GetDate() { return _Date.Date; }
 
         public AddCcyRefForm()
         {
@@ -28,6 +31,7 @@ namespace Design.SubForm
             Tuple<bool, string> test = CcyStatics.Load(TextSymbol.Text, TextThousandMarker.Text, TextDecimalMarker.Text);
             if (test.Item1)
             {
+                _Date = DateTimePicker.Value;
                 DialogResult = DialogResult.OK;
             }
             else

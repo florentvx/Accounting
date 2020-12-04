@@ -309,6 +309,7 @@ namespace Core
 
             AssetMarket aMkt = new AssetMarket();
             aMkt.Copy(_AssetMarket);
+            aMkt.PopulateWithFXMarket(fxmkt);
 
             AccountingData res = new AccountingData(_CcyDB)
             {

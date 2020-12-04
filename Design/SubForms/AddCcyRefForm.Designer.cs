@@ -1,4 +1,4 @@
-﻿namespace Design.SubForm
+﻿namespace Design.SubForms
 {
     partial class AddCcyRefForm
     {
@@ -42,12 +42,16 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.DateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // OKButton
             // 
-            this.OKButton.Location = new System.Drawing.Point(147, 148);
+            this.OKButton.Location = new System.Drawing.Point(147, 212);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(91, 31);
             this.OKButton.TabIndex = 0;
@@ -179,17 +183,47 @@
             this.label7.TabIndex = 9;
             this.label7.Text = "Ex: USD";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.DateTimePicker);
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Location = new System.Drawing.Point(13, 149);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(344, 57);
+            this.groupBox2.TabIndex = 10;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Date Selection";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(100, 17);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Date Selection";
+            // 
+            // DateTimePicker
+            // 
+            this.DateTimePicker.Location = new System.Drawing.Point(134, 23);
+            this.DateTimePicker.Name = "DateTimePicker";
+            this.DateTimePicker.Size = new System.Drawing.Size(204, 22);
+            this.DateTimePicker.TabIndex = 14;
+            // 
             // AddCcyRefForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(369, 185);
+            this.ClientSize = new System.Drawing.Size(369, 255);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.OKButton);
             this.Name = "AddCcyRefForm";
             this.Text = "Add Ref Currency";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -210,5 +244,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.DateTimePicker DateTimePicker;
+        private System.Windows.Forms.Label label5;
     }
 }
