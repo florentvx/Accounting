@@ -1,0 +1,5 @@
+{
+  "$type": "Core.Statics.AssetStatics, Core",
+  "Symbol": "BTC",
+  "Ccy": "USD"
+}

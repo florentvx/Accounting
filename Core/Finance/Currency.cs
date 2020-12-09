@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
 
 namespace Core.Finance
 {
-    public class Currency : ICcyAsset, IEquatable<Currency>, ICloneable
+    [Serializable]
+    public class Currency : ICcyAsset, IEquatable<Currency>, ICloneable, ISerializable
     {
-        string _Ccy;
+        private string _Ccy;
+
+        public string CcyString { get { return _Ccy; } set { _Ccy = value; } }
+
+        public Currency() { }
 
         public Currency(string ccy)
         {
@@ -84,6 +90,20 @@ namespace Core.Finance
         public object Clone()
         {
             return new Currency(_Ccy);
+        }
+
+        #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Ccy", _Ccy, typeof(string));
+        }
+
+        public Currency(SerializationInfo info, StreamingContext context)
+        {
+            _Ccy = (string)info.GetValue("Ccy", typeof(string));
         }
 
         #endregion

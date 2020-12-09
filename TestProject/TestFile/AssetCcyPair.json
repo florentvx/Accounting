@@ -1,0 +1,11 @@
+{
+  "$type": "Core.Finance.AssetCcyPair, Core",
+  "Asset1": {
+    "$type": "Core.Finance.Asset, Core",
+    "Asset": "Apple"
+  },
+  "Ccy2": {
+    "$type": "Core.Finance.Currency, Core",
+    "Ccy": "USD"
+  }
+}

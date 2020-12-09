@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Statics
 {
-    public class CurrencyStatics
+    [Serializable]
+    public class CurrencyStatics: IEquatable<CurrencyStatics>, ISerializable
     {
         private string _Symbol;
         private int _ThousandMark;
         private int _DecimalNumber;
+
+        public string Symbol { get { return _Symbol; } set { _Symbol = value; } }
+        public int ThousandMark { get { return _ThousandMark; } set { _ThousandMark = value; } }
+        public int DecimalNumber { get { return _DecimalNumber; } set { _DecimalNumber = value; } }
 
         public CurrencyStatics() { }
 
@@ -114,5 +120,62 @@ namespace Core.Statics
             }
             return new Tuple<bool, string>(true, null);
         }
+
+
+        #region IEquatable
+
+        public bool Equals(CurrencyStatics cs)
+        {
+            if (cs == null)
+                return false;
+            return _Symbol == cs._Symbol 
+                && _DecimalNumber == cs._DecimalNumber
+                && _ThousandMark == cs._ThousandMark;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as CurrencyStatics);
+        }
+
+        public override int GetHashCode()
+        {
+            return _Symbol.GetHashCode() + _DecimalNumber.GetHashCode() + _ThousandMark.GetHashCode();
+        }
+
+        public static bool operator ==(CurrencyStatics cs1, CurrencyStatics cs2)
+        {
+            if (cs1 is null)
+            {
+                if (cs1 is null) { return true; }
+                return false;
+            }
+            return cs1.Equals(cs2);
+        }
+
+        public static bool operator !=(CurrencyStatics cs1, CurrencyStatics cs2)
+        {
+            return !(cs1 == cs2);
+        }
+
+        #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Symbol", _Symbol, typeof(string));
+            info.AddValue("DecimalNumber", _DecimalNumber, typeof(string));
+            info.AddValue("ThousandMark", _ThousandMark, typeof(string));
+        }
+
+        public CurrencyStatics(SerializationInfo info, StreamingContext context)
+        {
+            _Symbol = (string)info.GetValue("Symbol", typeof(string));
+            _DecimalNumber = (int)info.GetValue("DecimalNumber", typeof(int));
+            _ThousandMark = (int)info.GetValue("ThousandMark", typeof(int));
+        }
+
+        #endregion
     }
 }

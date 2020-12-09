@@ -1,0 +1,36 @@
+{
+  "$type": "Core.Statics.CurrencyAssetStaticsDataBase, Core",
+  "DataBase": {
+    "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Core.Statics.CurrencyStatics, Core]], mscorlib",
+    "GBP": {
+      "$type": "Core.Statics.CurrencyStatics, Core",
+      "Symbol": "£",
+      "DecimalNumber": 2,
+      "ThousandMark": 3
+    },
+    "EUR": {
+      "$type": "Core.Statics.CurrencyStatics, Core",
+      "Symbol": "€",
+      "DecimalNumber": 2,
+      "ThousandMark": 3
+    },
+    "JPY": {
+      "$type": "Core.Statics.CurrencyStatics, Core",
+      "Symbol": "¥",
+      "DecimalNumber": 0,
+      "ThousandMark": 4
+    }
+  },
+  "AssetDataBase": {
+    "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Core.Statics.AssetStatics, Core]], mscorlib",
+    "BNP": {
+      "$type": "Core.Statics.AssetStatics, Core",
+      "Symbol": "BNP",
+      "Ccy": "EUR"
+    }
+  },
+  "RefCcy": {
+    "$type": "Core.Finance.Currency, Core",
+    "Ccy": "GBP"
+  }
+}

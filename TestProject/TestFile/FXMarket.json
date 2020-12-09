@@ -1,0 +1,23 @@
+{
+  "$type": "Core.Finance.FXMarket, Core",
+  "_Data": [
+    {
+      "Key": {
+        "$type": "Core.Finance.CurrencyPair, Core",
+        "_Ccy1": {
+          "$type": "Core.Finance.Currency, Core",
+          "Ccy": "EUR"
+        },
+        "_Ccy2": {
+          "$type": "Core.Finance.Currency, Core",
+          "Ccy": "USD"
+        }
+      },
+      "Value": 1.1
+    }
+  ],
+  "CcyRef": {
+    "$type": "Core.Finance.Currency, Core",
+    "Ccy": "USD"
+  }
+}

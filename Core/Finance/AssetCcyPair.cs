@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
+using Newtonsoft.Json;
 
 namespace Core.Finance
 {
+    [Serializable]
     public class AssetCcyPair : IMarketInput
     {
-        public Asset Asset;
-        public Currency Ccy;
+        [JsonProperty]
+        public Asset Asset { get; set; }
+        [JsonProperty]
+        public Currency Ccy { get; set; }
 
         public AssetCcyPair(Asset asset, Currency ccy)
         {
@@ -55,6 +60,59 @@ namespace Core.Finance
         }
 
         #endregion
+
+        #region IEquatable
+
+        public bool Equals(IMarketInput imi)
+        {
+            if (imi == null)
+                return false;
+            return Asset1 == imi.Asset1 && Ccy2 == imi.Ccy2;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as IMarketInput);
+        }
+
+        public override int GetHashCode()
+        {
+            return Asset1.GetHashCode() + Ccy2.GetHashCode();
+        }
+
+        public static bool operator ==(AssetCcyPair imi1, IMarketInput imi2)
+        {
+            if (imi1 is null)
+            {
+                if (imi2 is null) { return true; }
+                return false;
+            }
+            return imi1.Equals(imi2);
+        }
+
+        public static bool operator !=(AssetCcyPair imi1, IMarketInput imi2)
+        {
+            return !(imi1 == imi2);
+        }
+
+        #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Asset1", Asset, typeof(Asset));
+            info.AddValue("Ccy2", Ccy, typeof(Currency));
+        }
+
+        public AssetCcyPair(SerializationInfo info, StreamingContext context)
+        {
+            Asset = (Asset)info.GetValue("Asset1", typeof(Asset));
+            Ccy = (Currency)info.GetValue("Ccy2", typeof(Currency));
+        }
+
+        #endregion
+
 
     }
 }

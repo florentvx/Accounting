@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
+using Newtonsoft.Json;
 
 namespace Core.Finance
 {
-    public class Asset: ICcyAsset, IEquatable<Asset>
+    [Serializable]
+    public class Asset: ICcyAsset, IEquatable<Asset>, ISerializable
     {
         string _Name;
 
+        [JsonProperty]
         public string Name { get { return _Name; } set { _Name = value; } }
 
         public Asset(string value)
@@ -76,6 +80,20 @@ namespace Core.Finance
         public static bool operator !=(Asset asset1, Asset asset2)
         {
             return !(asset1 == asset2);
+        }
+
+        #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Asset", _Name, typeof(string));
+        }
+
+        public Asset(SerializationInfo info, StreamingContext context)
+        {
+            _Name = (string)info.GetValue("Asset", typeof(string));
         }
 
         #endregion

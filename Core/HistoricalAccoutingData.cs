@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 using Core.Interfaces;
 using Core.Statics;
 using Core.Finance;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace Core
 {
-    public class HistoricalAccoutingData: IHistoricalAccountingData
+    public class HistoricalAccoutingData: IHistoricalAccountingData, ISerializable
     {
         SortedDictionary<DateTime, AccountingData> _Data;
         CurrencyAssetStaticsDataBase _CcyDB;
+
         Currency _TotalCcy;
 
-        public CurrencyAssetStaticsDataBase CcyDB { get { return _CcyDB; } }
+        public SortedDictionary<DateTime, AccountingData> Data { get { return _Data; } set { _Data = value; } }
+        public CurrencyAssetStaticsDataBase CcyDB { get { return _CcyDB; } set { _CcyDB = value; } }
 
         public IEnumerable<DateTime> Dates { get { return _Data.Keys; } }
 
@@ -47,6 +51,15 @@ namespace Core
                                 .Last();
             AccountingData ad = _Data[t].Copy();
             _Data[date] = ad;
+        }
+
+        #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("TotalCcy", _TotalCcy, typeof(Currency));
         }
 
         #endregion

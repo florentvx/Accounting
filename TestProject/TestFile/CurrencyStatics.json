@@ -1,0 +1,6 @@
+{
+  "$type": "Core.Statics.CurrencyStatics, Core",
+  "Symbol": "$",
+  "DecimalNumber": 2,
+  "ThousandMark": 3
+}

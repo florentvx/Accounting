@@ -1,0 +1,4 @@
+{
+  "$type": "Core.Finance.Currency, Core",
+  "Ccy": "USD"
+}

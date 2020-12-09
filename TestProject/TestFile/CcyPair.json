@@ -1,0 +1,11 @@
+{
+  "$type": "Core.Finance.CurrencyPair, Core",
+  "_Ccy1": {
+    "$type": "Core.Finance.Currency, Core",
+    "Ccy": "EUR"
+  },
+  "_Ccy2": {
+    "$type": "Core.Finance.Currency, Core",
+    "Ccy": "USD"
+  }
+}

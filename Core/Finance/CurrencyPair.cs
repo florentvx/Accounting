@@ -1,38 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
+using Newtonsoft.Json;
 
 namespace Core.Finance
 {
-    public class CurrencyPair : IMarketInput
+    [JsonObject(MemberSerialization.OptIn)]
+    public class CurrencyPair : IMarketInput, ISerializable
     {
-        Tuple<Currency, Currency> _Data;
+        [JsonProperty]
+        Currency _Ccy1;
+
+        [JsonProperty]
+        Currency _Ccy2;
+
+        public CurrencyPair()
+        {
+        }
 
         public CurrencyPair(Currency ccy1, Currency ccy2)
         {
-            _Data = new Tuple<Currency, Currency>(ccy1, ccy2);
+            _Ccy1 = ccy1;
+            _Ccy2 = ccy2;
         }
 
         public CurrencyPair(ICcyAsset ccy1, ICcyAsset ccy2)
         {
-            _Data = new Tuple<Currency, Currency>(ccy1.Ccy, ccy2.Ccy);
+            _Ccy1 = ccy1.Ccy;
+            _Ccy2 = ccy2.Ccy;
         }
 
         public CurrencyPair(string ccy1, string ccy2)
         {
-            _Data = new Tuple<Currency, Currency>(new Currency(ccy1), new Currency(ccy2));
+            _Ccy1 = new Currency(ccy1);
+            _Ccy2 = new Currency(ccy2);
         }
 
         #region IMarketInput
 
-        public Currency Ccy1 { get { return _Data.Item1; } }
+        public Currency Ccy1 { get { return _Ccy1; } }
 
         public Asset Asset1 { get { return null; } }
 
-        public Currency Ccy2 { get { return _Data.Item2; } }
+        public Currency Ccy2 { get { return _Ccy2; } }
 
         public object Item1 { get => Ccy1; }
 
@@ -82,6 +96,58 @@ namespace Core.Finance
         public bool Contains(ICcyAsset ccy)
         {
             return (ccy.Ccy == Ccy1 || ccy.Ccy == Ccy2);
+        }
+
+        #endregion
+
+        #region IEquatable
+
+        public bool Equals(IMarketInput cp)
+        {
+            if (cp == null)
+                return false;
+            return cp.Ccy1 == Ccy1 && cp.Ccy2 == Ccy2;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as IMarketInput);
+        }
+
+        public override int GetHashCode()
+        {
+            return Ccy1.GetHashCode() + Ccy2.GetHashCode();
+        }
+
+        public static bool operator ==(CurrencyPair cp1, IMarketInput cp2)
+        {
+            if (cp1 is null)
+            {
+                if (cp2 is null) { return true; }
+                return false;
+            }
+            return cp1.Equals(cp2);
+        }
+
+        public static bool operator !=(CurrencyPair cp1, IMarketInput cp2)
+        {
+            return !(cp1 == cp2);
+        }
+
+        #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Ccy1", Ccy1, typeof(Currency));
+            info.AddValue("Ccy2", Ccy2, typeof(Currency));
+        }
+
+        public CurrencyPair(SerializationInfo info, StreamingContext context)
+        {
+            _Ccy1 = (Currency)info.GetValue("Ccy1", typeof(Currency));
+            _Ccy2 = (Currency)info.GetValue("Ccy2", typeof(Currency));
         }
 
         #endregion

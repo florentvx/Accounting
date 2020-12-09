@@ -1,49 +1,93 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
 
 namespace Core.Finance
 {
-    public class Market
+    public class Market : IEquatable<Market>
     {
-        public Dictionary<IMarketInput, double> _Data;
+        virtual public Dictionary<IMarketInput, double> GetData()
+        {
+            throw new NotImplementedException();
+        }
+
+        virtual public void SetData(Dictionary<IMarketInput, double> input) { }
+
         List<IMarketInput> _Pairs;
 
-        public Market()
+        public Market() { _Pairs = new List<IMarketInput> { }; }
+
+        #region IEquatable
+
+        public bool Equals(Market mkt)
         {
-            _Data = new Dictionary<IMarketInput, double> { };
-            _Pairs = new List<IMarketInput> { };
-        } 
+            if (mkt == null)
+                return false;
+            return Tools.CompareDictionary<IMarketInput, double>(GetData(), mkt.GetData());
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as Market);
+        }
+
+        public override int GetHashCode()
+        {
+            return GetData().GetHashCode();
+        }
+
+        public static bool operator ==(Market mkt1, Market mkt2)
+        {
+            if (mkt1 is null)
+            {
+                if (mkt2 is null) { return true; }
+                return false;
+            }
+            return mkt1.Equals(mkt2);
+        }
+
+        public static bool operator !=(Market mkt1, Market mkt2)
+        {
+            return !(mkt1 == mkt2);
+        }
+
+        #endregion
 
         virtual public void Reset()
         {
-            _Data = new Dictionary<IMarketInput, double> { };
+            //_Data = new Dictionary<IMarketInput, double> { };
             _Pairs = new List<IMarketInput> { };
         }
 
         public IEnumerable<Tuple<IMarketInput, double>> EnumerateData()
         {
-            return _Pairs.Select(x => new Tuple<IMarketInput, double>(x, _Data[x]));
+            var data = GetData();
+            return _Pairs.Select(x => new Tuple<IMarketInput, double>(x, data[x]));
         }
 
         virtual protected void AddQuoteToDictionary(IMarketInput imi, double value)
         {
-            _Data[imi] = value;
+            var data = GetData();
+            data[imi] = value;
             _Pairs.Add(imi);
+            SetData(data);
         }
 
         public void AddQuote(IMarketInput imi, double value)
         {
-            var presentData = _Data.Where(x => x.Key.IsEquivalent(imi)).Select(x => x.Key).ToList();
+            var data = GetData();
+            var presentData = data.Where(x => x.Key.IsEquivalent(imi)).Select(x => x.Key).ToList();
             if (presentData.Count() == 1)
             {
                 if (presentData[0].IsEqual(imi))
-                    _Data[presentData[0]] = value;
+                    data[presentData[0]] = value;
                 else
-                    _Data[presentData[0]] = 1 / value;
+                    data[presentData[0]] = 1 / value;
+                SetData(data);
             }
             else if (presentData.Count() == 0)
             {
@@ -53,13 +97,15 @@ namespace Core.Finance
 
         public void Copy(IMarket imkt)
         {
-            _Data = new Dictionary<IMarketInput, double> { };
+            var data = GetData();
+            data = new Dictionary<IMarketInput, double> { };
             _Pairs = new List<IMarketInput> { };
             foreach(var item in imkt.EnumerateData())
             {
                 _Pairs.Add(item.Item1);
-                _Data.Add(item.Item1, item.Item2);
+                data.Add(item.Item1, item.Item2);
             }
+            SetData(data);
         }
     }
 }

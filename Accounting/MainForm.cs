@@ -75,6 +75,15 @@ namespace Accounting
 
             AddAccountingData(DateTime.Today.AddMonths(-2), ad1);
             AddAccountingData(DateTime.Today.AddMonths(-1), ad2);
+
+            //FileStream fs = new FileStream(@"C:\\Users\flore\\OneDrive\\Documents\\temp\\test.xml", FileMode.OpenOrCreate);
+            //System.Xml.Serialization.XmlSerializer s = new System.Xml.Serialization.XmlSerializer(typeof(CurrencyAssetStaticsDataBase));
+            //s.Serialize(fs, _DataHistory.CcyDB);
+
+            //string fileName = @"C:\\Users\flore\\OneDrive\\Documents\\temp\\test.json";
+
+            //string jsonString = JsonConvert.SerializeObject(_DataHistory.CcyDB, Formatting.Indented);
+            //File.WriteAllText(fileName, jsonString);
         }
 
         private void OnLoad()

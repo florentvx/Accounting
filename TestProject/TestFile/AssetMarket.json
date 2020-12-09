@@ -1,0 +1,33 @@
+{
+  "$type": "Core.Finance.AssetMarket, Core",
+  "Dict": [
+    {
+      "Key": {
+        "$type": "Core.Finance.AssetCcyPair, Core",
+        "Asset1": {
+          "$type": "Core.Finance.Asset, Core",
+          "Asset": "BNP"
+        },
+        "Ccy2": {
+          "$type": "Core.Finance.Currency, Core",
+          "Ccy": "EUR"
+        }
+      },
+      "Value": 48.5
+    },
+    {
+      "Key": {
+        "$type": "Core.Finance.AssetCcyPair, Core",
+        "Asset1": {
+          "$type": "Core.Finance.Asset, Core",
+          "Asset": "BTC"
+        },
+        "Ccy2": {
+          "$type": "Core.Finance.Currency, Core",
+          "Ccy": "EUR"
+        }
+      },
+      "Value": 15000.0
+    }
+  ]
+}

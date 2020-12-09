@@ -1,0 +1,4 @@
+{
+  "$type": "Core.Finance.Asset, Core",
+  "Asset": "BTC"
+}
