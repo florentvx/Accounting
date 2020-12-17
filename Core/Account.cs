@@ -5,13 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
 using Core.Finance;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Core
 {
-    public class Account : IAccount, IAccountingElement
+    [Serializable]
+    public class Account : IAccount, IAccountingElement, IEquatable<Account>, ISerializable
     {
+        [JsonProperty]
         string _AccountName;
+        [JsonProperty]
         ICcyAsset _Ccy;
+        [JsonProperty]
         double _Amount;
         Currency _ConvertedCcy;
         double _ConvertedAmount;
@@ -101,6 +107,68 @@ namespace Core
         public void Delete(string v)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IEquatable
+
+        public bool Equals(Account acc)
+        {
+            if (acc == null)
+                return false;
+            return _AccountName == acc._AccountName
+                && _Ccy.Ccy == acc._Ccy.Ccy
+                && _Ccy.Asset == acc._Ccy.Asset
+                && _Amount == acc._Amount;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as Account);
+        }
+
+        public override int GetHashCode()
+        {
+            return _AccountName.GetHashCode() + _Ccy.GetHashCode() + _Amount.GetHashCode();
+        }
+
+        public static bool operator ==(Account acc1, Account acc2)
+        {
+            if (acc1 is null)
+            {
+                if (acc2 is null) { return true; }
+                return false;
+            }
+            return acc1.Equals(acc2);
+        }
+
+        public static bool operator !=(Account acc1, Account acc2)
+        {
+            return !(acc1 == acc2);
+        }
+
+        #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Name", _AccountName, typeof(string));
+            info.AddValue("Currency", _Ccy.Ccy, typeof(Currency));
+            info.AddValue("Asset", _Ccy.Asset, typeof(Asset));
+            info.AddValue("Amount", _Amount, typeof(double));
+        }
+
+        public Account(SerializationInfo info, StreamingContext context)
+        {
+            _AccountName = (string)info.GetValue("Name", typeof(string));
+            Currency ccy = (Currency)info.GetValue("Currency", typeof(Currency));
+            if (!(ccy == null))
+                _Ccy = (ICcyAsset)ccy;
+            else
+                _Ccy = (ICcyAsset)info.GetValue("Asset", typeof(Asset));
+            _Amount = (double)info.GetValue("Amount", typeof(double));
         }
 
         #endregion

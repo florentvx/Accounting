@@ -42,6 +42,7 @@ namespace Core.Statics
         internal string ValueToString(double value)
         {
             string res = "";
+            value = Math.Round(value, _DecimalNumber);
             double roundedvalue = Math.Floor(value);
             if (_DecimalNumber == 0)
                 roundedvalue = Math.Round(value, 0);

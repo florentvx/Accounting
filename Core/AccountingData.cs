@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using Core.Finance;
 using Core.Statics;
 using Core.Interfaces;
+using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace Core
 {
@@ -22,20 +24,37 @@ namespace Core
         }
     }
 
-    public class AccountingData : IAccountingData
+    [Serializable]
+    public class AccountingData : IAccountingData, IEquatable<AccountingData>, ISerializable
     {
+        [JsonProperty]
         Currency _Ccy; // Ccy Total
+
         double _TotalValue; // Total value in Ccy Total
+
         CurrencyAssetStaticsDataBase _CcyDB; //Copy By Ref of CcyAssetDataBase
-        Dictionary<string, Category> _Data = new Dictionary<string, Category> { };
+
+        [JsonProperty]
+        List<Category> _Data = new List<Category> { };
+
+        [JsonProperty]
         FXMarket _FXMarket;
+
+        [JsonProperty]
         AssetMarket _AssetMarket;
+
+        [JsonProperty]
         TreeViewMapping _Map;
 
         public Currency Ccy
         {
             get { return _Ccy; }
             ///set { _Ccy = value; }
+        }
+
+        public Dictionary<string, Category> GetData()
+        {
+            return _Data.ToDictionary(x => x.CategoryName, x => x);
         }
 
         public void SetCcyDB(CurrencyAssetStaticsDataBase ccyDB)
@@ -45,7 +64,8 @@ namespace Core
 
         private Category GetCategory(string catName)
         {
-            return _Data[catName];
+            var data = GetData();
+            return data[catName];
         }
 
         private Institution GetInstitution(string catName, string institName)
@@ -77,15 +97,16 @@ namespace Core
 
         public ICategory GetFirstCategory()
         {
-            return _Data[_Data.Keys.First().ToString()];
+            return _Data.First();
         }
 
         public IEnumerable<ICategory> Categories
         {
             get
             {
+                var data = GetData();
                 IEnumerable<string> nameList = _Map.GetList(new NodeAddress(NodeType.All, ""));
-                return nameList.Select(x => _Data[x]);
+                return nameList.Select(x => data[x]);
             }
         }
 
@@ -93,7 +114,7 @@ namespace Core
         {
             double total = 0;
             foreach (var item in _Data)
-                total += item.Value.TotalInstitution(_FXMarket, _AssetMarket, Ccy).ConvertedAmount;
+                total += item.TotalInstitution(_FXMarket, _AssetMarket, Ccy).ConvertedAmount;
             _TotalValue = total;
             return new Account("Total", Ccy, total);
         }
@@ -107,19 +128,22 @@ namespace Core
         public bool ChangeName(string before, string after, NodeAddress nodeTag)
         {
             bool test = false;
+            var data = GetData();
             if (nodeTag.NodeType == NodeType.Category)
             {
-                if (!_Data.ContainsKey(after))
+                if (!data.ContainsKey(after))
                 {
-                    _Data[after] = _Data[before];
-                    _Data.Remove(before);
-                    _Data[after].CategoryName = after;
+                    Category cat = GetCategory(before);
+                    cat.CategoryName = after;
+                    //_Data[after] = _Data[before];
+                    //_Data.Remove(before);
+                    //_Data[after].CategoryName = after;
                     test = true;
                 }
             }
             else
             {
-                test = _Data[nodeTag.Address[0]].ChangeName(before, after, nodeTag);
+                test = GetCategory(nodeTag.Address[0]).ChangeName(before, after, nodeTag);
             }
             if (test)
                 _Map.ChangeName(nodeTag, after);
@@ -160,7 +184,7 @@ namespace Core
 
         public void Reset(string ccy, CurrencyStatics cs)
         {
-            _Data = new Dictionary<string, Category> { };
+            _Data = new List<Category> { };
             Map.Reset();
             _FXMarket.Reset();
             _CcyDB.AddRefCcy(ccy, cs);
@@ -171,11 +195,91 @@ namespace Core
 
         #endregion
 
+        #region IEquatable
+
+        public bool Equals(AccountingData ad)
+        {
+            if (ad == null)
+                return false;
+            if (_Ccy == ad._Ccy
+                && _CcyDB == ad._CcyDB
+                && _FXMarket == ad._FXMarket
+                && _AssetMarket == ad._AssetMarket
+                && _Map == ad._Map
+                && _Data.Count == ad._Data.Count)
+            {
+                for (int i = 0; i < _Data.Count; i++)
+                {
+                    if (_Data[i] != ad._Data[i])
+                        return false;
+                }
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as AccountingData);
+        }
+
+        public override int GetHashCode()
+        {
+            int res = _Ccy.GetHashCode() + _CcyDB.GetHashCode();
+            res += _FXMarket.GetHashCode() + _AssetMarket.GetHashCode();
+            res += _Map.GetHashCode();
+            foreach (Category item in _Data)
+                res += item.GetHashCode();
+            return res;
+        }
+
+        public static bool operator ==(AccountingData ad1, AccountingData ad2)
+        {
+            if (ad1 is null)
+            {
+                if (ad2 is null) { return true; }
+                return false;
+            }
+            return ad1.Equals(ad2);
+        }
+
+        public static bool operator !=(AccountingData ad1, AccountingData ad2)
+        {
+            return !(ad1 == ad2);
+        }
+
+        #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Currency", _Ccy, typeof(Currency));
+            info.AddValue("CcyDB", _CcyDB, typeof(CurrencyAssetStaticsDataBase));
+            info.AddValue("Categories", _Data, typeof(List<Category>));
+            info.AddValue("FXMarket", _FXMarket, typeof(FXMarket));
+            info.AddValue("AssetMarket", _AssetMarket, typeof(AssetMarket));
+            info.AddValue("Map", _Map, typeof(TreeViewMapping));
+        }
+
+        public AccountingData(SerializationInfo info, StreamingContext context)
+        {
+            _Ccy = (Currency)info.GetValue("Currency", typeof(Currency));
+            _CcyDB = (CurrencyAssetStaticsDataBase)info.GetValue("CcyDB", typeof(CurrencyAssetStaticsDataBase));
+            _Data = (List<Category>)info.GetValue("Categories", typeof(List<Category>));
+            _FXMarket = (FXMarket)info.GetValue("FXMarket", typeof(FXMarket));
+            _AssetMarket = (AssetMarket)info.GetValue("AssetMarket", typeof(AssetMarket));
+            _Map = (TreeViewMapping)info.GetValue("Map", typeof(TreeViewMapping));
+        }
+
+        #endregion
+
         public AccountingData(CurrencyAssetStaticsDataBase ccyDB)
         {
             _CcyDB = ccyDB;
             _Ccy = ccyDB.RefCcy;
-            _Data = new Dictionary<string, Category> { };
+            _Data = new List<Category> { };
             _FXMarket = new FXMarket(Ccy);
             _AssetMarket = new AssetMarket();
             AddNewCategory();
@@ -185,7 +289,7 @@ namespace Core
         public AccountingData(List<Category> input, FXMarket mkt, AssetMarket aMkt)
         {
             _Ccy = new Currency("USD");
-            _Data = input.ToDictionary(x => x.CategoryName, x => x);
+            _Data = input;
             _FXMarket = mkt;
             _AssetMarket = aMkt;
             _Map = new TreeViewMapping(_Data);
@@ -222,9 +326,10 @@ namespace Core
         public Category AddNewCategory()
         {
             int i = 0;
+            var data = GetData();
             string newNameRef = "New Category";
             string newName = newNameRef;
-            while (_Data.ContainsKey(newName))
+            while (data.ContainsKey(newName))
             {
                 i++;
                 newName = $"{newNameRef} - {i}";
@@ -232,7 +337,7 @@ namespace Core
             Category cat = new Category(newName, _CcyDB.RefCcy);
             cat.AddInstitution("New Institution");
             cat.AddAccount("New Account", "New Institution");
-            _Data.Add(cat.CategoryName, cat);
+            _Data.Add(cat);
             return cat;
         }
 
@@ -248,7 +353,7 @@ namespace Core
                     nodeAddress.ChangeAddress(newCat.CategoryName);
                     return nodeAddress;
                 case NodeType.Institution:
-                    Institution newInstit = _Data[nodeAddress.Address[0]].AddNewInstitution();
+                    Institution newInstit = GetCategory(nodeAddress.Address[0]).AddNewInstitution();
                     Map.AddItem(nodeAddress, newInstit);
                     nodeAddress.ChangeAddress(newInstit.InstitutionName);
                     return nodeAddress;
@@ -270,7 +375,7 @@ namespace Core
             {
                 if (_Data.Count > 1)
                 {
-                    _Data.Remove(na.Address[0]);
+                    _Data.Remove(GetCategory(na.Address[0]));
                     res = _Map.DeleteNode(na);
                 }
                 else
@@ -300,9 +405,9 @@ namespace Core
 
         public AccountingData Copy()
         {
-            Dictionary<string, Category> newData = new Dictionary<string, Category> { };
-            foreach (var text in _Data.Keys)
-                newData[text] = _Data[text].Copy();
+            List<Category> newData = new List<Category> { };
+            foreach (var cat in _Data)
+                newData.Add(cat.Copy());
 
             FXMarket fxmkt = new FXMarket(_CcyDB.RefCcy);
             fxmkt.Copy(_FXMarket);

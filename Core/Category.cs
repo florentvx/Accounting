@@ -1,18 +1,31 @@
 ﻿using Core.Finance;
 using Core.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Core
 {
-    public class Category : ICategory, IAccountingElement
+    [Serializable]
+    public class Category : ICategory, IAccountingElement, IEquatable<Category>, ISerializable
     {
+        [JsonProperty]
         private string _CategoryName;
+
+        [JsonProperty]
         Currency _Ccy;
-        Dictionary<string, Institution> _Institutions;
+
+        [JsonProperty]
+        public List<Institution> _Institutions;
+
+        public Dictionary<string, Institution> InstitutionsDictionary
+        {
+            get { return _Institutions.ToDictionary(x => x.InstitutionName, x => x); }
+        }
 
         #region ICategory
 
@@ -26,7 +39,7 @@ namespace Core
 
         public IEnumerable<IInstitution> GetInstitutions(TreeViewMappingElement tvme)
         {
-            return tvme.Nodes.Select(x => _Institutions[x.Name]);
+            return tvme.Nodes.Select(x => InstitutionsDictionary[x.Name]);
         }
 
         public IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideName)
@@ -54,7 +67,7 @@ namespace Core
 
         public IEnumerable<IAccountingElement> GetItemList()
         {
-            return _Institutions.Values.ToList<IAccountingElement>();
+            return _Institutions.ToList<IAccountingElement>();
         }
 
         public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
@@ -91,8 +104,78 @@ namespace Core
         {
             if (GetItemList().Count() > 1)
             {
-                _Institutions.Remove(v);
+                _Institutions = _Institutions.Where(x => x.InstitutionName != v).Select(x => x).ToList();
+                //_Institutions.Remove(v);
             }
+        }
+
+        #endregion
+
+        #region IEquatable
+
+        public bool Equals(Category cat)
+        {
+            if (cat == null)
+                return false;
+            if (_CategoryName == cat._CategoryName
+                && _Ccy == cat._Ccy
+                && _Institutions.Count == cat._Institutions.Count)
+            {
+                for (int i = 0; i < _Institutions.Count; i++)
+                {
+                    if (_Institutions[i] != cat._Institutions[i])
+                        return false;
+                }
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as Category);
+        }
+
+        public override int GetHashCode()
+        {
+            int res = _CategoryName.GetHashCode() + _Ccy.GetHashCode();
+            foreach (Institution item in _Institutions)
+                res += item.GetHashCode();
+            return res;
+        }
+
+        public static bool operator ==(Category cat1, Category cat2)
+        {
+            if (cat1 is null)
+            {
+                if (cat2 is null) { return true; }
+                return false;
+            }
+            return cat1.Equals(cat2);
+        }
+
+        public static bool operator !=(Category cat1, Category cat2)
+        {
+            return !(cat1 == cat2);
+        }
+
+        #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Name", _CategoryName, typeof(string));
+            info.AddValue("Currency", _Ccy, typeof(Currency));
+            info.AddValue("Institutions", _Institutions, typeof(List<Institution>));
+        }
+
+        public Category(SerializationInfo info, StreamingContext context)
+        {
+            _CategoryName = (string)info.GetValue("Name", typeof(string));
+            _Ccy = (Currency)info.GetValue("Currency", typeof(Currency));
+            _Institutions = (List<Institution>)info.GetValue("Institutions", typeof(List<Institution>));
         }
 
         #endregion
@@ -101,17 +184,17 @@ namespace Core
         {
             _CategoryName = name;
             _Ccy = ccy;
-            _Institutions = new Dictionary<string, Institution> { };
+            _Institutions = new List<Institution> { };
         }
 
         public IEnumerable<IInstitution> Institutions
         {
-            get { return _Institutions.Values.ToList<IInstitution>(); }
+            get { return _Institutions.ToList<IInstitution>(); }
         }
 
         public Institution GetInstitution(string name)
         {
-            return _Institutions[name];
+            return InstitutionsDictionary[name];
         }
 
         public void AddInstitution(string name, Currency currency = null)
@@ -119,12 +202,12 @@ namespace Core
             if (currency == null)
                 currency = Ccy;
             Institution instit = new Institution(name, currency);
-            _Institutions.Add(instit.InstitutionName, instit);
+            _Institutions.Add(instit);
         }
 
-        private void AddInstitution(string name, Institution instit)
+        public void AddInstitution(Institution instit)
         {
-            _Institutions.Add(name, instit);
+            _Institutions.Add(instit);
         }
 
         public Institution AddNewInstitution()
@@ -132,19 +215,20 @@ namespace Core
             int i = 0;
             string newNameRef = "New Institution";
             string newName = newNameRef;
-            while (_Institutions.ContainsKey(newName))
+            while (InstitutionsDictionary.ContainsKey(newName))
             {
                 i++;
                 newName = $"{newNameRef} - {i}";
             }
             AddInstitution(newName);
-            _Institutions[newName].AddAccount("New Account");
-            return _Institutions[newName];
+            Institution newInstit = GetInstitution(newName);
+            newInstit.AddAccount("New Account");
+            return newInstit;
         }
 
         public void AddAccount(string name, string institutionName)
         {
-            Institution instit = _Institutions[institutionName];
+            Institution instit = GetInstitution(institutionName);
             instit.AddAccount(name, instit.Ccy);
         }
 
@@ -153,17 +237,16 @@ namespace Core
             bool test = false;
             if (nodeTag.NodeType == NodeType.Institution)
             {
-                if (_Institutions.ContainsKey(before) && !_Institutions.ContainsKey(after))
+                if (InstitutionsDictionary.ContainsKey(before) && !InstitutionsDictionary.ContainsKey(after))
                 {
-                    _Institutions[after] = _Institutions[before];
-                    _Institutions[after].InstitutionName = after;
-                    _Institutions.Remove(before);
+                    Institution instit_before = GetInstitution(before);
+                    instit_before.InstitutionName = after;
                     test = true;
                 }
             }
             else
             {
-                test = _Institutions[nodeTag.Address[1]].ChangeName(before, after, nodeTag);
+                test = GetInstitution(nodeTag.Address[1]).ChangeName(before, after, nodeTag);
             }
             return test;
         }
@@ -171,9 +254,9 @@ namespace Core
         public Category Copy()
         {
             Category res = new Category(_CategoryName, (Currency)_Ccy.Clone());
-            foreach (string item in _Institutions.Keys)
+            foreach (var item in _Institutions)
             {
-                res.AddInstitution(item, _Institutions[item].Copy());
+                res.AddInstitution(item.Copy());
             }
             return res;
         }

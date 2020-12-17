@@ -1,0 +1,10 @@
+{
+  "$type": "Core.Account, Core",
+  "Name": "Wallet",
+  "Currency": null,
+  "Asset": {
+    "$type": "Core.Finance.Asset, Core",
+    "Asset": "BTC"
+  },
+  "Amount": 0.0001
+}

@@ -1,0 +1,10 @@
+{
+  "$type": "Core.Account, Core",
+  "Name": "Checking",
+  "Currency": {
+    "$type": "Core.Finance.Currency, Core",
+    "Ccy": "GBP"
+  },
+  "Asset": null,
+  "Amount": 1000.0
+}

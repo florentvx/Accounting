@@ -1,17 +1,23 @@
 ﻿using Core.Finance;
 using Core.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Core
 {
-    public class Institution : IInstitution, IAccountingElement
+    [Serializable]
+    public class Institution : IInstitution, IAccountingElement, IEquatable<Institution>, ISerializable
     {
+        [JsonProperty]
         string _InstitutionName;
+        [JsonProperty]
         Currency _Ccy;
+        [JsonProperty]
         List<Account> _Accounts;
 
         #region IInstitution
@@ -121,6 +127,76 @@ namespace Core
 
         #endregion
 
+        #region IEquatable
+
+        public bool Equals(Institution instit)
+        {
+            if (instit == null)
+                return false;
+            if (_InstitutionName == instit._InstitutionName
+                && _Ccy == instit._Ccy
+                && _Accounts.Count == instit._Accounts.Count)
+            {
+                for (int i = 0; i < _Accounts.Count; i++)
+                {
+                    if (_Accounts[i] != instit._Accounts[i])
+                        return false;
+                }
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as Institution);
+        }
+
+        public override int GetHashCode()
+        {
+            int res = _InstitutionName.GetHashCode() + _Ccy.GetHashCode();
+            foreach (Account item in _Accounts)
+                res += item.GetHashCode();
+            return res;
+        }
+
+        public static bool operator ==(Institution in1, Institution in2)
+        {
+            if (in1 is null)
+            {
+                if (in2 is null) { return true; }
+                return false;
+            }
+            return in1.Equals(in2);
+        }
+
+        public static bool operator !=(Institution in1, Institution in2)
+        {
+            return !(in1 == in2);
+        }
+
+        #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Name", _InstitutionName, typeof(string));
+            info.AddValue("Currency", _Ccy, typeof(Currency));
+            info.AddValue("Accounts", _Accounts, typeof(List<Account>));
+        }
+
+        public Institution(SerializationInfo info, StreamingContext context)
+        {
+            _InstitutionName = (string)info.GetValue("Name", typeof(string));
+            _Ccy = (Currency)info.GetValue("Currency", typeof(Currency));
+            _Accounts = (List<Account>)info.GetValue("Accounts", typeof(List<Account>));
+        }
+
+        #endregion
+
+
         public Institution(string name, Currency ccy)
         {
             _InstitutionName = name;
@@ -136,16 +212,16 @@ namespace Core
             throw new Exception($"Account Name [{accountName}] not found in Insitution [{InstitutionName}]");
         }
 
-        public Account AddAccount(string name, Currency currency = null)
+        public Account AddAccount(string name, ICcyAsset currency = null, double amount = 0)
         {
             if (currency == null)
                 currency = Ccy;
-            Account account = new Account(name, currency);
+            Account account = new Account(name, currency, amount);
             _Accounts.Add(account);
             return account;
         }
 
-        private void AddAccount(Account acc)
+        public void AddAccount(Account acc)
         {
             _Accounts.Add(acc);
         }

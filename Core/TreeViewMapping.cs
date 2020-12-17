@@ -1,17 +1,24 @@
 ﻿using Core.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Core
 {
-    public class TreeViewMappingElement : IEnumerable<TreeViewMappingElement>
+    [Serializable]
+    public class TreeViewMappingElement : IEquatable<TreeViewMappingElement>, ISerializable
     {
+        [JsonProperty]
         public string Name;
+
+        [JsonProperty]
         public List<TreeViewMappingElement> Nodes;
+
         public bool Expand; 
 
         #region IEnumerable
@@ -21,9 +28,87 @@ namespace Core
             return Nodes.GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        //IEnumerator IEnumerable.GetEnumerator()
+        //{
+        //    return Nodes.GetEnumerator();
+        //}
+
+        #endregion
+
+        #region IEquatable
+
+        public bool Equals(TreeViewMappingElement tvme)
         {
-            return Nodes.GetEnumerator();
+            if (tvme == null)
+                return false;
+            if( Name == tvme.Name
+                && Expand == tvme.Expand)
+            {
+                if (Nodes == null)
+                {
+                    if (tvme.Nodes == null)
+                        return true;
+                    return false;
+                }
+                else
+                {
+                    if (Nodes.Count != tvme.Nodes.Count)
+                        return false;
+                    for (int i = 0; i < Nodes.Count; i++)
+                    {
+                        if (Nodes[i] != tvme.Nodes[i])
+                            return false;
+                    }
+                    return true;
+                }
+                
+            }
+            return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as TreeViewMappingElement);
+        }
+
+        public override int GetHashCode()
+        {
+            int res = Name.GetHashCode() + Expand.GetHashCode();
+            foreach (var item in Nodes)
+                res += item.GetHashCode();
+            return res;
+        }
+
+        public static bool operator ==(TreeViewMappingElement tvme1, TreeViewMappingElement tvme2)
+        {
+            if (tvme1 is null)
+            {
+                if (tvme2 is null) { return true; }
+                return false;
+            }
+            return tvme1.Equals(tvme2);
+        }
+
+        public static bool operator !=(TreeViewMappingElement tvme1, TreeViewMappingElement tvme2)
+        {
+            return !(tvme1 == tvme2);
+        }
+
+        #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Name", Name, typeof(string));
+            info.AddValue("Nodes", Nodes, typeof(List<TreeViewMappingElement>));
+        }
+
+        public TreeViewMappingElement(SerializationInfo info, StreamingContext context)
+        {
+            Name = (string)info.GetValue("Name", typeof(string));
+            Nodes = (List<TreeViewMappingElement>)info.GetValue("Nodes", typeof(List<TreeViewMappingElement>));
+            Expand = false;
         }
 
         #endregion
@@ -31,7 +116,7 @@ namespace Core
         public TreeViewMappingElement(string name)
         {             
             Name = name;
-            Nodes = null;
+            Nodes = new List<TreeViewMappingElement> { };
             Expand = false;
         }
 
@@ -47,7 +132,7 @@ namespace Core
             return Nodes.FindIndex(x => x.Name == name);
         }
 
-        internal void AddElement(TreeViewMappingElement elmt)
+        public void AddElement(TreeViewMappingElement elmt)
         {
             if (Nodes == null)
                 Nodes = new List<TreeViewMappingElement> { };
@@ -149,8 +234,10 @@ namespace Core
         }
     }
 
-    public class TreeViewMapping : IEnumerable<TreeViewMappingElement>
+    [Serializable]
+    public class TreeViewMapping : IEquatable<TreeViewMapping>, ISerializable
     {
+        [JsonProperty]
         TreeViewMappingElement Map;
 
         #region IEnumerable
@@ -160,9 +247,59 @@ namespace Core
             return Map.GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        //IEnumerator IEnumerable.GetEnumerator()
+        //{
+        //    return Map.GetEnumerator();
+        //}
+
+        #endregion
+
+        #region IEquatable
+
+        public bool Equals(TreeViewMapping tvm)
         {
-            return Map.GetEnumerator();
+            if (tvm == null)
+                return false;
+            return Map == tvm.Map;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as TreeViewMapping);
+        }
+
+        public override int GetHashCode()
+        {
+            return Map.GetHashCode();
+        }
+
+        public static bool operator ==(TreeViewMapping tvm1, TreeViewMapping tvm2)
+        {
+            if (tvm1 is null)
+            {
+                if (tvm2 is null) { return true; }
+                return false;
+            }
+            return tvm1.Equals(tvm2);
+        }
+
+        public static bool operator !=(TreeViewMapping tvm1, TreeViewMapping tvm2)
+        {
+            return !(tvm1 == tvm2);
+        }
+
+        #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Map", Map, typeof(TreeViewMappingElement));
+        }
+
+        public TreeViewMapping(SerializationInfo info, StreamingContext context)
+        {
+            Map = (TreeViewMappingElement)info.GetValue("Map", typeof(TreeViewMappingElement));
         }
 
         #endregion
@@ -172,13 +309,13 @@ namespace Core
             Map = new TreeViewMappingElement("Root");
         }
 
-        public TreeViewMapping(Dictionary<string, Category> data)
+        public TreeViewMapping(List<Category> data)
         {
             Reset();
             foreach (var itemC in data)
             {
-                TreeViewMappingElement Map2 = Map.AddElement(itemC.Key);
-                foreach (var itemI in data[itemC.Key].Institutions)
+                TreeViewMappingElement Map2 = Map.AddElement(itemC.CategoryName);
+                foreach (var itemI in itemC.Institutions)
                 {
                     TreeViewMappingElement Map3 = Map2.AddElement(itemI.InstitutionName);
                     foreach (var itemA in itemI.Accounts)

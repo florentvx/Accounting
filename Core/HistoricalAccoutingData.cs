@@ -8,30 +8,40 @@ using Core.Statics;
 using Core.Finance;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Core
 {
+    [Serializable]
     public class HistoricalAccoutingData: IHistoricalAccountingData, ISerializable
     {
-        SortedDictionary<DateTime, AccountingData> _Data;
+        [JsonProperty]
+        List<KeyValuePair<DateTime, AccountingData>> _Data;
+
+        [JsonProperty]
         CurrencyAssetStaticsDataBase _CcyDB;
 
+        [JsonProperty]
         Currency _TotalCcy;
 
-        public SortedDictionary<DateTime, AccountingData> Data { get { return _Data; } set { _Data = value; } }
+        public SortedDictionary<DateTime, AccountingData> Data
+        {
+            get { return new SortedDictionary<DateTime, AccountingData>(_Data.ToDictionary(x => x.Key, x=> x.Value)); }
+        }
+
         public CurrencyAssetStaticsDataBase CcyDB { get { return _CcyDB; } set { _CcyDB = value; } }
 
-        public IEnumerable<DateTime> Dates { get { return _Data.Keys; } }
+        public IEnumerable<DateTime> Dates { get { return _Data.Select(x => x.Key); } }
 
         public HistoricalAccoutingData()
         {
-            _Data = new SortedDictionary<DateTime, AccountingData> { };
+            _Data = new List<KeyValuePair<DateTime, AccountingData>> { };
             _CcyDB = new CurrencyAssetStaticsDataBase();
         }
 
         #region IHistoricalAccountingData
 
-        public AccountingData GetData(DateTime date) { return _Data[date]; }
+        public AccountingData GetData(DateTime date) { return Data[date]; }
 
         public void Reset(DateTime date, string ccy, CurrencyStatics cs)
         {
@@ -39,18 +49,23 @@ namespace Core
             _CcyDB.Reset();
             _CcyDB.AddRefCcy(ccy, cs);
             AccountingData ad = new AccountingData(_CcyDB);
-            _Data[date] = ad;
+            _Data.Add(new KeyValuePair<DateTime, AccountingData>(date, ad));
         }
 
         public void AddNewDate(DateTime date)
         {
             if (_Data.Count() == 0)
                 return;
-            DateTime t = _Data  .Where(x => x.Key <= date)
-                                .Select(x=>x.Key)
+            int pos = _Data  .Select((item,index) => new
+                                {
+                                    Date = item.Key, 
+                                    Position = index
+                                })
+                                .Where(x => x.Date <= date)
+                                .Select(x=>x.Position)
                                 .Last();
-            AccountingData ad = _Data[t].Copy();
-            _Data[date] = ad;
+            AccountingData ad = _Data[pos].Value.Copy();
+            _Data.Insert(pos + 1, new KeyValuePair<DateTime, AccountingData>(date, ad));
         }
 
         #endregion
@@ -66,19 +81,18 @@ namespace Core
 
         private void ModifyCcy(object sender, ModifyCcyEventArgs e)
         {
-            foreach (var date in _Data.Keys)
+            foreach (var item in _Data)
             {
-                AccountingData ad = _Data[date];
-                ad.RecalculateTotal(e.Ccy);
+                item.Value.RecalculateTotal(e.Ccy);
             }
         }
 
         public void AddData(DateTime date, AccountingData ad)
         {
-            if (!_Data.ContainsKey(date))
+            if (_Data.Where(x => x.Key == date).Count() == 0)
             {
                 ad.Total(_TotalCcy);
-                _Data.Add(date, ad);
+                _Data.Add(new KeyValuePair<DateTime, AccountingData>(date, ad));
                 ad.ModifyCcyEventHandler += this.ModifyCcy;
             }
             else

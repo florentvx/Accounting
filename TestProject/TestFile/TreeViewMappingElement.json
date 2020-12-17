@@ -1,0 +1,44 @@
+{
+  "$type": "Core.TreeViewMappingElement, Core",
+  "Name": "ROOT",
+  "Nodes": [
+    {
+      "$type": "Core.TreeViewMappingElement, Core",
+      "Name": "X1",
+      "Nodes": [
+        {
+          "$type": "Core.TreeViewMappingElement, Core",
+          "Name": "Y1",
+          "Nodes": [
+            {
+              "$type": "Core.TreeViewMappingElement, Core",
+              "Name": "Z1",
+              "Nodes": []
+            }
+          ]
+        },
+        {
+          "$type": "Core.TreeViewMappingElement, Core",
+          "Name": "Y2",
+          "Nodes": []
+        }
+      ]
+    },
+    {
+      "$type": "Core.TreeViewMappingElement, Core",
+      "Name": "X2",
+      "Nodes": [
+        {
+          "$type": "Core.TreeViewMappingElement, Core",
+          "Name": "Y3",
+          "Nodes": []
+        }
+      ]
+    },
+    {
+      "$type": "Core.TreeViewMappingElement, Core",
+      "Name": "X3",
+      "Nodes": []
+    }
+  ]
+}

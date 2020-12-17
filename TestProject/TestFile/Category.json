@@ -1,0 +1,70 @@
+{
+  "$type": "Core.Category, Core",
+  "Name": "Category1",
+  "Currency": {
+    "$type": "Core.Finance.Currency, Core",
+    "Ccy": "GBP"
+  },
+  "Institutions": [
+    {
+      "$type": "Core.Institution, Core",
+      "Name": "Institution1",
+      "Currency": {
+        "$type": "Core.Finance.Currency, Core",
+        "Ccy": "JPY"
+      },
+      "Accounts": [
+        {
+          "$type": "Core.Account, Core",
+          "Name": "Checking",
+          "Currency": {
+            "$type": "Core.Finance.Currency, Core",
+            "Ccy": "GBP"
+          },
+          "Asset": null,
+          "Amount": 1000.0
+        },
+        {
+          "$type": "Core.Account, Core",
+          "Name": "Wallet",
+          "Currency": null,
+          "Asset": {
+            "$type": "Core.Finance.Asset, Core",
+            "Asset": "BTC"
+          },
+          "Amount": 0.0001
+        }
+      ]
+    },
+    {
+      "$type": "Core.Institution, Core",
+      "Name": "Institution2",
+      "Currency": {
+        "$type": "Core.Finance.Currency, Core",
+        "Ccy": "USD"
+      },
+      "Accounts": [
+        {
+          "$type": "Core.Account, Core",
+          "Name": "Checking2",
+          "Currency": {
+            "$type": "Core.Finance.Currency, Core",
+            "Ccy": "EUR"
+          },
+          "Asset": null,
+          "Amount": 1500.0
+        },
+        {
+          "$type": "Core.Account, Core",
+          "Name": "Stocks",
+          "Currency": null,
+          "Asset": {
+            "$type": "Core.Finance.Asset, Core",
+            "Asset": "AAPL"
+          },
+          "Amount": 1.0
+        }
+      ]
+    }
+  ]
+}
