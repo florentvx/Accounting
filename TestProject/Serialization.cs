@@ -128,8 +128,7 @@ namespace TestProject
             Assert.IsTrue(cs == desCs);
         }
 
-        [TestMethod]
-        public void CurrencyAssetStaticsDataBase()
+        private CurrencyAssetStaticsDataBase GetCcyDB()
         {
             CurrencyAssetStaticsDataBase casdb = new Core.Statics.CurrencyAssetStaticsDataBase();
             casdb.AddCcy("GBP", new CurrencyStatics("£", 3, 2));
@@ -137,6 +136,13 @@ namespace TestProject
             casdb.AddCcy("JPY", new CurrencyStatics("¥", 4, 0));
             casdb.RefCcy = new Currency("GBP");
             casdb.AddAsset("BNP", new AssetStatics("BNP", new Currency("EUR")));
+            return casdb;
+        }
+
+        [TestMethod]
+        public void CurrencyAssetStaticsDataBase()
+        {
+            CurrencyAssetStaticsDataBase casdb = GetCcyDB();
             string fileName = SerializeObject(casdb, "CurrencyAssetStaticsDB");
             CurrencyAssetStaticsDataBase desCasdb = DeserializeObject<CurrencyAssetStaticsDataBase>(fileName);
             Assert.IsTrue(casdb == desCasdb);
@@ -158,7 +164,7 @@ namespace TestProject
 
         private Account CreateAccountCurrency3()
         {
-            return new Account("ExtraAccount", new Asset("EUR"), 100.0);
+            return new Account("ExtraAccount", new Currency("EUR"), 100.0);
         }
 
         private Account CreateAccountAsset1()
@@ -293,6 +299,44 @@ namespace TestProject
             Assert.IsTrue(ad == desAd);
         }
 
+
+
         #endregion
+
+        [TestMethod]
+        public void HistoricalAccountingData()
+        {
+            HistoricalAccountingData had = new HistoricalAccountingData();
+            had.SetCcyDB(GetCcyDB());
+
+            // Create AccData 1
+            FXMarket fx1 = CreateFXMarket();
+            fx1.CcyRef = had.CcyDB.RefCcy;
+            fx1.AddQuote(new CurrencyPair("GBP", "EUR"), 1.1);
+            fx1.AddQuote(new CurrencyPair("GBP", "JPY"), 130);
+            AssetMarket amkt1 = CreateAssetMarket();
+            amkt1.AddQuote(new AssetCcyPair(new Asset("AAPL"), new Currency("USD")), 1234.56);
+            amkt1.PopulateWithFXMarket(fx1);
+            List<Category> list = new List<Category> { CreateCategory1(), CreateCategory2() };
+            AccountingData ad1 = new AccountingData(list, fx1, amkt1);
+            had.AddData(new DateTime(2020, 1, 1), ad1);
+
+            // Create AccData2
+            FXMarket fx2 = new FXMarket();
+            fx2.Copy(fx1);
+            fx2.AddQuote(new CurrencyPair("EUR", "USD"), 1.2);
+            fx2.AddQuote(new CurrencyPair("GBP", "EUR"), 1.15);
+            AssetMarket amkt2 = new AssetMarket();
+            amkt2.Copy(amkt1);
+            amkt2.AddQuote(new AssetCcyPair(new Asset("BNP"), new Currency("EUR")), 50.0);
+            amkt2.PopulateWithFXMarket(fx2);
+            AccountingData ad2 = new AccountingData(list, fx2, amkt2);
+            had.AddData(new DateTime(2020, 2, 3), ad2);
+
+            // Test
+            string fileName = SerializeObject(had, "HistoricalAccountingData");
+            HistoricalAccountingData desHad = DeserializeObject<HistoricalAccountingData>(fileName);
+            Assert.IsTrue(had == desHad);
+        }
     }
 }

@@ -4,7 +4,6 @@
     "$type": "Core.Finance.Currency, Core",
     "Ccy": "USD"
   },
-  "CcyDB": null,
   "Categories": [
     {
       "$type": "Core.Category, Core",
@@ -95,11 +94,11 @@
             {
               "$type": "Core.Account, Core",
               "Name": "ExtraAccount",
-              "Currency": null,
-              "Asset": {
-                "$type": "Core.Finance.Asset, Core",
-                "Asset": "EUR"
+              "Currency": {
+                "$type": "Core.Finance.Currency, Core",
+                "Ccy": "EUR"
               },
+              "Asset": null,
               "Amount": 100.0
             }
           ]

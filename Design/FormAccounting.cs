@@ -15,7 +15,7 @@ namespace Accounting
 {
     public partial class FormAccounting : Form, IView
     {
-        protected HistoricalAccoutingData _DataHistory;
+        protected HistoricalAccountingData _DataHistory;
         protected DateTime? _CurrentDate;
 
         public DateTime CurrentDate {
@@ -29,7 +29,7 @@ namespace Accounting
         public FormAccounting() : base()
         {
             InitializeComponent();
-            _DataHistory = new HistoricalAccoutingData();
+            _DataHistory = new HistoricalAccountingData();
             _CurrentDate = null;
         }
 

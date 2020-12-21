@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 namespace Core
 {
     [Serializable]
-    public class HistoricalAccoutingData: IHistoricalAccountingData, ISerializable
+    public class HistoricalAccountingData: IHistoricalAccountingData, IEquatable<HistoricalAccountingData>, ISerializable
     {
         [JsonProperty]
         List<KeyValuePair<DateTime, AccountingData>> _Data;
@@ -33,7 +33,7 @@ namespace Core
 
         public IEnumerable<DateTime> Dates { get { return _Data.Select(x => x.Key); } }
 
-        public HistoricalAccoutingData()
+        public HistoricalAccountingData()
         {
             _Data = new List<KeyValuePair<DateTime, AccountingData>> { };
             _CcyDB = new CurrencyAssetStaticsDataBase();
@@ -70,11 +70,73 @@ namespace Core
 
         #endregion
 
+        #region IEquatable
+
+        public bool Equals(HistoricalAccountingData had)
+        {
+            if (had == null)
+                return false;
+            if (_TotalCcy == had._TotalCcy
+                && _CcyDB == had._CcyDB)
+            {
+                for (int i = 0; i < _Data.Count; i++)
+                {
+                    if (_Data[i].Key != had._Data[i].Key
+                        && _Data[i].Value != had._Data[i].Value)
+                        return false;
+                }
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as HistoricalAccountingData);
+        }
+
+        public override int GetHashCode()
+        {
+            int res = _TotalCcy.GetHashCode() + _CcyDB.GetHashCode();
+            //res += _FXMarket.GetHashCode() + _AssetMarket.GetHashCode();
+            //res += _Map.GetHashCode();
+            //foreach (Category item in _Data)
+            //    res += item.GetHashCode();
+            return res;
+        }
+
+        public static bool operator ==(HistoricalAccountingData had1, HistoricalAccountingData had2)
+        {
+            if (had1 is null)
+            {
+                if (had2 is null) { return true; }
+                return false;
+            }
+            return had1.Equals(had2);
+        }
+
+        public static bool operator !=(HistoricalAccountingData had1, HistoricalAccountingData had2)
+        {
+            return !(had1 == had2);
+        }
+
+        #endregion
+
         #region ISerializable
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("TotalCcy", _TotalCcy, typeof(Currency));
+            info.AddValue("CcyDataBase", _CcyDB, typeof(CurrencyAssetStaticsDataBase));
+            info.AddValue("AccountingDataCollection", _Data, typeof(List<KeyValuePair<DateTime, AccountingData>>));
+        }
+
+        public HistoricalAccountingData(SerializationInfo info, StreamingContext context)
+        {
+            _TotalCcy = (Currency)info.GetValue("TotalCcy", typeof(Currency));
+            _CcyDB = (CurrencyAssetStaticsDataBase)info.GetValue("CcyDataBase", typeof(CurrencyAssetStaticsDataBase));
+            _Data = (List<KeyValuePair<DateTime, AccountingData>>)info.GetValue("AccountingDataCollection", typeof(List<KeyValuePair<DateTime, AccountingData>>));
         }
 
         #endregion

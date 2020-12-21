@@ -55,7 +55,7 @@
     <Compile Include="Statics\CurrencyAssetStaticsDataBase.cs" />
     <Compile Include="Statics\CurrencyStatics.cs" />
     <Compile Include="Finance\Market.cs" />
-    <Compile Include="HistoricalAccoutingData.cs" />
+    <Compile Include="HistoricalAccountingData.cs" />
     <Compile Include="Institution.cs" />
     <Compile Include="Interfaces\IAccount.cs" />
     <Compile Include="Interfaces\IAccountingData.cs" />

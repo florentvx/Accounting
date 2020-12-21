@@ -1,0 +1,593 @@
+{
+  "$type": "Core.HistoricalAccountingData, Core",
+  "TotalCcy": {
+    "$type": "Core.Finance.Currency, Core",
+    "Ccy": "GBP"
+  },
+  "CcyDataBase": {
+    "$type": "Core.Statics.CurrencyAssetStaticsDataBase, Core",
+    "DataBase": {
+      "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Core.Statics.CurrencyStatics, Core]], mscorlib",
+      "GBP": {
+        "$type": "Core.Statics.CurrencyStatics, Core",
+        "Symbol": "£",
+        "DecimalNumber": 2,
+        "ThousandMark": 3
+      },
+      "EUR": {
+        "$type": "Core.Statics.CurrencyStatics, Core",
+        "Symbol": "€",
+        "DecimalNumber": 2,
+        "ThousandMark": 3
+      },
+      "JPY": {
+        "$type": "Core.Statics.CurrencyStatics, Core",
+        "Symbol": "¥",
+        "DecimalNumber": 0,
+        "ThousandMark": 4
+      }
+    },
+    "AssetDataBase": {
+      "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Core.Statics.AssetStatics, Core]], mscorlib",
+      "BNP": {
+        "$type": "Core.Statics.AssetStatics, Core",
+        "Symbol": "BNP",
+        "Ccy": "EUR"
+      }
+    },
+    "RefCcy": {
+      "$type": "Core.Finance.Currency, Core",
+      "Ccy": "GBP"
+    }
+  },
+  "AccountingDataCollection": [
+    {
+      "Key": "2020-01-01T00:00:00",
+      "Value": {
+        "$type": "Core.AccountingData, Core",
+        "Currency": {
+          "$type": "Core.Finance.Currency, Core",
+          "Ccy": "GBP"
+        },
+        "Categories": [
+          {
+            "$type": "Core.Category, Core",
+            "Name": "Category1",
+            "Currency": {
+              "$type": "Core.Finance.Currency, Core",
+              "Ccy": "GBP"
+            },
+            "Institutions": [
+              {
+                "$type": "Core.Institution, Core",
+                "Name": "Institution1",
+                "Currency": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "JPY"
+                },
+                "Accounts": [
+                  {
+                    "$type": "Core.Account, Core",
+                    "Name": "Checking",
+                    "Currency": {
+                      "$type": "Core.Finance.Currency, Core",
+                      "Ccy": "GBP"
+                    },
+                    "Asset": null,
+                    "Amount": 1000.0
+                  },
+                  {
+                    "$type": "Core.Account, Core",
+                    "Name": "Wallet",
+                    "Currency": null,
+                    "Asset": {
+                      "$type": "Core.Finance.Asset, Core",
+                      "Asset": "BTC"
+                    },
+                    "Amount": 0.0001
+                  }
+                ]
+              },
+              {
+                "$type": "Core.Institution, Core",
+                "Name": "Institution2",
+                "Currency": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "USD"
+                },
+                "Accounts": [
+                  {
+                    "$type": "Core.Account, Core",
+                    "Name": "Checking2",
+                    "Currency": {
+                      "$type": "Core.Finance.Currency, Core",
+                      "Ccy": "EUR"
+                    },
+                    "Asset": null,
+                    "Amount": 1500.0
+                  },
+                  {
+                    "$type": "Core.Account, Core",
+                    "Name": "Stocks",
+                    "Currency": null,
+                    "Asset": {
+                      "$type": "Core.Finance.Asset, Core",
+                      "Asset": "AAPL"
+                    },
+                    "Amount": 1.0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "$type": "Core.Category, Core",
+            "Name": "Category",
+            "Currency": {
+              "$type": "Core.Finance.Currency, Core",
+              "Ccy": "EUR"
+            },
+            "Institutions": [
+              {
+                "$type": "Core.Institution, Core",
+                "Name": "Institution3",
+                "Currency": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "EUR"
+                },
+                "Accounts": [
+                  {
+                    "$type": "Core.Account, Core",
+                    "Name": "ExtraAccount",
+                    "Currency": {
+                      "$type": "Core.Finance.Currency, Core",
+                      "Ccy": "EUR"
+                    },
+                    "Asset": null,
+                    "Amount": 100.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "FXMarket": {
+          "$type": "Core.Finance.FXMarket, Core",
+          "_Data": [
+            {
+              "Key": {
+                "$type": "Core.Finance.CurrencyPair, Core",
+                "_Ccy1": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "EUR"
+                },
+                "_Ccy2": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "USD"
+                }
+              },
+              "Value": 1.1
+            },
+            {
+              "Key": {
+                "$type": "Core.Finance.CurrencyPair, Core",
+                "_Ccy1": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "GBP"
+                },
+                "_Ccy2": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "EUR"
+                }
+              },
+              "Value": 1.1
+            },
+            {
+              "Key": {
+                "$type": "Core.Finance.CurrencyPair, Core",
+                "_Ccy1": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "GBP"
+                },
+                "_Ccy2": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "JPY"
+                }
+              },
+              "Value": 130.0
+            }
+          ],
+          "CcyRef": {
+            "$type": "Core.Finance.Currency, Core",
+            "Ccy": "GBP"
+          }
+        },
+        "AssetMarket": {
+          "$type": "Core.Finance.AssetMarket, Core",
+          "Dict": [
+            {
+              "Key": {
+                "$type": "Core.Finance.AssetCcyPair, Core",
+                "Asset1": {
+                  "$type": "Core.Finance.Asset, Core",
+                  "Asset": "BNP"
+                },
+                "Ccy2": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "EUR"
+                }
+              },
+              "Value": 48.5
+            },
+            {
+              "Key": {
+                "$type": "Core.Finance.AssetCcyPair, Core",
+                "Asset1": {
+                  "$type": "Core.Finance.Asset, Core",
+                  "Asset": "BTC"
+                },
+                "Ccy2": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "EUR"
+                }
+              },
+              "Value": 15000.0
+            },
+            {
+              "Key": {
+                "$type": "Core.Finance.AssetCcyPair, Core",
+                "Asset1": {
+                  "$type": "Core.Finance.Asset, Core",
+                  "Asset": "AAPL"
+                },
+                "Ccy2": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "USD"
+                }
+              },
+              "Value": 1234.56
+            }
+          ]
+        },
+        "Map": {
+          "$type": "Core.TreeViewMapping, Core",
+          "Map": {
+            "$type": "Core.TreeViewMappingElement, Core",
+            "Name": "Root",
+            "Nodes": [
+              {
+                "$type": "Core.TreeViewMappingElement, Core",
+                "Name": "Category1",
+                "Nodes": [
+                  {
+                    "$type": "Core.TreeViewMappingElement, Core",
+                    "Name": "Institution1",
+                    "Nodes": [
+                      {
+                        "$type": "Core.TreeViewMappingElement, Core",
+                        "Name": "Checking",
+                        "Nodes": []
+                      },
+                      {
+                        "$type": "Core.TreeViewMappingElement, Core",
+                        "Name": "Wallet",
+                        "Nodes": []
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Core.TreeViewMappingElement, Core",
+                    "Name": "Institution2",
+                    "Nodes": [
+                      {
+                        "$type": "Core.TreeViewMappingElement, Core",
+                        "Name": "Checking2",
+                        "Nodes": []
+                      },
+                      {
+                        "$type": "Core.TreeViewMappingElement, Core",
+                        "Name": "Stocks",
+                        "Nodes": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "$type": "Core.TreeViewMappingElement, Core",
+                "Name": "Category",
+                "Nodes": [
+                  {
+                    "$type": "Core.TreeViewMappingElement, Core",
+                    "Name": "Institution3",
+                    "Nodes": [
+                      {
+                        "$type": "Core.TreeViewMappingElement, Core",
+                        "Name": "ExtraAccount",
+                        "Nodes": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "Key": "2020-02-03T00:00:00",
+      "Value": {
+        "$type": "Core.AccountingData, Core",
+        "Currency": {
+          "$type": "Core.Finance.Currency, Core",
+          "Ccy": "GBP"
+        },
+        "Categories": [
+          {
+            "$type": "Core.Category, Core",
+            "Name": "Category1",
+            "Currency": {
+              "$type": "Core.Finance.Currency, Core",
+              "Ccy": "GBP"
+            },
+            "Institutions": [
+              {
+                "$type": "Core.Institution, Core",
+                "Name": "Institution1",
+                "Currency": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "JPY"
+                },
+                "Accounts": [
+                  {
+                    "$type": "Core.Account, Core",
+                    "Name": "Checking",
+                    "Currency": {
+                      "$type": "Core.Finance.Currency, Core",
+                      "Ccy": "GBP"
+                    },
+                    "Asset": null,
+                    "Amount": 1000.0
+                  },
+                  {
+                    "$type": "Core.Account, Core",
+                    "Name": "Wallet",
+                    "Currency": null,
+                    "Asset": {
+                      "$type": "Core.Finance.Asset, Core",
+                      "Asset": "BTC"
+                    },
+                    "Amount": 0.0001
+                  }
+                ]
+              },
+              {
+                "$type": "Core.Institution, Core",
+                "Name": "Institution2",
+                "Currency": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "USD"
+                },
+                "Accounts": [
+                  {
+                    "$type": "Core.Account, Core",
+                    "Name": "Checking2",
+                    "Currency": {
+                      "$type": "Core.Finance.Currency, Core",
+                      "Ccy": "EUR"
+                    },
+                    "Asset": null,
+                    "Amount": 1500.0
+                  },
+                  {
+                    "$type": "Core.Account, Core",
+                    "Name": "Stocks",
+                    "Currency": null,
+                    "Asset": {
+                      "$type": "Core.Finance.Asset, Core",
+                      "Asset": "AAPL"
+                    },
+                    "Amount": 1.0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "$type": "Core.Category, Core",
+            "Name": "Category",
+            "Currency": {
+              "$type": "Core.Finance.Currency, Core",
+              "Ccy": "EUR"
+            },
+            "Institutions": [
+              {
+                "$type": "Core.Institution, Core",
+                "Name": "Institution3",
+                "Currency": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "EUR"
+                },
+                "Accounts": [
+                  {
+                    "$type": "Core.Account, Core",
+                    "Name": "ExtraAccount",
+                    "Currency": {
+                      "$type": "Core.Finance.Currency, Core",
+                      "Ccy": "EUR"
+                    },
+                    "Asset": null,
+                    "Amount": 100.0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "FXMarket": {
+          "$type": "Core.Finance.FXMarket, Core",
+          "_Data": [
+            {
+              "Key": {
+                "$type": "Core.Finance.CurrencyPair, Core",
+                "_Ccy1": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "EUR"
+                },
+                "_Ccy2": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "USD"
+                }
+              },
+              "Value": 1.2
+            },
+            {
+              "Key": {
+                "$type": "Core.Finance.CurrencyPair, Core",
+                "_Ccy1": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "GBP"
+                },
+                "_Ccy2": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "EUR"
+                }
+              },
+              "Value": 1.15
+            },
+            {
+              "Key": {
+                "$type": "Core.Finance.CurrencyPair, Core",
+                "_Ccy1": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "GBP"
+                },
+                "_Ccy2": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "JPY"
+                }
+              },
+              "Value": 130.0
+            }
+          ],
+          "CcyRef": {
+            "$type": "Core.Finance.Currency, Core",
+            "Ccy": "GBP"
+          }
+        },
+        "AssetMarket": {
+          "$type": "Core.Finance.AssetMarket, Core",
+          "Dict": [
+            {
+              "Key": {
+                "$type": "Core.Finance.AssetCcyPair, Core",
+                "Asset1": {
+                  "$type": "Core.Finance.Asset, Core",
+                  "Asset": "BNP"
+                },
+                "Ccy2": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "EUR"
+                }
+              },
+              "Value": 50.0
+            },
+            {
+              "Key": {
+                "$type": "Core.Finance.AssetCcyPair, Core",
+                "Asset1": {
+                  "$type": "Core.Finance.Asset, Core",
+                  "Asset": "BTC"
+                },
+                "Ccy2": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "EUR"
+                }
+              },
+              "Value": 15000.0
+            },
+            {
+              "Key": {
+                "$type": "Core.Finance.AssetCcyPair, Core",
+                "Asset1": {
+                  "$type": "Core.Finance.Asset, Core",
+                  "Asset": "AAPL"
+                },
+                "Ccy2": {
+                  "$type": "Core.Finance.Currency, Core",
+                  "Ccy": "USD"
+                }
+              },
+              "Value": 1234.56
+            }
+          ]
+        },
+        "Map": {
+          "$type": "Core.TreeViewMapping, Core",
+          "Map": {
+            "$type": "Core.TreeViewMappingElement, Core",
+            "Name": "Root",
+            "Nodes": [
+              {
+                "$type": "Core.TreeViewMappingElement, Core",
+                "Name": "Category1",
+                "Nodes": [
+                  {
+                    "$type": "Core.TreeViewMappingElement, Core",
+                    "Name": "Institution1",
+                    "Nodes": [
+                      {
+                        "$type": "Core.TreeViewMappingElement, Core",
+                        "Name": "Checking",
+                        "Nodes": []
+                      },
+                      {
+                        "$type": "Core.TreeViewMappingElement, Core",
+                        "Name": "Wallet",
+                        "Nodes": []
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Core.TreeViewMappingElement, Core",
+                    "Name": "Institution2",
+                    "Nodes": [
+                      {
+                        "$type": "Core.TreeViewMappingElement, Core",
+                        "Name": "Checking2",
+                        "Nodes": []
+                      },
+                      {
+                        "$type": "Core.TreeViewMappingElement, Core",
+                        "Name": "Stocks",
+                        "Nodes": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "$type": "Core.TreeViewMappingElement, Core",
+                "Name": "Category",
+                "Nodes": [
+                  {
+                    "$type": "Core.TreeViewMappingElement, Core",
+                    "Name": "Institution3",
+                    "Nodes": [
+                      {
+                        "$type": "Core.TreeViewMappingElement, Core",
+                        "Name": "ExtraAccount",
+                        "Nodes": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -149,5 +149,11 @@ namespace Core.Finance
         {
             return GetAvailableCurrencies().Contains(ccy);
         }
+
+        public void Copy(FXMarket fx)
+        {
+            Copy((IMarket)fx);
+            CcyRef = fx.CcyRef;
+        }
     }
 }

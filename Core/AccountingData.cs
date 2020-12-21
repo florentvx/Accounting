@@ -202,7 +202,7 @@ namespace Core
             if (ad == null)
                 return false;
             if (_Ccy == ad._Ccy
-                && _CcyDB == ad._CcyDB
+                //&& _CcyDB == ad._CcyDB
                 && _FXMarket == ad._FXMarket
                 && _AssetMarket == ad._AssetMarket
                 && _Map == ad._Map
@@ -256,7 +256,7 @@ namespace Core
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Currency", _Ccy, typeof(Currency));
-            info.AddValue("CcyDB", _CcyDB, typeof(CurrencyAssetStaticsDataBase));
+            //info.AddValue("CcyDB", _CcyDB, typeof(CurrencyAssetStaticsDataBase));
             info.AddValue("Categories", _Data, typeof(List<Category>));
             info.AddValue("FXMarket", _FXMarket, typeof(FXMarket));
             info.AddValue("AssetMarket", _AssetMarket, typeof(AssetMarket));
@@ -266,7 +266,7 @@ namespace Core
         public AccountingData(SerializationInfo info, StreamingContext context)
         {
             _Ccy = (Currency)info.GetValue("Currency", typeof(Currency));
-            _CcyDB = (CurrencyAssetStaticsDataBase)info.GetValue("CcyDB", typeof(CurrencyAssetStaticsDataBase));
+            //_CcyDB = (CurrencyAssetStaticsDataBase)info.GetValue("CcyDB", typeof(CurrencyAssetStaticsDataBase));
             _Data = (List<Category>)info.GetValue("Categories", typeof(List<Category>));
             _FXMarket = (FXMarket)info.GetValue("FXMarket", typeof(FXMarket));
             _AssetMarket = (AssetMarket)info.GetValue("AssetMarket", typeof(AssetMarket));
