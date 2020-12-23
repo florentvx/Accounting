@@ -33,9 +33,13 @@ namespace Accounting
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.marketToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addCurrencyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addAssetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelTable = new System.Windows.Forms.Label();
             this.buttonTotal = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -48,7 +52,6 @@ namespace Accounting
             this.TreeViewAccounting = new Design.TreeViewAccounting();
             this.labelDate = new System.Windows.Forms.Label();
             this.ComboBoxDates = new System.Windows.Forms.ComboBox();
-            this.addDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -75,17 +78,41 @@ namespace Accounting
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripMenuItem});
+            this.newToolStripMenuItem,
+            this.saveAsToolStripMenuItem,
+            this.saveToolStripMenuItem,
+            this.loadToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(114, 26);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
+            this.saveAsToolStripMenuItem.Text = "Save As";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+            // 
+            // loadToolStripMenuItem
+            // 
+            this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
+            this.loadToolStripMenuItem.Text = "Load";
+            this.loadToolStripMenuItem.Click += new System.EventHandler(this.LoadToolStripMenuItem_Click);
             // 
             // marketToolStripMenuItem
             // 
@@ -94,7 +121,7 @@ namespace Accounting
             this.addAssetToolStripMenuItem,
             this.addDateToolStripMenuItem});
             this.marketToolStripMenuItem.Name = "marketToolStripMenuItem";
-            this.marketToolStripMenuItem.Size = new System.Drawing.Size(67, 24);
+            this.marketToolStripMenuItem.Size = new System.Drawing.Size(69, 24);
             this.marketToolStripMenuItem.Text = "Market";
             // 
             // addCurrencyToolStripMenuItem
@@ -110,6 +137,13 @@ namespace Accounting
             this.addAssetToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.addAssetToolStripMenuItem.Text = "Add Asset";
             this.addAssetToolStripMenuItem.Click += new System.EventHandler(this.AddAssetToolStripMenuItem_Click);
+            // 
+            // addDateToolStripMenuItem
+            // 
+            this.addDateToolStripMenuItem.Name = "addDateToolStripMenuItem";
+            this.addDateToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.addDateToolStripMenuItem.Text = "Add Date";
+            this.addDateToolStripMenuItem.Click += new System.EventHandler(this.AddDateToolStripMenuItem_Click);
             // 
             // labelTable
             // 
@@ -176,6 +210,7 @@ namespace Accounting
             this.dataGridViewFXMarket.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dataGridViewFXMarket.Name = "dataGridViewFXMarket";
             this.dataGridViewFXMarket.RowHeadersVisible = false;
+            this.dataGridViewFXMarket.RowHeadersWidth = 51;
             this.dataGridViewFXMarket.RowTemplate.Height = 24;
             this.dataGridViewFXMarket.Size = new System.Drawing.Size(235, 343);
             this.dataGridViewFXMarket.TabIndex = 5;
@@ -204,6 +239,7 @@ namespace Accounting
             this.dataGridViewAssetMarket.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridViewAssetMarket.Name = "dataGridViewAssetMarket";
             this.dataGridViewAssetMarket.RowHeadersVisible = false;
+            this.dataGridViewAssetMarket.RowHeadersWidth = 51;
             this.dataGridViewAssetMarket.Size = new System.Drawing.Size(235, 343);
             this.dataGridViewAssetMarket.TabIndex = 0;
             this.dataGridViewAssetMarket.ValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAssetMarket_ValueChanged);
@@ -219,6 +255,7 @@ namespace Accounting
             this.dataGridViewAccounting.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dataGridViewAccounting.Name = "dataGridViewAccounting";
             this.dataGridViewAccounting.RowHeadersVisible = false;
+            this.dataGridViewAccounting.RowHeadersWidth = 51;
             this.dataGridViewAccounting.RowTemplate.Height = 24;
             this.dataGridViewAccounting.Size = new System.Drawing.Size(641, 343);
             this.dataGridViewAccounting.TabIndex = 2;
@@ -258,13 +295,6 @@ namespace Accounting
             this.ComboBoxDates.Size = new System.Drawing.Size(179, 24);
             this.ComboBoxDates.TabIndex = 9;
             this.ComboBoxDates.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDates_SelectedIndexChanged);
-            // 
-            // addDateToolStripMenuItem
-            // 
-            this.addDateToolStripMenuItem.Name = "addDateToolStripMenuItem";
-            this.addDateToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.addDateToolStripMenuItem.Text = "Add Date";
-            this.addDateToolStripMenuItem.Click += new System.EventHandler(this.AddDateToolStripMenuItem_Click);
             // 
             // FormAccounting
             // 
@@ -318,6 +348,9 @@ namespace Accounting
         private System.Windows.Forms.TabPage tabPage2;
         protected DataGridViewAssetMarket dataGridViewAssetMarket;
         private System.Windows.Forms.ToolStripMenuItem addDateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
     }
 }
 

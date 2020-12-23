@@ -15,6 +15,14 @@ namespace Accounting
     {
         private readonly IView _view;
         private IHistoricalAccountingData _had;
+
+        internal void SetHistoricalData(IHistoricalAccountingData dataHistory)
+        {
+            _had = dataHistory;
+            _had.CalculateTotal();
+            _view.UpdateDates();
+        }
+
         private IAccountingData _ad { get { return _had.GetData(_view.CurrentDate); } }
 
         public Presenter(IView view, IHistoricalAccountingData had)

@@ -68,6 +68,17 @@ namespace Core
             _Data.Insert(pos + 1, new KeyValuePair<DateTime, AccountingData>(date, ad));
         }
 
+        public void CalculateTotal()
+        {
+            foreach (var item in _Data)
+            {
+                var ad = item.Value;
+                ad.SetCcyDB(_CcyDB);
+                ad.AssetMarket.PopulateWithFXMarket(ad.FXMarket);
+                ad.Total();
+            }
+        }
+
         #endregion
 
         #region IEquatable

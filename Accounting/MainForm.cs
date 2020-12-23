@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Core;
@@ -9,6 +10,7 @@ using Core.Interfaces;
 using Core.Statics;
 using Design;
 using Design.SubForms;
+using Newtonsoft.Json;
 
 namespace Accounting
 {
@@ -24,6 +26,8 @@ namespace Accounting
 
         private void LoadTestData()
         {
+            SetFilePath(@"\\New.json", startUp: true);
+
             Category category = new Category("Banks", new Currency("USD"));
             category.AddInstitution("Toto Bank");
             category.AddAccount("Checking", "Toto Bank");
@@ -106,6 +110,57 @@ namespace Accounting
             }
         }
 
+        protected override void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog form = new SaveFileDialog
+            {
+                DefaultExt = "json",
+                Filter = "Json Files (*.json)|*.json",
+                RestoreDirectory = false,
+                CheckPathExists = true,
+                CheckFileExists = false
+            };
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                string fullPath = form.FileName;
+                SetFilePath(fullPath);
+                SaveToolStripMenuItem_Click(sender, e);
+            }
+        }
+
+        protected override void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_FilePath == "<NONE>")
+                SaveAsToolStripMenuItem_Click(sender, e);
+            else
+            {
+                string jsonString = JsonConvert.SerializeObject(_DataHistory, Formatting.Indented);
+                File.WriteAllText(FullPath, jsonString);
+                MessageBox.Show($"File Saved Under: {FullPath}", "File Saved");
+            }
+        }
+
+        protected override void LoadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog form = new OpenFileDialog())
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    SetFilePath(form.FileName);
+                }
+            }
+            HistoricalAccountingData desObject;
+            using (StreamReader r = new StreamReader(FullPath))
+            {
+                string json = r.ReadToEnd();
+                desObject = JsonConvert.DeserializeObject<HistoricalAccountingData>(json);
+            }
+            _DataHistory = desObject;
+            _CurrentDate = _DataHistory.Dates.Last();
+            MainPresenter.SetHistoricalData(_DataHistory);
+            MainPresenter.LoadAccounts();
+        }
+
         protected override void AddCurrencyToolStripMenuItem_Click(object sender, EventArgs e)
         {   
             using (AddCcyForm form = new AddCcyForm(Data.GetAvailableCurrencies()))
@@ -152,7 +207,6 @@ namespace Accounting
             }
         }
         
-
         private void TreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             MainPresenter.TreeView_AfterLabelEdit(e);

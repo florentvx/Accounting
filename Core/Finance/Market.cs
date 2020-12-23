@@ -17,9 +17,9 @@ namespace Core.Finance
 
         virtual public void SetData(Dictionary<IMarketInput, double> input) { }
 
-        List<IMarketInput> _Pairs;
+        IEnumerable<IMarketInput> Pairs { get { return GetData().Keys; } }
 
-        public Market() { _Pairs = new List<IMarketInput> { }; }
+        public Market() { }// _Pairs = new List<IMarketInput> { }; }
 
         #region IEquatable
 
@@ -60,20 +60,20 @@ namespace Core.Finance
         virtual public void Reset()
         {
             //_Data = new Dictionary<IMarketInput, double> { };
-            _Pairs = new List<IMarketInput> { };
+            //_Pairs = new List<IMarketInput> { };
         }
 
         public IEnumerable<Tuple<IMarketInput, double>> EnumerateData()
         {
             var data = GetData();
-            return _Pairs.Select(x => new Tuple<IMarketInput, double>(x, data[x]));
+            return Pairs.Select(x => new Tuple<IMarketInput, double>(x, data[x]));
         }
 
         virtual protected void AddQuoteToDictionary(IMarketInput imi, double value)
         {
             var data = GetData();
             data[imi] = value;
-            _Pairs.Add(imi);
+            //_Pairs.Add(imi);
             SetData(data);
         }
 
@@ -99,10 +99,10 @@ namespace Core.Finance
         {
             var data = GetData();
             data = new Dictionary<IMarketInput, double> { };
-            _Pairs = new List<IMarketInput> { };
+            //_Pairs = new List<IMarketInput> { };
             foreach(var item in imkt.EnumerateData())
             {
-                _Pairs.Add(item.Item1);
+                //_Pairs.Add(item.Item1);
                 data.Add(item.Item1, item.Item2);
             }
             SetData(data);

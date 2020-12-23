@@ -17,10 +17,23 @@ namespace Accounting
     {
         protected HistoricalAccountingData _DataHistory;
         protected DateTime? _CurrentDate;
+        protected string _FilePath;
+        protected string _FileName;
+
+        public string FullPath { get { return _FilePath + _FileName + ".json"; } }
 
         public DateTime CurrentDate {
             get { return _CurrentDate.Value; }
             set { _CurrentDate = value; }
+        }
+
+        public void SetFilePath(string path, bool startUp = false)
+        {
+            string file = path.Split('\\').Last();
+            _FileName = file.Split('.').First();
+            Text = $"Accounting - {_FileName}";
+            if (!startUp)
+                _FilePath = path.Substring(0, path.Length - file.Length);
         }
 
         public CurrencyAssetStaticsDataBase CcyDB { get { return _DataHistory.CcyDB; } }
@@ -31,6 +44,7 @@ namespace Accounting
             InitializeComponent();
             _DataHistory = new HistoricalAccountingData();
             _CurrentDate = null;
+            _FilePath = "<NONE>";
         }
 
         #region IView
@@ -152,6 +166,9 @@ namespace Accounting
         }
 
         virtual protected void NewToolStripMenuItem_Click(object sender, System.EventArgs e) { }
+        virtual protected void SaveAsToolStripMenuItem_Click(object sender, EventArgs e) { }
+        virtual protected void SaveToolStripMenuItem_Click(object sender, EventArgs e) { }
+        virtual protected void LoadToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void AddCurrencyToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void AddAssetToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void AddDateToolStripMenuItem_Click(object sender, EventArgs e) { }
