@@ -193,6 +193,14 @@ namespace Accounting
             }
         }
 
+        protected override void ApplicationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (AboutApplicationForm form = new AboutApplicationForm())
+            {
+                if (form.ShowDialog() == DialogResult.OK) { }
+            }
+        }
+
         protected override void ButtonTotal_Click(object sender, EventArgs e)
         {
             MainPresenter.ButtonTotal();

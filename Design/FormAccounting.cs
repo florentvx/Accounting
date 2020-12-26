@@ -172,6 +172,7 @@ namespace Accounting
         virtual protected void AddCurrencyToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void AddAssetToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void AddDateToolStripMenuItem_Click(object sender, EventArgs e) { }
+        virtual protected void ApplicationToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void ButtonTotal_Click(object sender, System.EventArgs e) { }
         virtual protected void ComboBoxDates_SelectedIndexChanged(object sender, EventArgs e) { }
 
