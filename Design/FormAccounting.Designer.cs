@@ -54,6 +54,9 @@ namespace Accounting
             this.TreeViewAccounting = new Design.TreeViewAccounting();
             this.labelDate = new System.Windows.Forms.Label();
             this.ComboBoxDates = new System.Windows.Forms.ComboBox();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -62,6 +65,8 @@ namespace Accounting
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssetMarket)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).BeginInit();
+            this.tabControl2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -74,7 +79,7 @@ namespace Accounting
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1205, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1223, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -159,7 +164,7 @@ namespace Accounting
             // applicationToolStripMenuItem
             // 
             this.applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            this.applicationToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.applicationToolStripMenuItem.Size = new System.Drawing.Size(169, 26);
             this.applicationToolStripMenuItem.Text = "Application";
             this.applicationToolStripMenuItem.Click += new System.EventHandler(this.ApplicationToolStripMenuItem_Click);
             // 
@@ -167,7 +172,7 @@ namespace Accounting
             // 
             this.labelTable.AutoSize = true;
             this.labelTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTable.Location = new System.Drawing.Point(277, 34);
+            this.labelTable.Location = new System.Drawing.Point(273, 12);
             this.labelTable.Name = "labelTable";
             this.labelTable.Size = new System.Drawing.Size(79, 18);
             this.labelTable.TabIndex = 3;
@@ -176,7 +181,7 @@ namespace Accounting
             // buttonTotal
             // 
             this.buttonTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonTotal.Location = new System.Drawing.Point(678, 34);
+            this.buttonTotal.Location = new System.Drawing.Point(674, 12);
             this.buttonTotal.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonTotal.Name = "buttonTotal";
             this.buttonTotal.Size = new System.Drawing.Size(239, 28);
@@ -189,7 +194,7 @@ namespace Accounting
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(935, 34);
+            this.tabControl1.Location = new System.Drawing.Point(931, 12);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -269,7 +274,7 @@ namespace Accounting
             this.dataGridViewAccounting.AllowUserToResizeColumns = false;
             this.dataGridViewAccounting.AllowUserToResizeRows = false;
             this.dataGridViewAccounting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewAccounting.Location = new System.Drawing.Point(276, 71);
+            this.dataGridViewAccounting.Location = new System.Drawing.Point(272, 49);
             this.dataGridViewAccounting.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dataGridViewAccounting.Name = "dataGridViewAccounting";
             this.dataGridViewAccounting.RowHeadersVisible = false;
@@ -281,7 +286,7 @@ namespace Accounting
             // TreeViewAccounting
             // 
             this.TreeViewAccounting.AllowDrop = true;
-            this.TreeViewAccounting.Location = new System.Drawing.Point(15, 71);
+            this.TreeViewAccounting.Location = new System.Drawing.Point(11, 49);
             this.TreeViewAccounting.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TreeViewAccounting.Name = "TreeViewAccounting";
             this.TreeViewAccounting.Size = new System.Drawing.Size(244, 342);
@@ -299,7 +304,7 @@ namespace Accounting
             // 
             this.labelDate.AutoSize = true;
             this.labelDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDate.Location = new System.Drawing.Point(12, 35);
+            this.labelDate.Location = new System.Drawing.Point(8, 13);
             this.labelDate.Name = "labelDate";
             this.labelDate.Size = new System.Drawing.Size(39, 18);
             this.labelDate.TabIndex = 8;
@@ -308,24 +313,55 @@ namespace Accounting
             // ComboBoxDates
             // 
             this.ComboBoxDates.FormattingEnabled = true;
-            this.ComboBoxDates.Location = new System.Drawing.Point(80, 34);
+            this.ComboBoxDates.Location = new System.Drawing.Point(76, 12);
             this.ComboBoxDates.Name = "ComboBoxDates";
             this.ComboBoxDates.Size = new System.Drawing.Size(179, 24);
             this.ComboBoxDates.TabIndex = 9;
             this.ComboBoxDates.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDates_SelectedIndexChanged);
             // 
+            // tabControl2
+            // 
+            this.tabControl2.Controls.Add(this.tabPage3);
+            this.tabControl2.Controls.Add(this.tabPage4);
+            this.tabControl2.Location = new System.Drawing.Point(12, 31);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(1204, 439);
+            this.tabControl2.TabIndex = 10;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.labelTable);
+            this.tabPage3.Controls.Add(this.ComboBoxDates);
+            this.tabPage3.Controls.Add(this.TreeViewAccounting);
+            this.tabPage3.Controls.Add(this.labelDate);
+            this.tabPage3.Controls.Add(this.dataGridViewAccounting);
+            this.tabPage3.Controls.Add(this.tabControl1);
+            this.tabPage3.Controls.Add(this.buttonTotal);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(1196, 410);
+            this.tabPage3.TabIndex = 0;
+            this.tabPage3.Text = "Data";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Location = new System.Drawing.Point(4, 25);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(1196, 410);
+            this.tabPage4.TabIndex = 1;
+            this.tabPage4.Text = "Graph";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
             // FormAccounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1205, 431);
-            this.Controls.Add(this.ComboBoxDates);
-            this.Controls.Add(this.labelDate);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.buttonTotal);
-            this.Controls.Add(this.labelTable);
-            this.Controls.Add(this.dataGridViewAccounting);
-            this.Controls.Add(this.TreeViewAccounting);
+            this.ClientSize = new System.Drawing.Size(1223, 474);
+            this.Controls.Add(this.tabControl2);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -340,6 +376,9 @@ namespace Accounting
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssetMarket)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).EndInit();
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -371,6 +410,9 @@ namespace Accounting
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem applicationToolStripMenuItem;
+        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPage4;
     }
 }
 
