@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
-
+using System.Windows.Forms.DataVisualization.Charting;
 using Core;
 using Core.Finance;
 using Core.Interfaces;
@@ -98,7 +98,7 @@ namespace Accounting
 
         public void SetUpMarkets(CurrencyAssetStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt)
         {
-            Data.SetCcyDB(ccyDB);
+            _DataHistory.SetCcyDB(ccyDB);
             dataGridViewAccounting.SetUpMarkets(ccyDB, mkt, aMkt);
             dataGridViewFXMarket.ShowMarket(mkt);
             dataGridViewAssetMarket.ShowMarket(aMkt);
@@ -175,7 +175,8 @@ namespace Accounting
         virtual protected void ApplicationToolStripMenuItem_Click(object sender, EventArgs e) { }
         virtual protected void ButtonTotal_Click(object sender, System.EventArgs e) { }
         virtual protected void ComboBoxDates_SelectedIndexChanged(object sender, EventArgs e) { }
-
+        virtual protected void MainTabControl_SelectedIndexChanged(object sender, EventArgs e) { }
+        
         public void TreeView_NodeAddition(object sender, TreeNodeMouseClickEventArgs e)
         {
             NodeAddress na = (NodeAddress)e.Node.Tag;
@@ -259,6 +260,7 @@ namespace Accounting
                 case DataGridViewMarketStatics.Column_Value:
                     Data.FXMarket.AddQuote(new CurrencyPair(ccy1, ccy2), rate);
                     Data.UpdateAssetMarket();
+                    Data.RefreshTotalAmount(Data.FXMarket, Data.AssetMarket);
                     ShowActive();
                     break;
             }
@@ -274,8 +276,53 @@ namespace Accounting
                 case DataGridViewMarketStatics.Column_Value:
                     Data.AssetMarket.AddQuote(new AssetCcyPair(asset, ccy2), rate);
                     Data.UpdateAssetMarket();
+                    Data.RefreshTotalAmount(Data.FXMarket, Data.AssetMarket);
                     ShowActive();
                     break;
+            }
+        }
+
+        public void Chart_Update()
+        {
+            Chart.Series.Clear();
+            Series ser = new Series("Value");
+            ser.XValueType = ChartValueType.String;
+            List<double> values = new List<double> { };
+            foreach (var item in _DataHistory.Data)
+            {
+                DataPoint dp = new DataPoint(ser);
+                dp.AxisLabel = item.Key.ToString("d");
+                double val = item.Value.TotalValue;
+                values.Add(val);
+                dp.YValues = new double[] { val };
+                ser.Points.Add(dp);
+            }
+            Chart.Series.Add(ser);
+            Chart.Series[0].ChartType = SeriesChartType.Line;
+            Chart.ChartAreas[0].AxisY.Minimum = Math.Round(Math.Min(values.Min() * 0.9, values.Min() - 100));
+            Chart.ChartAreas[0].AxisY.Maximum = Math.Round(Math.Max(values.Max() * 1.1, values.Max() + 100));
+            Chart.ChartAreas[0].AxisY.Interval = Math.Round((Chart.ChartAreas[0].AxisY.Maximum - Chart.ChartAreas[0].AxisY.Minimum) / 5.0, 2);
+            Chart.ChartAreas[0].AxisX.Interval = 1;
+        }
+
+        private void Chart_MouseMove(object sender, MouseEventArgs e)
+        {
+            HitTestResult result = Chart.HitTest(e.X, e.Y);
+            // Reset Data Point Attributes
+            foreach (DataPoint point in Chart.Series[0].Points)
+            {
+                point.MarkerStyle = MarkerStyle.None;
+                point.Color = Color.FromArgb(200, 30, 144, 255);
+            }
+            // If the mouse if over a data point
+            if (result.ChartElementType == ChartElementType.DataPoint)
+            {
+                // Find selected data point
+                DataPoint Datapoint = Chart.Series[0].Points[result.PointIndex];
+                Datapoint.MarkerStyle = MarkerStyle.Square;
+                //Datapoint.Color = Color.Red;
+                Datapoint.ToolTip = $"{Math.Round(Datapoint.YValues[0])}";
+
             }
         }
     }

@@ -30,7 +30,8 @@ namespace Core
         [JsonProperty]
         Currency _Ccy; // Ccy Total
 
-        double _TotalValue; // Total value in Ccy Total
+        private double _TotalValue; // Total value in Ccy Total
+        public double TotalValue { get { return _TotalValue; } } 
 
         CurrencyAssetStaticsDataBase _CcyDB; //Copy By Ref of CcyAssetDataBase
 
@@ -95,6 +96,17 @@ namespace Core
             ModifyCcyEventHandler?.Invoke(this, e);
         }
 
+        public void ModifyTotalCcy(Currency ccy)
+        {
+            _Ccy = ccy;
+            _TotalValue = 0;
+            foreach (Category item in Categories)
+            {
+                item.ModifyTotalCcy(_FXMarket, _AssetMarket, ccy);
+                _TotalValue += item.TotalAmount;
+            }
+        }
+
         public ICategory GetFirstCategory()
         {
             return _Data.First();
@@ -150,25 +162,25 @@ namespace Core
             return test;
         }
 
-        public void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair cp, double cpValue)
-        {
-            bool testAdd = _CcyDB.AddCcy(ccyName, ccyStatics);
-            if (!testAdd)
-                MessageBox.Show($"The new Currency [{ccyName}] does already exist.");
-            else
-            {
-                _FXMarket.AddQuote(cp, cpValue);
-            }
-        }
+        //public void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair cp, double cpValue)
+        //{
+        //    bool testAdd = _CcyDB.AddCcy(ccyName, ccyStatics);
+        //    if (!testAdd)
+        //        MessageBox.Show($"The new Currency [{ccyName}] does already exist.");
+        //    else
+        //    {
+        //        _FXMarket.AddQuote(cp, cpValue);
+        //    }
+        //}
 
-        public void AddRefCcy(string ccyName, CurrencyStatics ccyStatics)
-        {
-            bool testAdd = _CcyDB.AddCcy(ccyName, ccyStatics);
-            if (!testAdd)
-                throw new Exception($"Add Ref Ccy Error {ccyName}");
-            _Ccy = new Currency(ccyName);
-            _FXMarket.SetCcyRef(_Ccy);
-        }
+        //public void AddRefCcy(string ccyName, CurrencyStatics ccyStatics)
+        //{
+        //    bool testAdd = _CcyDB.AddCcy(ccyName, ccyStatics);
+        //    if (!testAdd)
+        //        throw new Exception($"Add Ref Ccy Error {ccyName}");
+        //    _Ccy = new Currency(ccyName);
+        //    _FXMarket.SetCcyRef(_Ccy);
+        //}
 
         public void AddNewAsset(string assetName, AssetStatics aSt, double acpValue)
         {
@@ -338,6 +350,7 @@ namespace Core
             cat.AddInstitution("New Institution");
             cat.AddAccount("New Account", "New Institution");
             _Data.Add(cat);
+            cat.ModifyAmountEventHandler += this.UpdateTotalAmount;
             return cat;
         }
 
@@ -396,18 +409,34 @@ namespace Core
             _AssetMarket.PopulateWithFXMarket(_FXMarket);
         }
 
-        internal void RecalculateTotal(Currency ccy)
+        public void UpdateTotalAmount(object sender, ModifyAmountEventArgs e)
         {
-            if (ccy != _Ccy)
-                _TotalValue = _TotalValue * _FXMarket.GetQuote(new CurrencyPair(_Ccy, ccy));
-            _Ccy = (Currency)ccy.Clone();
+            _TotalValue = 0;
+            foreach (Category item in Categories)
+            {
+                _TotalValue += item.TotalAmount;
+            }
+        }
+
+        public void RefreshTotalAmount(FXMarket fXMarket, AssetMarket assetMarket)
+        {
+            _TotalValue = 0;
+            foreach (Category item in Categories)
+            {
+                item.RefreshTotalAmount(fXMarket, assetMarket);
+                _TotalValue += item.TotalAmount;
+            }
         }
 
         public AccountingData Copy()
         {
             List<Category> newData = new List<Category> { };
             foreach (var cat in _Data)
-                newData.Add(cat.Copy());
+            {
+                Category copyCat = cat.Copy();
+                newData.Add(copyCat);
+            }
+                
 
             FXMarket fxmkt = new FXMarket(_CcyDB.RefCcy);
             fxmkt.Copy(_FXMarket);
@@ -425,6 +454,9 @@ namespace Core
                 _AssetMarket = aMkt,
                 _Map = new TreeViewMapping(newData)
             };
+
+            foreach (Category cat in newData)
+                cat.ModifyAmountEventHandler += res.UpdateTotalAmount;
             
             return res;
         }

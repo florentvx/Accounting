@@ -9,6 +9,7 @@ using Core.Finance;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using System.Windows.Forms;
 
 namespace Core
 {
@@ -23,6 +24,8 @@ namespace Core
 
         [JsonProperty]
         Currency _TotalCcy;
+
+        public Currency TotalCcy { get { return _TotalCcy; } }
 
         public SortedDictionary<DateTime, AccountingData> Data
         {
@@ -65,7 +68,41 @@ namespace Core
                                 .Select(x=>x.Position)
                                 .Last();
             AccountingData ad = _Data[pos].Value.Copy();
+            ad.ModifyCcyEventHandler += this.ModifyCcy;
             _Data.Insert(pos + 1, new KeyValuePair<DateTime, AccountingData>(date, ad));
+        }
+
+        public void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair ccyPair, double ccyPairQuote)
+        {
+            bool testAdd = _CcyDB.AddCcy(ccyName, ccyStatics);
+            if (!testAdd)
+                MessageBox.Show($"The new Currency [{ccyName}] does already exist.");
+            else
+            {
+                foreach (var item in _Data)
+                {
+                    item.Value.SetCcyDB(_CcyDB);
+                    item.Value.FXMarket.AddQuote(ccyPair, ccyPairQuote);
+                    item.Value.AssetMarket.PopulateWithFXMarket(item.Value.FXMarket);
+                }
+            }
+        }
+
+        public void AddNewAsset(string assetName, AssetStatics aSt, double acpValue)
+        {
+            bool testAdd = _CcyDB.AddAsset(assetName, aSt);
+            if (!testAdd)
+                MessageBox.Show($"The new Asset [{assetName}] does already exist.");
+            else
+            {
+                AssetCcyPair acp = new AssetCcyPair(new Asset(assetName), aSt.Ccy);
+                foreach (var item in _Data)
+                {
+                    item.Value.SetCcyDB(_CcyDB);
+                    item.Value.AssetMarket.AddQuote(acp, acpValue);
+                    item.Value.AssetMarket.PopulateWithFXMarket(item.Value.FXMarket);
+                }
+            }
         }
 
         public void CalculateTotal()
@@ -156,7 +193,7 @@ namespace Core
         {
             foreach (var item in _Data)
             {
-                item.Value.RecalculateTotal(e.Ccy);
+                item.Value.ModifyTotalCcy(e.Ccy);
             }
         }
 

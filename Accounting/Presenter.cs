@@ -88,14 +88,14 @@ namespace Accounting
 
         internal void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair ccyPair, double ccyPairQuote)
         {
-            _ad.AddNewCcy(ccyName, ccyStatics, ccyPair, ccyPairQuote);
+            _had.AddNewCcy(ccyName, ccyStatics, ccyPair, ccyPairQuote);
             _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket);
         }
 
         internal void AddNewAsset(string assetName, AssetStatics assetStatics, double assetCcyPairQuote)
         {
-            _ad.AddNewAsset(assetName, assetStatics, assetCcyPairQuote);
-            _ad.AssetMarket.PopulateWithFXMarket(_ad.FXMarket);
+            _had.AddNewAsset(assetName, assetStatics, assetCcyPairQuote);
+            //_ad.AssetMarket.PopulateWithFXMarket(_ad.FXMarket);
             _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket);
         }
 
@@ -112,6 +112,11 @@ namespace Accounting
             _had.Reset(date, ccyName, ccyStatics);
             _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket);
             _view.UpdateDates();
+        }
+
+        internal void UpdateChart()
+        {
+            _view.Chart_Update();
         }
     }
 }

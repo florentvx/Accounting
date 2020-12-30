@@ -23,5 +23,6 @@ namespace Core.Interfaces
         void SetUpAccountingData(CurrencyAssetStaticsDataBase ccyDb, IAccountingData ad);
         void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e);
         void UpdateDates();
+        void Chart_Update();
     }
 }

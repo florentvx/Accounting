@@ -22,6 +22,10 @@ namespace Core
         [JsonProperty]
         public List<Institution> _Institutions;
 
+        Currency _TotalCcy = new Currency("NONE");
+        double _TotalAmount = 0;
+        public double TotalAmount { get { return _TotalAmount; } }
+
         public Dictionary<string, Institution> InstitutionsDictionary
         {
             get { return _Institutions.ToDictionary(x => x.InstitutionName, x => x); }
@@ -97,6 +101,20 @@ namespace Core
             if (isLastRow)
             {
                 _Ccy = valueCcy.Ccy;
+            }
+        }
+
+        public void ModifyTotalCcy(FXMarket mkt, AssetMarket aMkt, Currency ccy)
+        {
+            if (_TotalCcy != ccy)
+            {
+                _TotalCcy = ccy;
+                _TotalAmount = 0;
+                foreach (Institution instit in Institutions)
+                {
+                    instit.ModifyTotalCcy(mkt, aMkt, ccy);
+                    _TotalAmount += instit.TotalAmount;
+                }
             }
         }
 
@@ -184,6 +202,7 @@ namespace Core
         {
             _CategoryName = name;
             _Ccy = ccy;
+            _TotalCcy = ccy;
             _Institutions = new List<Institution> { };
         }
 
@@ -203,11 +222,13 @@ namespace Core
                 currency = Ccy;
             Institution instit = new Institution(name, currency);
             _Institutions.Add(instit);
+            instit.ModifyAmountEventHandler += this.UpdateTotalAmount;
         }
 
         public void AddInstitution(Institution instit)
         {
             _Institutions.Add(instit);
+            instit.ModifyAmountEventHandler += this.UpdateTotalAmount;
         }
 
         public Institution AddNewInstitution()
@@ -223,6 +244,7 @@ namespace Core
             AddInstitution(newName);
             Institution newInstit = GetInstitution(newName);
             newInstit.AddAccount("New Account");
+            newInstit.ModifyAmountEventHandler += this.UpdateTotalAmount;
             return newInstit;
         }
 
@@ -249,6 +271,28 @@ namespace Core
                 test = GetInstitution(nodeTag.Address[1]).ChangeName(before, after, nodeTag);
             }
             return test;
+        }
+
+        public event EventHandler<ModifyAmountEventArgs> ModifyAmountEventHandler;
+
+        public void UpdateTotalAmount(object sender, ModifyAmountEventArgs e)
+        {
+            _TotalAmount = 0;
+            foreach (Institution item in Institutions)
+            {
+                _TotalAmount += item.TotalAmount;
+            }
+            ModifyAmountEventHandler?.Invoke(this, e);
+        }
+
+        internal void RefreshTotalAmount(FXMarket fXMarket, AssetMarket assetMarket)
+        {
+            _TotalAmount = 0;
+            foreach (Institution item in Institutions)
+            {
+                item.RefreshTotalAmount(fXMarket, assetMarket);
+                _TotalAmount += item.TotalAmount;
+            }
         }
 
         public Category Copy()

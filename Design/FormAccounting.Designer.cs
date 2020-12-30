@@ -30,6 +30,9 @@ namespace Accounting
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,13 +53,14 @@ namespace Accounting
             this.dataGridViewFXMarket = new Design.DataGridViewFXMarket();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridViewAssetMarket = new Design.DataGridViewAssetMarket();
-            this.dataGridViewAccounting = new Design.DataGridViewAccounting();
-            this.TreeViewAccounting = new Design.TreeViewAccounting();
             this.labelDate = new System.Windows.Forms.Label();
             this.ComboBoxDates = new System.Windows.Forms.ComboBox();
-            this.tabControl2 = new System.Windows.Forms.TabControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.MainTabControl = new System.Windows.Forms.TabControl();
+            this.DataPage = new System.Windows.Forms.TabPage();
+            this.TreeViewAccounting = new Design.TreeViewAccounting();
+            this.dataGridViewAccounting = new Design.DataGridViewAccounting();
+            this.GraphPage = new System.Windows.Forms.TabPage();
+            this.Chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -64,9 +68,11 @@ namespace Accounting
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewFXMarket)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssetMarket)).BeginInit();
+            this.MainTabControl.SuspendLayout();
+            this.DataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).BeginInit();
-            this.tabControl2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.GraphPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Chart)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -267,39 +273,6 @@ namespace Accounting
             this.dataGridViewAssetMarket.TabIndex = 0;
             this.dataGridViewAssetMarket.ValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAssetMarket_ValueChanged);
             // 
-            // dataGridViewAccounting
-            // 
-            this.dataGridViewAccounting.AllowUserToAddRows = false;
-            this.dataGridViewAccounting.AllowUserToDeleteRows = false;
-            this.dataGridViewAccounting.AllowUserToResizeColumns = false;
-            this.dataGridViewAccounting.AllowUserToResizeRows = false;
-            this.dataGridViewAccounting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewAccounting.Location = new System.Drawing.Point(272, 49);
-            this.dataGridViewAccounting.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.dataGridViewAccounting.Name = "dataGridViewAccounting";
-            this.dataGridViewAccounting.RowHeadersVisible = false;
-            this.dataGridViewAccounting.RowHeadersWidth = 51;
-            this.dataGridViewAccounting.RowTemplate.Height = 24;
-            this.dataGridViewAccounting.Size = new System.Drawing.Size(641, 343);
-            this.dataGridViewAccounting.TabIndex = 2;
-            // 
-            // TreeViewAccounting
-            // 
-            this.TreeViewAccounting.AllowDrop = true;
-            this.TreeViewAccounting.Location = new System.Drawing.Point(11, 49);
-            this.TreeViewAccounting.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TreeViewAccounting.Name = "TreeViewAccounting";
-            this.TreeViewAccounting.Size = new System.Drawing.Size(244, 342);
-            this.TreeViewAccounting.TabIndex = 1;
-            this.TreeViewAccounting.NodeAdded += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeAddition);
-            this.TreeViewAccounting.NodeDeleted += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeDeletion);
-            this.TreeViewAccounting.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewAccounting_AfterCollapse);
-            this.TreeViewAccounting.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewAccounting_AfterExpand);
-            this.TreeViewAccounting.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.TreeViewAccounting_ItemDrag);
-            this.TreeViewAccounting.DragDrop += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragDrop);
-            this.TreeViewAccounting.DragEnter += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragEnter);
-            this.TreeViewAccounting.DragOver += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragOver);
-            // 
             // labelDate
             // 
             this.labelDate.AutoSize = true;
@@ -319,49 +292,101 @@ namespace Accounting
             this.ComboBoxDates.TabIndex = 9;
             this.ComboBoxDates.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDates_SelectedIndexChanged);
             // 
-            // tabControl2
+            // MainTabControl
             // 
-            this.tabControl2.Controls.Add(this.tabPage3);
-            this.tabControl2.Controls.Add(this.tabPage4);
-            this.tabControl2.Location = new System.Drawing.Point(12, 31);
-            this.tabControl2.Name = "tabControl2";
-            this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(1204, 439);
-            this.tabControl2.TabIndex = 10;
+            this.MainTabControl.Controls.Add(this.DataPage);
+            this.MainTabControl.Controls.Add(this.GraphPage);
+            this.MainTabControl.Location = new System.Drawing.Point(12, 31);
+            this.MainTabControl.Name = "MainTabControl";
+            this.MainTabControl.SelectedIndex = 0;
+            this.MainTabControl.Size = new System.Drawing.Size(1204, 439);
+            this.MainTabControl.TabIndex = 10;
+            this.MainTabControl.SelectedIndexChanged += new System.EventHandler(this.MainTabControl_SelectedIndexChanged);
             // 
-            // tabPage3
+            // DataPage
             // 
-            this.tabPage3.Controls.Add(this.labelTable);
-            this.tabPage3.Controls.Add(this.ComboBoxDates);
-            this.tabPage3.Controls.Add(this.TreeViewAccounting);
-            this.tabPage3.Controls.Add(this.labelDate);
-            this.tabPage3.Controls.Add(this.dataGridViewAccounting);
-            this.tabPage3.Controls.Add(this.tabControl1);
-            this.tabPage3.Controls.Add(this.buttonTotal);
-            this.tabPage3.Location = new System.Drawing.Point(4, 25);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1196, 410);
-            this.tabPage3.TabIndex = 0;
-            this.tabPage3.Text = "Data";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.DataPage.Controls.Add(this.labelTable);
+            this.DataPage.Controls.Add(this.ComboBoxDates);
+            this.DataPage.Controls.Add(this.TreeViewAccounting);
+            this.DataPage.Controls.Add(this.labelDate);
+            this.DataPage.Controls.Add(this.dataGridViewAccounting);
+            this.DataPage.Controls.Add(this.tabControl1);
+            this.DataPage.Controls.Add(this.buttonTotal);
+            this.DataPage.Location = new System.Drawing.Point(4, 25);
+            this.DataPage.Name = "DataPage";
+            this.DataPage.Padding = new System.Windows.Forms.Padding(3);
+            this.DataPage.Size = new System.Drawing.Size(1196, 410);
+            this.DataPage.TabIndex = 0;
+            this.DataPage.Text = "Data";
+            this.DataPage.UseVisualStyleBackColor = true;
             // 
-            // tabPage4
+            // TreeViewAccounting
             // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 25);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1196, 410);
-            this.tabPage4.TabIndex = 1;
-            this.tabPage4.Text = "Graph";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.TreeViewAccounting.AllowDrop = true;
+            this.TreeViewAccounting.Location = new System.Drawing.Point(11, 49);
+            this.TreeViewAccounting.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TreeViewAccounting.Name = "TreeViewAccounting";
+            this.TreeViewAccounting.Size = new System.Drawing.Size(244, 342);
+            this.TreeViewAccounting.TabIndex = 1;
+            this.TreeViewAccounting.NodeAdded += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeAddition);
+            this.TreeViewAccounting.NodeDeleted += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeDeletion);
+            this.TreeViewAccounting.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewAccounting_AfterCollapse);
+            this.TreeViewAccounting.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewAccounting_AfterExpand);
+            this.TreeViewAccounting.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.TreeViewAccounting_ItemDrag);
+            this.TreeViewAccounting.DragDrop += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragDrop);
+            this.TreeViewAccounting.DragEnter += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragEnter);
+            this.TreeViewAccounting.DragOver += new System.Windows.Forms.DragEventHandler(this.TreeViewAccounting_DragOver);
+            // 
+            // dataGridViewAccounting
+            // 
+            this.dataGridViewAccounting.AllowUserToAddRows = false;
+            this.dataGridViewAccounting.AllowUserToDeleteRows = false;
+            this.dataGridViewAccounting.AllowUserToResizeColumns = false;
+            this.dataGridViewAccounting.AllowUserToResizeRows = false;
+            this.dataGridViewAccounting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewAccounting.Location = new System.Drawing.Point(272, 49);
+            this.dataGridViewAccounting.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dataGridViewAccounting.Name = "dataGridViewAccounting";
+            this.dataGridViewAccounting.RowHeadersVisible = false;
+            this.dataGridViewAccounting.RowHeadersWidth = 51;
+            this.dataGridViewAccounting.RowTemplate.Height = 24;
+            this.dataGridViewAccounting.Size = new System.Drawing.Size(641, 343);
+            this.dataGridViewAccounting.TabIndex = 2;
+            // 
+            // GraphPage
+            // 
+            this.GraphPage.Controls.Add(this.Chart);
+            this.GraphPage.Location = new System.Drawing.Point(4, 25);
+            this.GraphPage.Name = "GraphPage";
+            this.GraphPage.Padding = new System.Windows.Forms.Padding(3);
+            this.GraphPage.Size = new System.Drawing.Size(1196, 410);
+            this.GraphPage.TabIndex = 1;
+            this.GraphPage.Text = "Graph";
+            this.GraphPage.UseVisualStyleBackColor = true;
+            // 
+            // Chart
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.Chart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.Chart.Legends.Add(legend1);
+            this.Chart.Location = new System.Drawing.Point(6, 6);
+            this.Chart.Name = "Chart";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.Chart.Series.Add(series1);
+            this.Chart.Size = new System.Drawing.Size(1184, 398);
+            this.Chart.TabIndex = 0;
+            this.Chart.Text = "chart1";
+            this.Chart.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Chart_MouseMove);
             // 
             // FormAccounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1223, 474);
-            this.Controls.Add(this.tabControl2);
+            this.Controls.Add(this.MainTabControl);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -375,10 +400,12 @@ namespace Accounting
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewFXMarket)).EndInit();
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssetMarket)).EndInit();
+            this.MainTabControl.ResumeLayout(false);
+            this.DataPage.ResumeLayout(false);
+            this.DataPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).EndInit();
-            this.tabControl2.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.GraphPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Chart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -410,9 +437,10 @@ namespace Accounting
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem applicationToolStripMenuItem;
-        private System.Windows.Forms.TabControl tabControl2;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabControl MainTabControl;
+        private System.Windows.Forms.TabPage DataPage;
+        private System.Windows.Forms.TabPage GraphPage;
+        private System.Windows.Forms.DataVisualization.Charting.Chart Chart;
     }
 }
 

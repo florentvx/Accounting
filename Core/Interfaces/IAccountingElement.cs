@@ -18,6 +18,7 @@ namespace Core.Interfaces
         IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset ccyConv, string name);
         void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string v, object valueAmount);
         void ModifyCcy(FXMarket mkt, AssetMarket aMkt, string v, ICcyAsset valueCcy, bool isLastRow);
+        void ModifyTotalCcy(FXMarket mkt, AssetMarket aMkt, Currency ccy);
         void Delete(string v); //Delete an item from the ItemList
     }
 }

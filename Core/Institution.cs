@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace Core
 {
+    public class ModifyAmountEventArgs : EventArgs { }
+
     [Serializable]
     public class Institution : IInstitution, IAccountingElement, IEquatable<Institution>, ISerializable
     {
@@ -19,6 +21,11 @@ namespace Core
         Currency _Ccy;
         [JsonProperty]
         List<Account> _Accounts;
+
+        Currency _TotalCcy = new Currency("NONE");
+        double _TotalAmount = 0;
+
+        public double TotalAmount { get { return _TotalAmount; } }
 
         #region IInstitution
 
@@ -83,19 +90,33 @@ namespace Core
             return GetTotalAccount(mkt, aMkt, convCcy, "Total");
         }
 
-        public void RecalculateAmount(Account acc, FXMarket mkt, AssetMarket aMkt)
+        public void RecalculateAmount(Account acc, FXMarket mkt, AssetMarket aMkt, bool forceRecalc = true)
         {
             if (acc.Ccy.IsCcy())
-                acc.RecalculateAmount(mkt, Ccy);
+                acc.RecalculateAmount(mkt, Ccy, forceRecalc);
             else
-                acc.RecalculateAmount(aMkt, Ccy);
+                acc.RecalculateAmount(aMkt, Ccy, forceRecalc);
         }
+
+        public void RefreshTotal(FXMarket fxMkt, AssetMarket aMkt, Currency ccy)
+        {
+            _TotalAmount = 0;
+            foreach (Account acc in Accounts)
+            {
+                acc.ModifyTotalCcy(fxMkt, aMkt, ccy);
+                _TotalAmount += acc.TotalAmount;
+            }
+        }
+
+        public event EventHandler<ModifyAmountEventArgs> ModifyAmountEventHandler;
 
         public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string accountName, object value)
         {
             Account acc = GetAccount(accountName);
-            acc.Amount = Convert.ToDouble(value);
-            RecalculateAmount(acc, mkt, aMkt);
+            acc.ModifyAmount(mkt, aMkt, "", value);
+            RefreshTotal(mkt, aMkt, _TotalCcy);
+            ModifyAmountEventArgs e = new ModifyAmountEventArgs();
+            ModifyAmountEventHandler?.Invoke(this, e);
         }
 
         public void ModifyCcy(FXMarket mkt, AssetMarket aMkt, string accountName, ICcyAsset value, bool IsLastRow)
@@ -105,14 +126,22 @@ namespace Core
                 Ccy = value.Ccy;
                 foreach (Account item in Accounts)
                 {
-                    RecalculateAmount(item, mkt, aMkt);
+                    item.RecalculateConvertedAmount(Ccy, mkt, aMkt);
                 }
             }
             else
             {
                 Account acc = GetAccount(accountName);
-                acc.Ccy = value;
-                RecalculateAmount(acc, mkt, aMkt);
+                acc.ModifyCcy(mkt, aMkt, "", value, false);
+            }
+        }
+
+        public void ModifyTotalCcy(FXMarket mkt, AssetMarket aMkt, Currency ccy)
+        {
+            if (_TotalCcy != ccy)
+            {
+                _TotalCcy = ccy;
+                RefreshTotal(mkt, aMkt, ccy);
             }
         }
 
@@ -201,6 +230,7 @@ namespace Core
         {
             _InstitutionName = name;
             Ccy = ccy;
+            _TotalCcy = ccy;
             _Accounts = new List<Account> { };
         }
 
@@ -266,6 +296,16 @@ namespace Core
                 res.AddAccount(item.Copy());
             }
             return res;
+        }
+
+        internal void RefreshTotalAmount(FXMarket fXMarket, AssetMarket assetMarket)
+        {
+            _TotalAmount = 0;
+            foreach (Account item in Accounts)
+            {
+                item.RefreshTotalAmount(fXMarket, assetMarket);
+                _TotalAmount += item.TotalAmount;
+            }
         }
     }
 }
