@@ -105,14 +105,20 @@ namespace Core
             }
         }
 
-        public void CalculateTotal()
+        /// <summary>
+        /// Historical freahly Loaded from .json needs to be properly set up
+        /// 1. Populate Event Handlers For Modify Total Ccy (for Accounting Data to HAD)
+        /// 2. Populate Event Handlers for Modify Amount (for Accounting Data level)
+        /// 3. Calculate All Total Amounts (under Ccy = RefCcy)
+        /// </summary>
+        public void PrepareForLoading()
         {
+            _TotalCcy = _CcyDB.RefCcy;
             foreach (var item in _Data)
             {
-                var ad = item.Value;
-                ad.SetCcyDB(_CcyDB);
-                ad.AssetMarket.PopulateWithFXMarket(ad.FXMarket);
-                ad.Total();
+                AccountingData data = item.Value;
+                data.PrepareForLoading(_TotalCcy);
+                data.ModifyCcyEventHandler += this.ModifyCcy;
             }
         }
 

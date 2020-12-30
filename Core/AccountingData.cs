@@ -428,6 +428,19 @@ namespace Core
             }
         }
 
+        public void PrepareForLoading(Currency refCcy)
+        {
+            _Ccy = refCcy;
+            _TotalValue = 0;
+            _AssetMarket.PopulateWithFXMarket(_FXMarket);
+            foreach (Category item in Categories)
+            {
+                item.PrepareForLoading(_Ccy, _FXMarket, _AssetMarket);
+                item.ModifyAmountEventHandler += this.UpdateTotalAmount;
+                _TotalValue += item.TotalAmount;
+            }
+        }
+
         public AccountingData Copy()
         {
             List<Category> newData = new List<Category> { };

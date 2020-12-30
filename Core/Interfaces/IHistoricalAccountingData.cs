@@ -15,6 +15,6 @@ namespace Core.Interfaces
         void AddNewDate(DateTime date);
         void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair ccyPair, double ccyPairQuote);
         void AddNewAsset(string assetName, AssetStatics assetStatics, double assetCcyPairQuote);
-        void CalculateTotal();
+        void PrepareForLoading();
     }
 }

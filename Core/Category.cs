@@ -294,7 +294,19 @@ namespace Core
                 _TotalAmount += item.TotalAmount;
             }
         }
-
+        
+        internal void PrepareForLoading(Currency ccy, FXMarket fXMarket, AssetMarket assetMarket)
+        {
+            _TotalCcy = ccy;
+            _TotalAmount = 0;
+            foreach (Institution item in Institutions)
+            {
+                item.PrepareForLoading(_TotalCcy, fXMarket, assetMarket);
+                item.ModifyAmountEventHandler += this.UpdateTotalAmount;
+                _TotalAmount += item.TotalAmount;
+            }
+        }
+        
         public Category Copy()
         {
             Category res = new Category(_CategoryName, (Currency)_Ccy.Clone());

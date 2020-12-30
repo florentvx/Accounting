@@ -307,5 +307,16 @@ namespace Core
                 _TotalAmount += item.TotalAmount;
             }
         }
+
+        internal void PrepareForLoading(Currency ccy, FXMarket fXMarket, AssetMarket assetMarket)
+        {
+            _TotalCcy = ccy;
+            _TotalAmount = 0;
+            foreach (Account item in Accounts)
+            {
+                item.ModifyTotalCcy(fXMarket, assetMarket, ccy);
+                _TotalAmount += item.TotalAmount;
+            }
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace Accounting
         internal void SetHistoricalData(IHistoricalAccountingData dataHistory)
         {
             _had = dataHistory;
-            _had.CalculateTotal();
+            _had.PrepareForLoading();
             _view.UpdateDates();
         }
 
