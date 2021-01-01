@@ -39,15 +39,20 @@ namespace Core.Statics
             value -= digit * Math.Pow(10, N - 1 - pos);
         }
 
-        internal string ValueToString(double value)
+        public string ValueToString(double value)
         {
             string res = "";
+            if (value < 0)
+            {
+                res = "-"; 
+                value = -value;
+            }
             value = Math.Round(value, _DecimalNumber);
             double roundedvalue = Math.Floor(value);
             if (_DecimalNumber == 0)
                 roundedvalue = Math.Round(value, 0);
             if (roundedvalue == 0)
-                res = "0";
+                res += "0";
             else
             {
                 int N = Convert.ToInt32(Math.Floor(Math.Log10(roundedvalue))) + 1;
@@ -79,6 +84,10 @@ namespace Core.Statics
                 {
                     int N_dec = Convert.ToInt32(Math.Floor(Math.Log10(decimalPart))) + 1;
                     res += ".";
+                    for (int k_0 = N_dec; k_0 < _DecimalNumber; k_0++)
+                    {
+                        res += "0";
+                    }
                     for (int k = 0; k < N_dec; k++)
                     {
                         GetDigitAndUpdateValue(ref res, ref decimalPart, k, N_dec);

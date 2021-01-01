@@ -191,6 +191,10 @@ namespace Core
             _TotalCcy = (Currency)info.GetValue("TotalCcy", typeof(Currency));
             _CcyDB = (CurrencyAssetStaticsDataBase)info.GetValue("CcyDataBase", typeof(CurrencyAssetStaticsDataBase));
             _Data = (List<KeyValuePair<DateTime, AccountingData>>)info.GetValue("AccountingDataCollection", typeof(List<KeyValuePair<DateTime, AccountingData>>));
+            foreach (var item in _Data)
+            {
+                item.Value.SetCcyDB(_CcyDB);
+            }
         }
 
         #endregion

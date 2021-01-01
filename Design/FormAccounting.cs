@@ -15,6 +15,8 @@ namespace Accounting
 {
     public partial class FormAccounting : Form, IView
     {
+        private string AppName = "SortFin";
+
         protected HistoricalAccountingData _DataHistory;
         protected DateTime? _CurrentDate;
         protected string _FilePath;
@@ -31,7 +33,7 @@ namespace Accounting
         {
             string file = path.Split('\\').Last();
             _FileName = file.Split('.').First();
-            Text = $"Accounting - {_FileName}";
+            Text = $"{AppName} - {_FileName}";
             if (!startUp)
                 _FilePath = path.Substring(0, path.Length - file.Length);
         }
