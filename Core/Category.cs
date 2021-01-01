@@ -306,7 +306,17 @@ namespace Core
                 _TotalAmount += item.TotalAmount;
             }
         }
-        
+
+        internal void ReorgItems(IEnumerable<string> enumerable)
+        {
+            List<Institution> res = new List<Institution> { };
+            foreach (string item in enumerable)
+            {
+                res.Add(GetInstitution(item).Copy());
+            }
+            _Institutions = res;
+        }
+
         public Category Copy()
         {
             Category res = new Category(_CategoryName, (Currency)_Ccy.Clone());

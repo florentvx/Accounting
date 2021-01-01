@@ -441,6 +441,25 @@ namespace Core
             }
         }
 
+        private void ReorgAccountingData(TreeViewMapping tvm)
+        {
+            List<Category> res = new List<Category> { };
+            // Reorg each constituents
+            foreach(var itemC in tvm)
+            {
+                Category cat = GetCategory(itemC.Name);
+                foreach (var itemI in itemC.Nodes)
+                {
+                    Institution inst = GetInstitution(itemC.Name, itemI.Name);
+                    inst.ReorgItems(itemI.Nodes.Select(x => x.Name));
+                }
+                cat.ReorgItems(itemC.Nodes.Select(x => x.Name));
+                res.Add(cat.Copy());
+            }
+            _Data = res;
+            _Map = new TreeViewMapping(res);
+        }
+
         public AccountingData Copy()
         {
             List<Category> newData = new List<Category> { };
@@ -465,8 +484,10 @@ namespace Core
                 _Data = newData,
                 _FXMarket = fxmkt,
                 _AssetMarket = aMkt,
-                _Map = new TreeViewMapping(newData)
+                _Map = null
             };
+
+            res.ReorgAccountingData(_Map);
 
             foreach (Category cat in newData)
                 cat.ModifyAmountEventHandler += res.UpdateTotalAmount;

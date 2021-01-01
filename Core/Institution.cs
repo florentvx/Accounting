@@ -288,6 +288,16 @@ namespace Core
             return false;
         }
 
+        internal void ReorgItems(IEnumerable<string> enumerable)
+        {
+            List<Account> res = new List<Account> { };
+            foreach (string item in enumerable)
+            {
+                res.Add(GetAccount(item).Copy());
+            }
+            _Accounts = res;
+        }
+
         internal Institution Copy()
         {
             Institution res = new Institution(_InstitutionName, (Currency)_Ccy.Clone());
