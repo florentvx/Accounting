@@ -9,16 +9,24 @@ namespace Design
     {
         public DataGridViewRowAccounting(   DataGridViewAccounting table, 
                                             IAccount account, 
-                                            bool isTotal = false)
+                                            bool isTotalRow = false,
+                                            bool isTotalView = false)
         {
             CreateCells(table);
             string amount = table.CcyToString(account.Ccy, account.Amount);
             string convAmount = table.CcyToString(account.ConvertedCcy, account.ConvertedAmount);
                 
-            if (isTotal)
+            if (isTotalRow)
             {
                 convAmount = amount;
-                amount = "";
+                if (!(isTotalView && table.LastTotalMemory.HasValue))
+                    amount = "";
+                else
+                {
+                    double ret = account.Amount / table.LastTotalMemory.Value - 1;
+                    amount = (ret > 0) ? "+" : "-";
+                    amount += System.Math.Round(System.Math.Abs(ret) * 100, 1).ToString() + " %";
+                }
             }
 
             var titles = new object[] {
@@ -26,15 +34,15 @@ namespace Design
             };
 
             SetValues(titles);
-            if (!account.IsCalculatedAccount || isTotal)    
+            if (!account.IsCalculatedAccount || isTotalRow)    
                 Cells[DataGridViewAccountingStatics.Column_Currency] = 
-                    new DataGridViewComboBoxCellAccounting( account.Ccy, 
-                                                            isTotal? table.Ccies : table.CciesAndAssets);
+                    new DataGridViewComboBoxCellAccounting( account.Ccy,
+                                                            isTotalRow ? table.Ccies : table.CciesAndAssets);
             if (account.IsCalculatedAccount)
                 Cells[DataGridViewAccountingStatics.Column_Amount].ReadOnly = true;
             Cells[DataGridViewAccountingStatics.Column_ConvertedAmount].ReadOnly = true;
 
-            if (isTotal)
+            if (isTotalRow)
             {
                 for (int i = 0; i < Cells.Count; i++)
                 {
@@ -43,6 +51,21 @@ namespace Design
                         Cells[i].ReadOnly = true;
                 }
             }
+
+            if (account.Amount < 0)
+            {
+                for (int i = 2; i < 4; i++)
+                {
+                    Cells[i].Style.ForeColor = Color.Red;
+                }
+            }
+
+            if (isTotalView && table.LastTotalMemory.HasValue) 
+            {
+                Cells[2].Style.ForeColor = (account.Amount < table.LastTotalMemory.Value) ? 
+                    Color.Red : Color.Green;
+            }
+
         }
     }
 }

@@ -19,6 +19,8 @@ namespace Accounting
 
         protected HistoricalAccountingData _DataHistory;
         protected DateTime? _CurrentDate;
+        protected NodeAddress _AddressofElementShowed;
+
         protected string _FilePath;
         protected string _FileName;
 
@@ -28,6 +30,17 @@ namespace Accounting
             get { return _CurrentDate.Value; }
             set { _CurrentDate = value; }
         }
+
+        public DateTime? GetPreviousDate()
+        {
+            var res = _DataHistory.Dates.Where(x => x < CurrentDate).LastOrDefault();
+            if (_DataHistory.Dates.Contains(res))
+                return res;
+            else
+                return null;
+        }
+
+        public bool IsStartPageState { get { return !_CurrentDate.HasValue; } }
 
         public void SetFilePath(string path, bool startUp = false)
         {
@@ -89,13 +102,23 @@ namespace Accounting
         public void ShowTotal()
         {
             labelTable.Text = "Total";
-            dataGridViewAccounting.ShowTotal(Data);
+            DateTime? dt = GetPreviousDate();
+            double? lastTotal = null;
+            if (dt.HasValue)
+                lastTotal = _DataHistory.GetData(dt.Value).TotalValue;
+            dataGridViewAccounting.ShowTotal(Data, lastTotal);
+        }
+
+        public void ShowTotal(object sender, EventArgs e)
+        {
+            ShowTotal();
         }
 
         public void ShowElement(NodeAddress na)
         {
             labelTable.Text = na.GetLabelText();
             dataGridViewAccounting.ShowElement(Data.GetElement(na), Data.Map.GetElement(na));
+            _AddressofElementShowed = na;
         }
 
         public void SetUpMarkets(CurrencyAssetStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt)
@@ -303,7 +326,7 @@ namespace Accounting
             Chart.Series[0].ChartType = SeriesChartType.Line;
             Chart.ChartAreas[0].AxisY.Minimum = Math.Round(Math.Min(values.Min() * 0.9, values.Min() - 100));
             Chart.ChartAreas[0].AxisY.Maximum = Math.Round(Math.Max(values.Max() * 1.1, values.Max() + 100));
-            Chart.ChartAreas[0].AxisY.Interval = Math.Round((Chart.ChartAreas[0].AxisY.Maximum - Chart.ChartAreas[0].AxisY.Minimum) / 5.0, 2);
+            Chart.ChartAreas[0].AxisY.Interval = Math.Round((Chart.ChartAreas[0].AxisY.Maximum - Chart.ChartAreas[0].AxisY.Minimum) / 5.0);
             Chart.ChartAreas[0].AxisX.Interval = 1;
         }
 

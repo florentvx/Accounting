@@ -33,6 +33,9 @@ namespace Design
         private CurrencyAssetStaticsDataBase _CcyDB;
         public IEnumerable<string> Ccies;
         public IEnumerable<string> Assets;
+        private double? _LastTotalMemory;
+
+        public double? LastTotalMemory { get { return _LastTotalMemory; } }
 
         public IEnumerable<string> CciesAndAssets { get { return Ccies.Union(Assets); } }
 
@@ -73,9 +76,9 @@ namespace Design
 
         #region ShowElement
 
-        private void AddRow(IAccount item, bool isTotal = false)
+        private void AddRow(IAccount item, bool isTotalRow = false, bool isTotalView = false)
         {
-            DataGridViewRowAccounting dgvr = new DataGridViewRowAccounting(this, item, isTotal);
+            DataGridViewRowAccounting dgvr = new DataGridViewRowAccounting(this, item, isTotalRow, isTotalView);
             Rows.Add(dgvr);
         }
 
@@ -94,7 +97,7 @@ namespace Design
             foreach (IAccountingElement item in iElmt.GetItemList(tvme))
                 AddRow(item, iElmt.CcyRef);
             AddRow( iElmt.GetTotalAccount(FXMarketUsed, AssetMarketUsed, iElmt.CcyRef), 
-                    isTotal: iElmt.GetNodeType() != NodeType.Account);
+                    isTotalRow: iElmt.GetNodeType() != NodeType.Account);
             ElementShowed = iElmt;
             TotalShowed = null;
             Rows[0].Cells[0].Selected = false;
@@ -110,12 +113,16 @@ namespace Design
             AddRow(sum, false);
         }
 
-        internal void ShowTotal(IAccountingData iad)
+        internal void ShowTotal(IAccountingData iad, double? lastTotal = null)
         {
             Rows.Clear();
             foreach (ICategory icat in iad.Categories)
                 AddRow(icat, iad.Ccy);
-            AddRow(iad.Total(), isTotal: true);
+            if (lastTotal.HasValue)
+                _LastTotalMemory = lastTotal.Value;
+            else
+                _LastTotalMemory = null;
+            AddRow(iad.Total(), isTotalRow: true, isTotalView: true);
             ElementShowed = null;
             TotalShowed = iad;
             Rows[0].Cells[0].Selected = false;
@@ -147,6 +154,8 @@ namespace Design
                 return Convert.ToDouble(valueStr);
             }
         }
+
+        public event EventHandler<EventArgs> ShowTotalEventHandler;
 
         protected override void OnCellValueChanged(DataGridViewCellEventArgs e)
         {
@@ -189,7 +198,7 @@ namespace Design
                         TotalShowed.ModifyCcy(valueCcy);
                         break;
                 }
-                ShowTotal(TotalShowed);
+                ShowTotalEventHandler?.Invoke(this, e);
             }
         }
 

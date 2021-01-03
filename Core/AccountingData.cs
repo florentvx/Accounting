@@ -44,13 +44,13 @@ namespace Core
         [JsonProperty]
         AssetMarket _AssetMarket;
 
-        [JsonProperty]
+        //[JsonProperty]
         TreeViewMapping _Map;
 
         public Currency Ccy
         {
             get { return _Ccy; }
-            ///set { _Ccy = value; }
+            //set { _Ccy = value; }
         }
 
         public Dictionary<string, Category> GetData()
@@ -269,10 +269,11 @@ namespace Core
         {
             info.AddValue("Currency", _Ccy, typeof(Currency));
             //info.AddValue("CcyDB", _CcyDB, typeof(CurrencyAssetStaticsDataBase));
+            ReorgAccountingData(_Map);
             info.AddValue("Categories", _Data, typeof(List<Category>));
             info.AddValue("FXMarket", _FXMarket, typeof(FXMarket));
             info.AddValue("AssetMarket", _AssetMarket, typeof(AssetMarket));
-            info.AddValue("Map", _Map, typeof(TreeViewMapping));
+            //info.AddValue("Map", _Map, typeof(TreeViewMapping));
         }
 
         public AccountingData(SerializationInfo info, StreamingContext context)
@@ -282,7 +283,8 @@ namespace Core
             _Data = (List<Category>)info.GetValue("Categories", typeof(List<Category>));
             _FXMarket = (FXMarket)info.GetValue("FXMarket", typeof(FXMarket));
             _AssetMarket = (AssetMarket)info.GetValue("AssetMarket", typeof(AssetMarket));
-            _Map = (TreeViewMapping)info.GetValue("Map", typeof(TreeViewMapping));
+            //_Map = (TreeViewMapping)info.GetValue("Map", typeof(TreeViewMapping));
+            _Map = new TreeViewMapping(_Data);
         }
 
         #endregion

@@ -31,13 +31,17 @@ namespace Accounting
             _had = had;
         }
 
-        public void LoadAccounts(bool showTotal = false)
+        public void LoadAccounts(bool showTotal = false, NodeAddress specifiedAddress = null)
         {
             _view.Reset();
             _view.SetUpAccountingData(_view.CcyDB, _ad);
             if (showTotal)
             {
                 _view.ShowTotal();
+            }
+            else if(specifiedAddress != null)
+            {
+                _view.ShowElement(specifiedAddress);
             }
             else
             {
