@@ -303,7 +303,9 @@ namespace Core
             Institution res = new Institution(_InstitutionName, (Currency)_Ccy.Clone());
             foreach (var item in _Accounts)
             {
-                res.AddAccount(item.Copy());
+                Account copyItem = item.Copy();
+                copyItem.SetTotalCcy(_TotalCcy);
+                res.AddAccount(copyItem);
             }
             return res;
         }

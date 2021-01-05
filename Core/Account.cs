@@ -238,6 +238,12 @@ namespace Core
             _TotalAmount = _Amount * iMkt.GetQuote(_Ccy.CreateMarketInput(_TotalCcy));
         }
 
+        // function to set TotalCcy for copying process purposes
+        internal void SetTotalCcy(Currency totalCcy)
+        {
+            _TotalCcy = totalCcy;
+        }
+
         internal Account Copy()
         {
             return new Account(_AccountName, _Ccy, _Amount, false);

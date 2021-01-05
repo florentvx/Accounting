@@ -279,31 +279,50 @@ namespace Accounting
         {
             Currency ccy1 = new Currency(dataGridViewFXMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset1].Value);
             Currency ccy2 = new Currency(dataGridViewFXMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset2].Value);
-            double rate = Convert.ToDouble(dataGridViewFXMarket.Rows[e.RowIndex].Cells[e.ColumnIndex].Value);
-            switch (e.ColumnIndex)
+            object rateStr = dataGridViewFXMarket.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+            try
             {
-                case DataGridViewMarketStatics.Column_Value:
-                    Data.FXMarket.AddQuote(new CurrencyPair(ccy1, ccy2), rate);
-                    Data.UpdateAssetMarket();
-                    Data.RefreshTotalAmount(Data.FXMarket, Data.AssetMarket);
-                    ShowActive();
-                    break;
+                double rate = Convert.ToDouble(rateStr);
+                switch (e.ColumnIndex)
+                {
+                    case DataGridViewMarketStatics.Column_Value:
+                        Data.FXMarket.AddQuote(new CurrencyPair(ccy1, ccy2), rate);
+                        Data.UpdateAssetMarket();
+                        Data.RefreshTotalAmount(Data.FXMarket, Data.AssetMarket);
+                        ShowActive();
+                        break;
+                }
             }
+            catch
+            {
+                MessageBox.Show($"The new rate input is not valid: {rateStr}", "Ccy Market Error");
+                dataGridViewFXMarket.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = Data.FXMarket.GetQuote(new CurrencyPair(ccy1, ccy2));
+            }
+            
         }
 
         private void DataGridViewAssetMarket_ValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             Asset asset = new Asset(dataGridViewAssetMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset1].Value);
             Currency ccy2 = new Currency(dataGridViewAssetMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset2].Value);
-            double rate = Convert.ToDouble(dataGridViewAssetMarket.Rows[e.RowIndex].Cells[e.ColumnIndex].Value);
-            switch (e.ColumnIndex)
+            object rateStr = dataGridViewAssetMarket.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+            try
             {
-                case DataGridViewMarketStatics.Column_Value:
-                    Data.AssetMarket.AddQuote(new AssetCcyPair(asset, ccy2), rate);
-                    Data.UpdateAssetMarket();
-                    Data.RefreshTotalAmount(Data.FXMarket, Data.AssetMarket);
-                    ShowActive();
-                    break;
+                double rate = Convert.ToDouble(rateStr);
+                switch (e.ColumnIndex)
+                {
+                    case DataGridViewMarketStatics.Column_Value:
+                        Data.AssetMarket.AddQuote(new AssetCcyPair(asset, ccy2), rate);
+                        Data.UpdateAssetMarket();
+                        Data.RefreshTotalAmount(Data.FXMarket, Data.AssetMarket);
+                        ShowActive();
+                        break;
+                }
+            }
+            catch
+            {
+                MessageBox.Show($"The new rate input is not valid: {rateStr}", "Asset Market Error");
+                dataGridViewFXMarket.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = Data.AssetMarket.GetQuote(new AssetCcyPair(asset, ccy2));
             }
         }
 
