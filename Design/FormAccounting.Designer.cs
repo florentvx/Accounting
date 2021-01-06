@@ -385,8 +385,11 @@ namespace Accounting
             this.ClientSize = new System.Drawing.Size(1223, 474);
             this.Controls.Add(this.MainTabControl);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormAccounting";
             this.Text = "SortFin";
             this.menuStrip1.ResumeLayout(false);

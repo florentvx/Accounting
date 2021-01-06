@@ -68,6 +68,9 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ButtonOK);
             this.Controls.Add(this.DateTimePicker);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "AddDateForm";
             this.Text = "AddDateForm";
             this.ResumeLayout(false);

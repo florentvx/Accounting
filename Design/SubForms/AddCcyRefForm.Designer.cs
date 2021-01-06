@@ -43,8 +43,8 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.DateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.label5 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -194,6 +194,13 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Date Selection";
             // 
+            // DateTimePicker
+            // 
+            this.DateTimePicker.Location = new System.Drawing.Point(134, 23);
+            this.DateTimePicker.Name = "DateTimePicker";
+            this.DateTimePicker.Size = new System.Drawing.Size(204, 22);
+            this.DateTimePicker.TabIndex = 14;
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -203,13 +210,6 @@
             this.label5.TabIndex = 13;
             this.label5.Text = "Date Selection";
             // 
-            // DateTimePicker
-            // 
-            this.DateTimePicker.Location = new System.Drawing.Point(134, 23);
-            this.DateTimePicker.Name = "DateTimePicker";
-            this.DateTimePicker.Size = new System.Drawing.Size(204, 22);
-            this.DateTimePicker.TabIndex = 14;
-            // 
             // AddCcyRefForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -218,6 +218,9 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.OKButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "AddCcyRefForm";
             this.Text = "Add Ref Currency";
             this.groupBox1.ResumeLayout(false);
