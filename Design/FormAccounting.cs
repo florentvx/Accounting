@@ -334,19 +334,28 @@ namespace Accounting
             List<double> values = new List<double> { };
             foreach (var item in _DataHistory.Data)
             {
-                DataPoint dp = new DataPoint(ser);
-                dp.AxisLabel = item.Key.ToString("d");
+                //DataPoint dp = new DataPoint(ser);
+                //dp.AxisLabel = item.Key.ToString("d");
+                //double val = item.Value.TotalValue;
+                //values.Add(val);
+                //dp.YValues = new double[] { val };
+                //ser.Points.Add(dp);
+
                 double val = item.Value.TotalValue;
                 values.Add(val);
-                dp.YValues = new double[] { val };
-                ser.Points.Add(dp);
+                ser.Points.AddXY(item.Key, val);
             }
             Chart.Series.Add(ser);
             Chart.Series[0].ChartType = SeriesChartType.Line;
             Chart.ChartAreas[0].AxisY.Minimum = Math.Round(Math.Min(values.Min() * 0.9, values.Min() - 100));
             Chart.ChartAreas[0].AxisY.Maximum = Math.Round(Math.Max(values.Max() * 1.1, values.Max() + 100));
             Chart.ChartAreas[0].AxisY.Interval = Math.Round((Chart.ChartAreas[0].AxisY.Maximum - Chart.ChartAreas[0].AxisY.Minimum) / 5.0);
-            Chart.ChartAreas[0].AxisX.Interval = 1;
+            Chart.Series[0].XValueType = ChartValueType.DateTime;
+            Chart.ChartAreas[0].AxisX.LabelStyle.Format = "yyyy-MM-dd";
+            Chart.ChartAreas[0].AxisX.Interval = 3;
+            Chart.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Months;
+            Chart.ChartAreas[0].AxisX.IntervalOffset = 1;
+            Chart.Series[0].BorderWidth = 2;
         }
 
         private void Chart_MouseMove(object sender, MouseEventArgs e)
@@ -364,8 +373,9 @@ namespace Accounting
                 // Find selected data point
                 DataPoint Datapoint = Chart.Series[0].Points[result.PointIndex];
                 Datapoint.MarkerStyle = MarkerStyle.Square;
-                //Datapoint.Color = Color.Red;
-                Datapoint.ToolTip = $"{Math.Round(Datapoint.YValues[0])}";
+                Datapoint.MarkerColor = Color.Red;
+                DateTime xValue = DateTime.FromOADate(Datapoint.XValue);
+                Datapoint.ToolTip = $"{Math.Round(Datapoint.YValues[0])}{Environment.NewLine}{xValue:yyyy-MMM-dd}";
 
             }
         }

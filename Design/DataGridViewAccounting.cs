@@ -168,10 +168,14 @@ namespace Design
                         if (!IsLastRow && ElementShowed.GetNodeType() == NodeType.Institution)
                         {
                             var valueAmount = Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-                            ElementShowed.ModifyAmount( FXMarketUsed,
+                            try
+                            {
+                                ElementShowed.ModifyAmount(FXMarketUsed,
                                                         AssetMarketUsed,
                                                         Rows[e.RowIndex].Cells[0].Value.ToString(),
                                                         ValueFromStringToDouble(valueAmount));
+                            }
+                            catch { }
                         }
                         break;
 
