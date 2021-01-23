@@ -60,6 +60,9 @@ namespace Accounting
             _DataHistory = new HistoricalAccountingData();
             _CurrentDate = null;
             _FilePath = "<NONE>";
+            dataGridViewAccounting.SetUpTable();
+            dataGridViewFXMarket.SetUpTable();
+            dataGridViewAssetMarket.SetUpTable();
         }
 
         #region IView
@@ -328,6 +331,16 @@ namespace Accounting
 
         public void Chart_Update()
         {
+            // Combo Box
+
+            comboBoxGraphTotalCcy.Items.Clear();
+            foreach (var item in _DataHistory.CcyDB.DataBase)
+            {
+                comboBoxGraphTotalCcy.Items.Add(item.Key);
+            }
+            comboBoxGraphTotalCcy.SelectedItem = _DataHistory.TotalCcy.CcyString;
+
+            // Charts
             Chart.Series.Clear();
             Series ser = new Series("Value");
             ser.XValueType = ChartValueType.String;
@@ -347,9 +360,25 @@ namespace Accounting
             }
             Chart.Series.Add(ser);
             Chart.Series[0].ChartType = SeriesChartType.Line;
-            Chart.ChartAreas[0].AxisY.Minimum = Math.Round(Math.Min(values.Min() * 0.9, values.Min() - 100));
-            Chart.ChartAreas[0].AxisY.Maximum = Math.Round(Math.Max(values.Max() * 1.1, values.Max() + 100));
-            Chart.ChartAreas[0].AxisY.Interval = Math.Round((Chart.ChartAreas[0].AxisY.Maximum - Chart.ChartAreas[0].AxisY.Minimum) / 5.0);
+            double min = Math.Round(Math.Min(values.Min() * 0.9, values.Min() - 100));
+            double max = Math.Round(Math.Max(values.Max() * 1.1, values.Max() + 100));
+            Chart.ChartAreas[0].AxisY.Minimum = min;
+            Chart.ChartAreas[0].AxisY.Maximum = max;
+            //Chart.ChartAreas[0].AxisY.Interval = Math.Round((Chart.ChartAreas[0].AxisY.Maximum - Chart.ChartAreas[0].AxisY.Minimum) / 5.0);
+            Chart.ChartAreas[0].AxisY.CustomLabels.Clear();
+            double n = 8.0;
+            int decNb = _DataHistory.CcyDB.DataBase[_DataHistory.TotalCcy.CcyString].DecimalNumber;
+            Chart.ChartAreas[0].AxisY.MajorGrid.Interval = (max - min) / n;
+            Chart.ChartAreas[0].AxisY.MajorGrid.IntervalOffset = (max - min) / n / 2.0;
+            Chart.ChartAreas[0].AxisY.MajorTickMark.Enabled = false;
+            for (int i = 0; i < n; i++)
+            {
+                double min_i = min + (max - min) / n * i;
+                double max_i = min + (max - min) / n * (i + 1);
+                double value_i = Math.Round(0.5 * (min_i + max_i) * Math.Pow(10,-4 + decNb)) * Math.Pow(10, 4-decNb);
+                string valueStr_i = _DataHistory.CcyDB.CcyToString(_DataHistory.TotalCcy, value_i);
+                Chart.ChartAreas[0].AxisY.CustomLabels.Add(new CustomLabel(min_i, max_i, valueStr_i, 0, LabelMarkStyle.None));
+            }
             Chart.Series[0].XValueType = ChartValueType.DateTime;
             Chart.ChartAreas[0].AxisX.LabelStyle.Format = "yyyy-MM-dd";
             Chart.ChartAreas[0].AxisX.Interval = 3;
@@ -375,8 +404,20 @@ namespace Accounting
                 Datapoint.MarkerStyle = MarkerStyle.Square;
                 Datapoint.MarkerColor = Color.Red;
                 DateTime xValue = DateTime.FromOADate(Datapoint.XValue);
-                Datapoint.ToolTip = $"{Math.Round(Datapoint.YValues[0])}{Environment.NewLine}{xValue:yyyy-MMM-dd}";
+                string valueStr = _DataHistory.CcyDB.CcyToString(_DataHistory.TotalCcy, Datapoint.YValues[0]);
+                Datapoint.ToolTip = $"{valueStr}{Environment.NewLine}{xValue:yyyy-MMM-dd}";
 
+            }
+        }
+
+        private void comboBoxGraphTotalCcy_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string valueCcy = comboBoxGraphTotalCcy.SelectedItem.ToString();
+            if (valueCcy != _DataHistory.TotalCcy.CcyString)
+            {
+                _DataHistory.ModifyCcy(sender, new ModifyCcyEventArgs(valueCcy));
+                Chart_Update();
+                ShowTotal();
             }
         }
     }

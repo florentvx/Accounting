@@ -40,11 +40,11 @@ namespace Design
         public IEnumerable<string> CciesAndAssets { get { return Ccies.Union(Assets); } }
 
 
-        private void SetUpTable()
+        public void SetUpTable()
         {
             ColumnCount = DataGridViewAccountingStatics.ColumnNumber;
             for (int i = 0; i < ColumnCount; i++)
-                Columns[i].Name = DataGridViewAccountingStatics.ColumnNames[i];
+                Columns[i].HeaderText = DataGridViewAccountingStatics.ColumnNames[i];
             AllowUserToAddRows = false;
             foreach (DataGridViewColumn column in Columns)
             {
@@ -54,7 +54,7 @@ namespace Design
 
         public DataGridViewAccounting() : base()
         {
-            SetUpTable();
+            AutoGenerateColumns = false;
         }
 
         internal void SetUpMarkets(CurrencyAssetStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt)

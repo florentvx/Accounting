@@ -49,29 +49,31 @@ namespace Accounting
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.dataGridViewFXMarket = new Design.DataGridViewFXMarket();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.dataGridViewAssetMarket = new Design.DataGridViewAssetMarket();
             this.labelDate = new System.Windows.Forms.Label();
             this.ComboBoxDates = new System.Windows.Forms.ComboBox();
             this.MainTabControl = new System.Windows.Forms.TabControl();
             this.DataPage = new System.Windows.Forms.TabPage();
-            this.GraphPage = new System.Windows.Forms.TabPage();
-            this.Chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.TreeViewAccounting = new Design.TreeViewAccounting();
             this.dataGridViewAccounting = new Design.DataGridViewAccounting();
-            this.dataGridViewFXMarket = new Design.DataGridViewFXMarket();
-            this.dataGridViewAssetMarket = new Design.DataGridViewAssetMarket();
+            this.GraphPage = new System.Windows.Forms.TabPage();
+            this.comboBoxGraphTotalCcy = new System.Windows.Forms.ComboBox();
+            this.labelGraphTotalCcy = new System.Windows.Forms.Label();
+            this.Chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewFXMarket)).BeginInit();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssetMarket)).BeginInit();
             this.MainTabControl.SuspendLayout();
             this.DataPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).BeginInit();
             this.GraphPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Chart)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewFXMarket)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssetMarket)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -84,7 +86,7 @@ namespace Accounting
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1223, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(1223, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -96,7 +98,7 @@ namespace Accounting
             this.saveToolStripMenuItem,
             this.loadToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // newToolStripMenuItem
@@ -134,7 +136,7 @@ namespace Accounting
             this.addAssetToolStripMenuItem,
             this.addDateToolStripMenuItem});
             this.marketToolStripMenuItem.Name = "marketToolStripMenuItem";
-            this.marketToolStripMenuItem.Size = new System.Drawing.Size(69, 26);
+            this.marketToolStripMenuItem.Size = new System.Drawing.Size(69, 24);
             this.marketToolStripMenuItem.Text = "Market";
             // 
             // addCurrencyToolStripMenuItem
@@ -163,7 +165,7 @@ namespace Accounting
             this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.applicationToolStripMenuItem});
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(64, 26);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(64, 24);
             this.aboutToolStripMenuItem.Text = "About";
             // 
             // applicationToolStripMenuItem
@@ -179,9 +181,9 @@ namespace Accounting
             this.labelTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTable.Location = new System.Drawing.Point(273, 12);
             this.labelTable.Name = "labelTable";
-            this.labelTable.Size = new System.Drawing.Size(79, 18);
+            this.labelTable.Size = new System.Drawing.Size(108, 18);
             this.labelTable.TabIndex = 3;
-            this.labelTable.Text = "LabelTable";
+            this.labelTable.Text = "No File Loaded";
             // 
             // buttonTotal
             // 
@@ -227,6 +229,23 @@ namespace Accounting
             this.panel1.Size = new System.Drawing.Size(251, 351);
             this.panel1.TabIndex = 0;
             // 
+            // dataGridViewFXMarket
+            // 
+            this.dataGridViewFXMarket.AllowUserToAddRows = false;
+            this.dataGridViewFXMarket.AllowUserToDeleteRows = false;
+            this.dataGridViewFXMarket.AllowUserToResizeColumns = false;
+            this.dataGridViewFXMarket.AllowUserToResizeRows = false;
+            this.dataGridViewFXMarket.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewFXMarket.Location = new System.Drawing.Point(11, 4);
+            this.dataGridViewFXMarket.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dataGridViewFXMarket.Name = "dataGridViewFXMarket";
+            this.dataGridViewFXMarket.RowHeadersVisible = false;
+            this.dataGridViewFXMarket.RowHeadersWidth = 51;
+            this.dataGridViewFXMarket.RowTemplate.Height = 24;
+            this.dataGridViewFXMarket.Size = new System.Drawing.Size(235, 343);
+            this.dataGridViewFXMarket.TabIndex = 5;
+            this.dataGridViewFXMarket.ValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewFXMarket_ValueChanged);
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.dataGridViewAssetMarket);
@@ -238,6 +257,22 @@ namespace Accounting
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Assets";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewAssetMarket
+            // 
+            this.dataGridViewAssetMarket.AllowUserToAddRows = false;
+            this.dataGridViewAssetMarket.AllowUserToDeleteRows = false;
+            this.dataGridViewAssetMarket.AllowUserToResizeColumns = false;
+            this.dataGridViewAssetMarket.AllowUserToResizeRows = false;
+            this.dataGridViewAssetMarket.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewAssetMarket.Location = new System.Drawing.Point(4, 10);
+            this.dataGridViewAssetMarket.Margin = new System.Windows.Forms.Padding(4);
+            this.dataGridViewAssetMarket.Name = "dataGridViewAssetMarket";
+            this.dataGridViewAssetMarket.RowHeadersVisible = false;
+            this.dataGridViewAssetMarket.RowHeadersWidth = 51;
+            this.dataGridViewAssetMarket.Size = new System.Drawing.Size(235, 343);
+            this.dataGridViewAssetMarket.TabIndex = 0;
+            this.dataGridViewAssetMarket.ValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAssetMarket_ValueChanged);
             // 
             // labelDate
             // 
@@ -286,31 +321,6 @@ namespace Accounting
             this.DataPage.Text = "Data";
             this.DataPage.UseVisualStyleBackColor = true;
             // 
-            // GraphPage
-            // 
-            this.GraphPage.Controls.Add(this.Chart);
-            this.GraphPage.Location = new System.Drawing.Point(4, 25);
-            this.GraphPage.Name = "GraphPage";
-            this.GraphPage.Padding = new System.Windows.Forms.Padding(3);
-            this.GraphPage.Size = new System.Drawing.Size(1196, 410);
-            this.GraphPage.TabIndex = 1;
-            this.GraphPage.Text = "Graph";
-            this.GraphPage.UseVisualStyleBackColor = true;
-            // 
-            // Chart
-            // 
-            chartArea1.Name = "ChartArea1";
-            this.Chart.ChartAreas.Add(chartArea1);
-            this.Chart.Location = new System.Drawing.Point(6, 6);
-            this.Chart.Name = "Chart";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.Chart.Series.Add(series1);
-            this.Chart.Size = new System.Drawing.Size(1184, 398);
-            this.Chart.TabIndex = 0;
-            this.Chart.Text = "chart1";
-            this.Chart.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Chart_MouseMove);
-            // 
             // TreeViewAccounting
             // 
             this.TreeViewAccounting.AllowDrop = true;
@@ -345,38 +355,53 @@ namespace Accounting
             this.dataGridViewAccounting.TabIndex = 2;
             this.dataGridViewAccounting.ShowTotalEventHandler += new System.EventHandler<System.EventArgs>(this.ShowTotal);
             // 
-            // dataGridViewFXMarket
+            // GraphPage
             // 
-            this.dataGridViewFXMarket.AllowUserToAddRows = false;
-            this.dataGridViewFXMarket.AllowUserToDeleteRows = false;
-            this.dataGridViewFXMarket.AllowUserToResizeColumns = false;
-            this.dataGridViewFXMarket.AllowUserToResizeRows = false;
-            this.dataGridViewFXMarket.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewFXMarket.Location = new System.Drawing.Point(11, 4);
-            this.dataGridViewFXMarket.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.dataGridViewFXMarket.Name = "dataGridViewFXMarket";
-            this.dataGridViewFXMarket.RowHeadersVisible = false;
-            this.dataGridViewFXMarket.RowHeadersWidth = 51;
-            this.dataGridViewFXMarket.RowTemplate.Height = 24;
-            this.dataGridViewFXMarket.Size = new System.Drawing.Size(235, 343);
-            this.dataGridViewFXMarket.TabIndex = 5;
-            this.dataGridViewFXMarket.ValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewFXMarket_ValueChanged);
+            this.GraphPage.Controls.Add(this.comboBoxGraphTotalCcy);
+            this.GraphPage.Controls.Add(this.labelGraphTotalCcy);
+            this.GraphPage.Controls.Add(this.Chart);
+            this.GraphPage.Location = new System.Drawing.Point(4, 25);
+            this.GraphPage.Name = "GraphPage";
+            this.GraphPage.Padding = new System.Windows.Forms.Padding(3);
+            this.GraphPage.Size = new System.Drawing.Size(1196, 410);
+            this.GraphPage.TabIndex = 1;
+            this.GraphPage.Text = "Graph";
+            this.GraphPage.UseVisualStyleBackColor = true;
             // 
-            // dataGridViewAssetMarket
+            // comboBoxGraphTotalCcy
             // 
-            this.dataGridViewAssetMarket.AllowUserToAddRows = false;
-            this.dataGridViewAssetMarket.AllowUserToDeleteRows = false;
-            this.dataGridViewAssetMarket.AllowUserToResizeColumns = false;
-            this.dataGridViewAssetMarket.AllowUserToResizeRows = false;
-            this.dataGridViewAssetMarket.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewAssetMarket.Location = new System.Drawing.Point(4, 10);
-            this.dataGridViewAssetMarket.Margin = new System.Windows.Forms.Padding(4);
-            this.dataGridViewAssetMarket.Name = "dataGridViewAssetMarket";
-            this.dataGridViewAssetMarket.RowHeadersVisible = false;
-            this.dataGridViewAssetMarket.RowHeadersWidth = 51;
-            this.dataGridViewAssetMarket.Size = new System.Drawing.Size(235, 343);
-            this.dataGridViewAssetMarket.TabIndex = 0;
-            this.dataGridViewAssetMarket.ValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAssetMarket_ValueChanged);
+            this.comboBoxGraphTotalCcy.FormattingEnabled = true;
+            this.comboBoxGraphTotalCcy.Location = new System.Drawing.Point(6, 35);
+            this.comboBoxGraphTotalCcy.Name = "comboBoxGraphTotalCcy";
+            this.comboBoxGraphTotalCcy.Size = new System.Drawing.Size(118, 24);
+            this.comboBoxGraphTotalCcy.TabIndex = 2;
+            this.comboBoxGraphTotalCcy.SelectedIndexChanged += new System.EventHandler(this.comboBoxGraphTotalCcy_SelectedIndexChanged);
+            // 
+            // labelGraphTotalCcy
+            // 
+            this.labelGraphTotalCcy.AutoSize = true;
+            this.labelGraphTotalCcy.Location = new System.Drawing.Point(27, 6);
+            this.labelGraphTotalCcy.Name = "labelGraphTotalCcy";
+            this.labelGraphTotalCcy.Size = new System.Drawing.Size(67, 17);
+            this.labelGraphTotalCcy.TabIndex = 1;
+            this.labelGraphTotalCcy.Text = "Total Ccy";
+            // 
+            // Chart
+            // 
+            this.Chart.BackColor = System.Drawing.SystemColors.Window;
+            this.Chart.BackSecondaryColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.Chart.BorderlineColor = System.Drawing.Color.Gray;
+            chartArea1.Name = "ChartArea1";
+            this.Chart.ChartAreas.Add(chartArea1);
+            this.Chart.Location = new System.Drawing.Point(130, 8);
+            this.Chart.Name = "Chart";
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.Chart.Series.Add(series1);
+            this.Chart.Size = new System.Drawing.Size(881, 398);
+            this.Chart.TabIndex = 0;
+            this.Chart.Text = "chart1";
+            this.Chart.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Chart_MouseMove);
             // 
             // FormAccounting
             // 
@@ -397,15 +422,16 @@ namespace Accounting
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewFXMarket)).EndInit();
             this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssetMarket)).EndInit();
             this.MainTabControl.ResumeLayout(false);
             this.DataPage.ResumeLayout(false);
             this.DataPage.PerformLayout();
-            this.GraphPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Chart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewFXMarket)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssetMarket)).EndInit();
+            this.GraphPage.ResumeLayout(false);
+            this.GraphPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Chart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -441,6 +467,8 @@ namespace Accounting
         private System.Windows.Forms.TabPage DataPage;
         private System.Windows.Forms.TabPage GraphPage;
         private System.Windows.Forms.DataVisualization.Charting.Chart Chart;
+        private System.Windows.Forms.Label labelGraphTotalCcy;
+        private System.Windows.Forms.ComboBox comboBoxGraphTotalCcy;
     }
 }
 

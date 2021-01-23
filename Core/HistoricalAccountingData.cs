@@ -199,12 +199,13 @@ namespace Core
 
         #endregion
 
-        private void ModifyCcy(object sender, ModifyCcyEventArgs e)
+        public void ModifyCcy(object sender, ModifyCcyEventArgs e)
         {
             foreach (var item in _Data)
             {
                 item.Value.ModifyTotalCcy(e.Ccy);
             }
+            _TotalCcy = e.Ccy;
         }
 
         public void AddData(DateTime date, AccountingData ad)

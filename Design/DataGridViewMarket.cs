@@ -25,7 +25,7 @@ namespace Design
         public IMarket MarketShowed;
         public bool IsFX => _IsFX;
 
-        private void SetUpTable()
+        public void SetUpTable()
         {
             ColumnCount = DataGridViewMarketStatics.ColumnNumber;
             for (int i = 0; i < ColumnCount; i++)
@@ -42,7 +42,6 @@ namespace Design
         public DataGridViewMarket(bool isFX) : base()
         {
             _IsFX = isFX;
-            SetUpTable();
         }
 
         public void ShowMarket(IMarket mkt)
