@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
+using Core.Statics;
 
 namespace Core.Finance
 {
@@ -67,6 +68,20 @@ namespace Core.Finance
         {
             var data = GetData();
             return Pairs.Select(x => new Tuple<IMarketInput, double>(x, data[x]));
+        }
+
+            public IEnumerable<Tuple<IMarketInput, double>> EnumerateData(CurrencyAssetStaticsDataBase ccyDB)
+        {
+            var data = GetData();
+            if (data.Keys.Count() == 0)
+                return new List<Tuple<IMarketInput, double>> { };
+            if (data.Keys.First().Ccy1 != null)
+                return ccyDB.DataBase   .Select(x => x.PricingCcyPair)
+                                        .Where(x => x != null)
+                                        .Select(x => new Tuple<IMarketInput, double>(x, data[x]));
+            else
+                return ccyDB.AssetDataBase  .Select(x => new AssetCcyPair(new Asset(x.Name), x.Ccy))
+                                            .Select(x => new Tuple<IMarketInput, double>(x, data[x]));
         }
 
         virtual protected void AddQuoteToDictionary(IMarketInput imi, double value)

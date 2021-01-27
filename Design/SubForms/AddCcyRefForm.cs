@@ -28,7 +28,7 @@ namespace Design.SubForms
         {
             Close();
             CcyStatics = new CurrencyStatics();
-            Tuple<bool, string> test = CcyStatics.Load(TextSymbol.Text, TextThousandMarker.Text, TextDecimalMarker.Text);
+            Tuple<bool, string> test = CcyStatics.Load(TextBoxName.Text, TextSymbol.Text, TextThousandMarker.Text, TextDecimalMarker.Text, null);
             if (test.Item1)
             {
                 _Date = DateTimePicker.Value;

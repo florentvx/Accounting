@@ -4,27 +4,34 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Finance;
 
 namespace Core.Statics
 {
     [Serializable]
     public class CurrencyStatics: IEquatable<CurrencyStatics>, ISerializable
     {
+        private string _Name;
         private string _Symbol;
         private int _ThousandMark;
         private int _DecimalNumber;
+        private CurrencyPair _PricingCcyPair;
 
+        public string Name { get { return _Name; } }
         public string Symbol { get { return _Symbol; } set { _Symbol = value; } }
         public int ThousandMark { get { return _ThousandMark; } set { _ThousandMark = value; } }
         public int DecimalNumber { get { return _DecimalNumber; } set { _DecimalNumber = value; } }
+        public CurrencyPair PricingCcyPair { get { return _PricingCcyPair; } }
 
         public CurrencyStatics() { }
 
-        public CurrencyStatics(string symbol, int thousandMark, int decNb)
+        public CurrencyStatics(string name, string symbol, int thousandMark, int decNb, CurrencyPair cp = null)
         {
+            _Name = name;
             _Symbol = symbol;
             _ThousandMark = thousandMark;
             _DecimalNumber = decNb;
+            _PricingCcyPair = cp;
         }
 
         private int GetDigit(double value, int pos, int N)
@@ -97,8 +104,16 @@ namespace Core.Statics
             return _Symbol + " " + res;
         }
 
-        public Tuple<bool, string> Load(string symbol, string thousandMarker, string decimalNumber)
+        public Tuple<bool, string> Load(string name, string symbol, string thousandMarker, string decimalNumber, CurrencyPair cp)
         {
+            // Name
+            if (name.Length > 2 && name.Length < 5)
+            {
+                _Name = name;
+            }
+            else
+                return new Tuple<bool, string>(false, $"Name [{name}] should have between 3 and 4 characters.");
+
             // Symbol
             if (symbol.Length < 6)
             {
@@ -128,6 +143,9 @@ namespace Core.Statics
             {
                 throw new Exception($"The thousand Marker [{_DecimalNumber}] needs to be a number.");
             }
+
+            // Pricing CcyPair
+            _PricingCcyPair = cp;
             return new Tuple<bool, string>(true, null);
         }
 
@@ -174,16 +192,20 @@ namespace Core.Statics
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            info.AddValue("Name", _Name, typeof(string));
             info.AddValue("Symbol", _Symbol, typeof(string));
             info.AddValue("DecimalNumber", _DecimalNumber, typeof(string));
             info.AddValue("ThousandMark", _ThousandMark, typeof(string));
+            info.AddValue("PricingCcyPair", _PricingCcyPair, typeof(CurrencyPair));
         }
 
         public CurrencyStatics(SerializationInfo info, StreamingContext context)
         {
+            _Name = (string)info.GetValue("Name", typeof(string));
             _Symbol = (string)info.GetValue("Symbol", typeof(string));
             _DecimalNumber = (int)info.GetValue("DecimalNumber", typeof(int));
             _ThousandMark = (int)info.GetValue("ThousandMark", typeof(int));
+            _PricingCcyPair = (CurrencyPair)info.GetValue("PricingCcyPair", typeof(CurrencyPair));
         }
 
         #endregion

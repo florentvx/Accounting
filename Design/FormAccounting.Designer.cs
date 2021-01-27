@@ -62,6 +62,9 @@ namespace Accounting
             this.comboBoxGraphTotalCcy = new System.Windows.Forms.ComboBox();
             this.labelGraphTotalCcy = new System.Windows.Forms.Label();
             this.Chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.StaticsPage = new System.Windows.Forms.TabPage();
+            this.dataGridViewStaticsAsset = new System.Windows.Forms.DataGridView();
+            this.dataGridViewStaticsCcy = new System.Windows.Forms.DataGridView();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -74,6 +77,9 @@ namespace Accounting
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounting)).BeginInit();
             this.GraphPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Chart)).BeginInit();
+            this.StaticsPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStaticsAsset)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStaticsCcy)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -297,6 +303,7 @@ namespace Accounting
             // 
             this.MainTabControl.Controls.Add(this.DataPage);
             this.MainTabControl.Controls.Add(this.GraphPage);
+            this.MainTabControl.Controls.Add(this.StaticsPage);
             this.MainTabControl.Location = new System.Drawing.Point(12, 31);
             this.MainTabControl.Name = "MainTabControl";
             this.MainTabControl.SelectedIndex = 0;
@@ -403,6 +410,40 @@ namespace Accounting
             this.Chart.Text = "chart1";
             this.Chart.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Chart_MouseMove);
             // 
+            // StaticsPage
+            // 
+            this.StaticsPage.Controls.Add(this.dataGridViewStaticsAsset);
+            this.StaticsPage.Controls.Add(this.dataGridViewStaticsCcy);
+            this.StaticsPage.Location = new System.Drawing.Point(4, 25);
+            this.StaticsPage.Name = "StaticsPage";
+            this.StaticsPage.Size = new System.Drawing.Size(1196, 410);
+            this.StaticsPage.TabIndex = 2;
+            this.StaticsPage.Text = "Statics";
+            this.StaticsPage.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewStaticsAsset
+            // 
+            this.dataGridViewStaticsAsset.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewStaticsAsset.Cursor = System.Windows.Forms.Cursors.Default;
+            this.dataGridViewStaticsAsset.Location = new System.Drawing.Point(549, 24);
+            this.dataGridViewStaticsAsset.Name = "dataGridViewStaticsAsset";
+            this.dataGridViewStaticsAsset.RowHeadersVisible = false;
+            this.dataGridViewStaticsAsset.RowHeadersWidth = 51;
+            this.dataGridViewStaticsAsset.RowTemplate.Height = 24;
+            this.dataGridViewStaticsAsset.Size = new System.Drawing.Size(556, 382);
+            this.dataGridViewStaticsAsset.TabIndex = 1;
+            // 
+            // dataGridViewStaticsCcy
+            // 
+            this.dataGridViewStaticsCcy.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewStaticsCcy.Location = new System.Drawing.Point(3, 24);
+            this.dataGridViewStaticsCcy.Name = "dataGridViewStaticsCcy";
+            this.dataGridViewStaticsCcy.RowHeadersVisible = false;
+            this.dataGridViewStaticsCcy.RowHeadersWidth = 51;
+            this.dataGridViewStaticsCcy.RowTemplate.Height = 24;
+            this.dataGridViewStaticsCcy.Size = new System.Drawing.Size(521, 382);
+            this.dataGridViewStaticsCcy.TabIndex = 0;
+            // 
             // FormAccounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -432,6 +473,9 @@ namespace Accounting
             this.GraphPage.ResumeLayout(false);
             this.GraphPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Chart)).EndInit();
+            this.StaticsPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStaticsAsset)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStaticsCcy)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -469,6 +513,9 @@ namespace Accounting
         private System.Windows.Forms.DataVisualization.Charting.Chart Chart;
         private System.Windows.Forms.Label labelGraphTotalCcy;
         private System.Windows.Forms.ComboBox comboBoxGraphTotalCcy;
+        private System.Windows.Forms.TabPage StaticsPage;
+        private System.Windows.Forms.DataGridView dataGridViewStaticsCcy;
+        private System.Windows.Forms.DataGridView dataGridViewStaticsAsset;
     }
 }
 

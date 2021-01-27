@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Core.Finance;
 using Core.Interfaces;
+using Core.Statics;
 
 namespace Design
 {
@@ -44,11 +45,11 @@ namespace Design
             _IsFX = isFX;
         }
 
-        public void ShowMarket(IMarket mkt)
+        public void ShowMarket(IMarket mkt, CurrencyAssetStaticsDataBase ccyDB)
         {
             MarketShowed = mkt;
             Rows.Clear();
-            foreach (var item in mkt.EnumerateData())
+            foreach (var item in mkt.EnumerateData(ccyDB))
             {
                 var titles = new object[] {
                     item.Item1.Item1.ToString(), item.Item1.Ccy2.ToString(), item.Item2

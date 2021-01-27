@@ -10,19 +10,19 @@ namespace Core.Statics
 {
     public class CurrencyAssetStaticsDataBase: IEquatable<CurrencyAssetStaticsDataBase>, ISerializable
     {
-        public Dictionary<string, CurrencyStatics> DataBase { get; set; }
-        public Dictionary<string, AssetStatics> AssetDataBase { get; set; }
+        public List<CurrencyStatics> DataBase { get; set; }
+        public List<AssetStatics> AssetDataBase { get; set; }
         public Currency RefCcy { get; set; }
 
         public CurrencyAssetStaticsDataBase() {
-            DataBase = new Dictionary<string, CurrencyStatics> { };
-            AssetDataBase = new Dictionary<string, AssetStatics> { };
+            DataBase = new List<CurrencyStatics> { };
+            AssetDataBase = new List<AssetStatics> { };
         }
 
         public void Reset()
         {
-            DataBase = new Dictionary<string, CurrencyStatics> { };
-            AssetDataBase = new Dictionary<string, AssetStatics> { };
+            DataBase = new List<CurrencyStatics> { };
+            AssetDataBase = new List<AssetStatics> { };
         }
 
         internal void AddRefCcy(string ccy, CurrencyStatics cs)
@@ -33,26 +33,39 @@ namespace Core.Statics
 
         #region Currency Management
 
+        public bool ContainsCcy(string ccy)
+        {
+            return !(DataBase.Where(x => x.Name == ccy).Count() == 0);
+        }
+        public bool ContainsAsset(string asset)
+        {
+            return !(AssetDataBase.Where(x => x.Name == asset).Count() == 0);
+        }
+
+        public CurrencyStatics GetCcyStatics(Currency ccy)
+        {
+            return DataBase.Where(x => x.Name == ccy.CcyString).FirstOrDefault();
+        }
+
         public bool AddCcy(string newCcy, CurrencyStatics cs)
         {
-            if (DataBase.ContainsKey(newCcy) || AssetDataBase.ContainsKey(newCcy))
+            if (ContainsCcy(newCcy) || ContainsAsset(newCcy))
                 return false;
             else
             {
-                DataBase.Add(newCcy, cs);
+                DataBase.Add(cs);
                 return true;
             }
         }
 
         public IEnumerable<string> GetAvailableCurrencies()
         {
-            return DataBase.Keys;
+            return DataBase.Select(x => x.Name);
         }
 
         public string CcyToString(Currency ccy, double value)
         {
-            CurrencyStatics cs = DataBase[ccy.ToString()];
-            return cs.ValueToString(value);
+            return GetCcyStatics(ccy).ValueToString(value);
         }
 
         #endregion
@@ -61,18 +74,18 @@ namespace Core.Statics
 
         public bool AddAsset(string newAsset, AssetStatics asSt)
         {
-            if (DataBase.ContainsKey(newAsset) || AssetDataBase.ContainsKey(newAsset))
+            if (ContainsCcy(newAsset) || ContainsAsset(newAsset))
                 return false;
             else
             {
-                AssetDataBase.Add(newAsset, asSt);
+                AssetDataBase.Add(asSt);
                 return true;
             }
         }
 
         public IEnumerable<string> GetAvailableAssets()
         {
-            return AssetDataBase.Keys;
+            return AssetDataBase.Select(x => x.Name);
         }
 
         #endregion
@@ -83,9 +96,9 @@ namespace Core.Statics
         {
             if (casDb == null)
                 return false;
-            return casDb.RefCcy == RefCcy 
-                && Tools.CompareDictionary<string, CurrencyStatics>(casDb.DataBase, DataBase)
-                && Tools.CompareDictionary<string, AssetStatics>(casDb.AssetDataBase, AssetDataBase);
+            return casDb.RefCcy == RefCcy
+                && Tools.CompareList<CurrencyStatics>(casDb.DataBase, DataBase)
+                && Tools.CompareList<AssetStatics>(casDb.AssetDataBase, AssetDataBase);
         }
 
         public override bool Equals(object obj)
@@ -115,7 +128,6 @@ namespace Core.Statics
 
         #endregion
 
-
         #region ISerializable
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -126,8 +138,8 @@ namespace Core.Statics
 
         public CurrencyAssetStaticsDataBase(SerializationInfo info, StreamingContext context)
         {
-            DataBase = (Dictionary<string, CurrencyStatics>)info.GetValue("CcyDB", typeof(Dictionary<string, CurrencyStatics>));
-            AssetDataBase = (Dictionary<string, AssetStatics>)info.GetValue("AssetDB", typeof(Dictionary<string, AssetStatics>));
+            DataBase = (List<CurrencyStatics>)info.GetValue("CcyDB", typeof(List<CurrencyStatics>));
+            AssetDataBase = (List<AssetStatics>)info.GetValue("AssetDB", typeof(List<AssetStatics>));
         }
 
         #endregion

@@ -60,7 +60,7 @@ namespace Design.SubForms
         {
             Close();
             CcyStatics = new CurrencyStatics();
-            Tuple<bool, string> test = CcyStatics.Load(TextSymbol.Text, TextThousandMarker.Text, TextDecimalMarker.Text);
+            Tuple<bool, string> test = CcyStatics.Load(TextBoxName.Text, TextSymbol.Text, TextThousandMarker.Text, TextDecimalMarker.Text, CcyPair);
             if (test.Item1)
             {
                 try { CcyPairQuote = Convert.ToDouble(TextBoxValue.Text); }

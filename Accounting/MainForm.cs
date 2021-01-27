@@ -191,6 +191,8 @@ namespace Accounting
                 TabControl tc = (TabControl)sender;
                 if (tc.SelectedTab.Name == "GraphPage")
                     MainPresenter.UpdateChart();
+                if (tc.SelectedTab.Name == "StaticsPage")
+                    MainPresenter.UpdateStatics();
             }
         }
     }

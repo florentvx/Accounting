@@ -11,15 +11,15 @@ namespace Core.Statics
     [Serializable]
     public class AssetStatics : IEquatable<AssetStatics>, ISerializable
     {
-        private string _Symbol;
+        private string _Name;
         private Currency _Ccy;
 
-        public string Symbol { get { return _Symbol; } set { _Symbol = value; } }
+        public string Name { get { return _Name; } set { _Name = value; } }
         public Currency Ccy { get { return _Ccy; } set { _Ccy = value; } }
 
-        public AssetStatics(string symbol, Currency ccy)
+        public AssetStatics(string name, Currency ccy)
         {
-            _Symbol = symbol;
+            _Name = name;
             _Ccy = ccy;
         }
 
@@ -29,7 +29,7 @@ namespace Core.Statics
         {
             if (aS == null)
                 return false;
-            return _Ccy == aS._Ccy && _Symbol == aS._Symbol;
+            return _Ccy == aS._Ccy && _Name == aS._Name;
         }
 
         public override bool Equals(object obj)
@@ -39,7 +39,7 @@ namespace Core.Statics
 
         public override int GetHashCode()
         {
-            return _Ccy.GetHashCode() + _Symbol.GetHashCode();
+            return _Ccy.GetHashCode() + _Name.GetHashCode();
         }
 
         public static bool operator ==(AssetStatics as1, AssetStatics as2)
@@ -63,13 +63,13 @@ namespace Core.Statics
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Symbol", _Symbol, typeof(string));
+            info.AddValue("Name", _Name, typeof(string));
             _Ccy.GetObjectData(info, context);
         }
 
         public AssetStatics(SerializationInfo info, StreamingContext context)
         {
-            _Symbol = (string)info.GetValue("Symbol", typeof(string));
+            _Name = (string)info.GetValue("Name", typeof(string));
             _Ccy = new Currency(info, context);
         }
 

@@ -1,34 +1,58 @@
 {
   "$type": "Core.Statics.CurrencyAssetStaticsDataBase, Core",
-  "DataBase": {
-    "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Core.Statics.CurrencyStatics, Core]], mscorlib",
-    "GBP": {
+  "DataBase": [
+    {
       "$type": "Core.Statics.CurrencyStatics, Core",
+      "Name": "GBP",
       "Symbol": "£",
       "DecimalNumber": 2,
-      "ThousandMark": 3
+      "ThousandMark": 3,
+      "PricingCcyPair": null
     },
-    "EUR": {
+    {
       "$type": "Core.Statics.CurrencyStatics, Core",
+      "Name": "EUR",
       "Symbol": "€",
       "DecimalNumber": 2,
-      "ThousandMark": 3
+      "ThousandMark": 3,
+      "PricingCcyPair": {
+        "$type": "Core.Finance.CurrencyPair, Core",
+        "_Ccy1": {
+          "$type": "Core.Finance.Currency, Core",
+          "Ccy": "GBP"
+        },
+        "_Ccy2": {
+          "$type": "Core.Finance.Currency, Core",
+          "Ccy": "EUR"
+        }
+      }
     },
-    "JPY": {
+    {
       "$type": "Core.Statics.CurrencyStatics, Core",
+      "Name": "JPY",
       "Symbol": "¥",
       "DecimalNumber": 0,
-      "ThousandMark": 4
+      "ThousandMark": 4,
+      "PricingCcyPair": {
+        "$type": "Core.Finance.CurrencyPair, Core",
+        "_Ccy1": {
+          "$type": "Core.Finance.Currency, Core",
+          "Ccy": "GBP"
+        },
+        "_Ccy2": {
+          "$type": "Core.Finance.Currency, Core",
+          "Ccy": "JPY"
+        }
+      }
     }
-  },
-  "AssetDataBase": {
-    "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Core.Statics.AssetStatics, Core]], mscorlib",
-    "BNP": {
+  ],
+  "AssetDataBase": [
+    {
       "$type": "Core.Statics.AssetStatics, Core",
-      "Symbol": "BNP",
+      "Name": "BNP",
       "Ccy": "EUR"
     }
-  },
+  ],
   "RefCcy": {
     "$type": "Core.Finance.Currency, Core",
     "Ccy": "GBP"

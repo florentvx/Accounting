@@ -16,7 +16,7 @@ namespace TestProject
         [TestMethod]
         public void DollarValueToString()
         {
-            CurrencyStatics USDcs = new CurrencyStatics("$", 3, 2);
+            CurrencyStatics USDcs = new CurrencyStatics("USD", "$", 3, 2);
             bool test1 = USDcs.ValueToString(12345678) == "$ 12,345,678";
             bool test2 = USDcs.ValueToString(12345678.910121) == "$ 12,345,678.91";
             bool test3 = USDcs.ValueToString(1234.0412) == "$ 1,234.04";
@@ -27,7 +27,7 @@ namespace TestProject
         [TestMethod]
         public void YenValueToString()
         {
-            CurrencyStatics JPYcs = new CurrencyStatics("¥", 4, 0);
+            CurrencyStatics JPYcs = new CurrencyStatics("JPY", "¥", 4, 0);
             bool test1 = JPYcs.ValueToString(12345678) == "¥ 1234,5678";
             bool test2 = JPYcs.ValueToString(12345678.910121) == "¥ 1234,5679";
             bool test3 = JPYcs.ValueToString(1234.0412) == "¥ 1234";
@@ -38,7 +38,7 @@ namespace TestProject
         [TestMethod]
         public void BitcoinValueToString()
         {
-            CurrencyStatics JPYcs = new CurrencyStatics("฿", 3, 8);
+            CurrencyStatics JPYcs = new CurrencyStatics("BTC", "฿", 3, 8);
             bool test1 = JPYcs.ValueToString(0.123456789) == "฿ 0.12345679";
             bool test2 = JPYcs.ValueToString(0.12345678910121) == "฿ 0.12345679";
             bool test3 = JPYcs.ValueToString(1234.0012340412) == "฿ 1,234.00123404";

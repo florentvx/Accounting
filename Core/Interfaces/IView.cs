@@ -24,5 +24,7 @@ namespace Core.Interfaces
         void TreeView_NodeMouseLeftClick(TreeNodeMouseClickEventArgs e);
         void UpdateDates();
         void Chart_Update();
+        void Statics_Update();
+
     }
 }

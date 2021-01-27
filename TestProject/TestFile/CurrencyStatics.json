@@ -1,6 +1,8 @@
 {
   "$type": "Core.Statics.CurrencyStatics, Core",
+  "Name": "USD",
   "Symbol": "$",
   "DecimalNumber": 2,
-  "ThousandMark": 3
+  "ThousandMark": 3,
+  "PricingCcyPair": null
 }

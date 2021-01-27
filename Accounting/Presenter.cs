@@ -122,5 +122,10 @@ namespace Accounting
         {
             _view.Chart_Update();
         }
+
+        internal void UpdateStatics()
+        {
+            _view.Statics_Update();
+        }
     }
 }

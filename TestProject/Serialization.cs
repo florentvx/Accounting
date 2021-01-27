@@ -122,7 +122,7 @@ namespace TestProject
         [TestMethod]
         public void CurrencyStatics()
         {
-            CurrencyStatics cs = new CurrencyStatics("$", 3, 2);
+            CurrencyStatics cs = new CurrencyStatics("USD", "$", 3, 2);
             string fileName = SerializeObject(cs, "CurrencyStatics");
             CurrencyStatics desCs = DeserializeObject<CurrencyStatics>(fileName);
             Assert.IsTrue(cs == desCs);
@@ -131,9 +131,9 @@ namespace TestProject
         private CurrencyAssetStaticsDataBase GetCcyDB()
         {
             CurrencyAssetStaticsDataBase casdb = new Core.Statics.CurrencyAssetStaticsDataBase();
-            casdb.AddCcy("GBP", new CurrencyStatics("£", 3, 2));
-            casdb.AddCcy("EUR", new CurrencyStatics("€", 3, 2));
-            casdb.AddCcy("JPY", new CurrencyStatics("¥", 4, 0));
+            casdb.AddCcy("GBP", new CurrencyStatics("GBP", "£", 3, 2));
+            casdb.AddCcy("EUR", new CurrencyStatics("EUR", "€", 3, 2, new CurrencyPair("GBP","EUR")));
+            casdb.AddCcy("JPY", new CurrencyStatics("JPY", "¥", 4, 0, new CurrencyPair("GBP", "JPY")));
             casdb.RefCcy = new Currency("GBP");
             casdb.AddAsset("BNP", new AssetStatics("BNP", new Currency("EUR")));
             return casdb;
