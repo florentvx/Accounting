@@ -89,7 +89,7 @@ namespace Core.Finance
 
         public object Clone()
         {
-            return new Currency(_Ccy);
+            return new Currency((string)_Ccy.Clone());
         }
 
         #endregion

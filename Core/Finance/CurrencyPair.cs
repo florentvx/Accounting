@@ -166,5 +166,10 @@ namespace Core.Finance
         {
             return new CurrencyPair(Ccy2, Ccy1);
         }
+
+        public object Clone()
+        {
+            return new CurrencyPair((Currency)Ccy1.Clone(), (Currency)Ccy2.Clone());
+        }
     }
 }

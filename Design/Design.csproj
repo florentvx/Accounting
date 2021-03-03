@@ -43,6 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataGridViewDesign\DataGridViewStaticsAsset.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DataGridViewDesign\DataGridViewStaticsCcy.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SubForms\AboutApplicationForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -74,5 +74,10 @@ namespace Core.Statics
         }
 
         #endregion
+
+        public object Clone()
+        {
+            return new AssetStatics((string)_Name.Clone(), (Currency)_Ccy.Clone());
+        }
     }
 }

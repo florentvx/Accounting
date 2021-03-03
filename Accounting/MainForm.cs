@@ -189,6 +189,8 @@ namespace Accounting
             if (!IsStartPageState)
             {
                 TabControl tc = (TabControl)sender;
+                if (tc.SelectedTab.Name == "DataPage")
+                    MainPresenter.LoadAccounts();
                 if (tc.SelectedTab.Name == "GraphPage")
                     MainPresenter.UpdateChart();
                 if (tc.SelectedTab.Name == "StaticsPage")

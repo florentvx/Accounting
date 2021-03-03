@@ -222,39 +222,8 @@ namespace Accounting
 
         public void Statics_Update()
         {
-            dataGridViewStaticsCcy.Rows.Clear();
-            dataGridViewStaticsCcy.ColumnCount = 5;
-            dataGridViewStaticsCcy.Columns[0].HeaderText = "Name";
-            dataGridViewStaticsCcy.Columns[1].HeaderText = "Symbol";
-            dataGridViewStaticsCcy.Columns[2].HeaderText = "Decimal Number";
-            dataGridViewStaticsCcy.Columns[3].HeaderText = "Thousand Marker";
-            dataGridViewStaticsCcy.Columns[4].HeaderText = "Pricing CcyPair";
-            dataGridViewStaticsCcy.Columns[0].Width = 50;
-            for (int i = 0; i < dataGridViewStaticsCcy.ColumnCount - 1; i++)
-            {
-                dataGridViewStaticsCcy.Columns[1 + i].Width = 75;
-            }
-            dataGridViewStaticsCcy.AllowUserToAddRows = false;
-            foreach (var item in CcyDB.DataBase)
-            {
-                CurrencyPair cp = item.PricingCcyPair;
-                string cpStr = cp == null? "Ref. Ccy" : cp.ToString();
-                object[] values = { item.Name, item.Symbol, item.DecimalNumber, item.ThousandMark, cpStr };
-                dataGridViewStaticsCcy.Rows.Add(values);
-            }
-
-            dataGridViewStaticsAsset.Rows.Clear();
-            dataGridViewStaticsAsset.ColumnCount = 2;
-            dataGridViewStaticsAsset.Columns[0].HeaderText = "Name";
-            dataGridViewStaticsAsset.Columns[1].HeaderText = "Ccy";
-            dataGridViewStaticsAsset.Columns[0].Width = 50;
-            dataGridViewStaticsAsset.Columns[1].Width = 50;
-            dataGridViewStaticsAsset.AllowUserToAddRows = false;
-            foreach (var item in CcyDB.AssetDataBase)
-            {
-                object[] values = { item.Name, item.Ccy.CcyString };
-                dataGridViewStaticsAsset.Rows.Add(values);
-            }
+            dataGridViewStaticsCcy.Update(CcyDB);
+            dataGridViewStaticsAsset.Update(CcyDB);
         }
 
         #endregion
@@ -291,7 +260,9 @@ namespace Accounting
         virtual protected void ButtonTotal_Click(object sender, System.EventArgs e) { }
         virtual protected void ComboBoxDates_SelectedIndexChanged(object sender, EventArgs e) { }
         virtual protected void MainTabControl_SelectedIndexChanged(object sender, EventArgs e) { }
-        
+
+        #region TreeViewAccounting
+
         public void TreeView_NodeAddition(object sender, TreeNodeMouseClickEventArgs e)
         {
             NodeAddress na = (NodeAddress)e.Node.Tag;
@@ -365,6 +336,10 @@ namespace Accounting
             TreeViewAccounting.ShowLine(pt);
         }
 
+        #endregion
+
+        #region DataGridViewMarket
+
         private void DataGridViewFXMarket_ValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             Currency ccy1 = new Currency(dataGridViewFXMarket.Rows[e.RowIndex].Cells[DataGridViewMarketStatics.Column_Asset1].Value);
@@ -416,6 +391,10 @@ namespace Accounting
             }
         }
 
+        #endregion
+
+        #region Graph
+
         private void Chart_MouseMove(object sender, MouseEventArgs e)
         {
             HitTestResult result = Chart.HitTest(e.X, e.Y);
@@ -449,5 +428,59 @@ namespace Accounting
                 ShowTotal();
             }
         }
+
+        #endregion
+
+        #region DataGridViewStatics
+
+        private void dataGridViewStaticsAsset_MouseDown(object sender, MouseEventArgs e)
+        {
+            dataGridViewStaticsAsset.CustomOnMouseDown(e);
+        }
+
+        private void dataGridViewStaticsAsset_MouseMove(object sender, MouseEventArgs e)
+        {
+            dataGridViewStaticsAsset.CustomOnMouseMove(e);
+        }
+
+        private void dataGridViewStaticsAsset_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+            Point pt = dataGridViewStaticsAsset.PointToClient(new Point(e.X, e.Y));
+            int rowIndex = dataGridViewStaticsAsset.GetRowIndex(pt);
+            dataGridViewStaticsAsset.ShowLine(rowIndex);
+        }
+
+        private void dataGridViewStaticsAsset_DragDrop(object sender, DragEventArgs e)
+        {
+            dataGridViewStaticsAsset.OnDragDop(sender, e);
+            //CcyDB.SetAssetOrder(dataGridViewStaticsAsset.AssetList);
+        }
+
+        private void dataGridViewStaticsCcy_MouseDown(object sender, MouseEventArgs e)
+        {
+            dataGridViewStaticsCcy.CustomOnMouseDown(e);
+        }
+
+        private void dataGridViewStaticsCcy_MouseMove(object sender, MouseEventArgs e)
+        {
+            dataGridViewStaticsCcy.CustomOnMouseMove(e);
+        }
+
+        private void dataGridViewStaticsCcy_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+            Point pt = dataGridViewStaticsCcy.PointToClient(new Point(e.X, e.Y));
+            int rowIndex = dataGridViewStaticsCcy.GetRowIndex(pt);
+            dataGridViewStaticsCcy.ShowLine(rowIndex);
+        }
+
+        private void dataGridViewStaticsCcy_DragDrop(object sender, DragEventArgs e)
+        {
+            dataGridViewStaticsCcy.OnDragDop(sender, e);
+            //CcyDB.SetCcyOrder(dataGridViewStaticsCcy.CcyList);
+        }
+
+        #endregion
     }
 }

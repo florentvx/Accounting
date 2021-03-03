@@ -142,6 +142,16 @@ namespace Core.Statics
             AssetDataBase = (List<AssetStatics>)info.GetValue("AssetDB", typeof(List<AssetStatics>));
         }
 
+        //public void SetAssetOrder(List<AssetStatics> assetList)
+        //{
+        //    AssetDataBase = assetList;
+        //}
+
+        //public void SetCcyOrder(List<CurrencyStatics> ccyList)
+        //{
+        //    Console.WriteLine("ERROR");
+        //}
+
         #endregion
     }
 }

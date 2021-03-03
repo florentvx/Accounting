@@ -209,5 +209,14 @@ namespace Core.Statics
         }
 
         #endregion
+
+        public object Clone()
+        {
+            return new CurrencyStatics((string) Name.Clone(), 
+                (string) Symbol.Clone(), 
+                ThousandMark + 0, 
+                DecimalNumber + 0, 
+                PricingCcyPair == null ? null : (CurrencyPair)PricingCcyPair.Clone());
+        }
     }
 }
