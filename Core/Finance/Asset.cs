@@ -48,6 +48,11 @@ namespace Core.Finance
             return new AssetCcyPair(this, ccyRef);
         }
 
+        public object Clone()
+        {
+            return new Asset((string)_Name.Clone());
+        }
+
         #endregion
 
         #region IEquatable

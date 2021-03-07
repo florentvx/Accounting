@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -482,5 +483,33 @@ namespace Accounting
         }
 
         #endregion
+
+        public void Summary_Update()
+        {
+            if (_CurrentDate.HasValue)
+                dataGridViewSummary.Update(_DataHistory.GetData(_CurrentDate.Value));
+        }
+
+        private void dataGridViewSummary_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            DataGridViewColumn sortCol = dataGridViewSummary.Columns[dataGridViewSummary.ColumnCount - 1];
+            if (e.ColumnIndex == 0)
+            {
+                dataGridViewSummary.Update(Data);
+                sortCol.HeaderCell.SortGlyphDirection = SortOrder.None;
+            }
+            else
+            {
+                ListSortDirection d = ListSortDirection.Descending;
+                SortOrder o = SortOrder.Descending;
+                if (sortCol.HeaderCell.SortGlyphDirection == SortOrder.Descending)
+                {
+                    d = ListSortDirection.Ascending;
+                    o = SortOrder.Ascending;
+                }
+                dataGridViewSummary.Sort(sortCol, d);
+                sortCol.HeaderCell.SortGlyphDirection = o;
+            }
+        }
     }
 }

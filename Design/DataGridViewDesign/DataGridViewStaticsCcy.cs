@@ -15,7 +15,6 @@ namespace Design.DataGridViewDesign
         CurrencyAssetStaticsDataBase _Memo;
         public List<CurrencyStatics> CcyList { get { return _Memo.DataBase; } }
 
-
         public void Update(CurrencyAssetStaticsDataBase CcyDB) 
         {
             Rows.Clear();
@@ -25,10 +24,10 @@ namespace Design.DataGridViewDesign
             Columns[2].HeaderText = "Decimal Number";
             Columns[3].HeaderText = "Thousand Marker";
             Columns[4].HeaderText = "Pricing CcyPair";
-            Columns[0].Width = 50;
-            for (int i = 0; i < ColumnCount - 1; i++)
+            for (int i = 0; i < ColumnCount; i++)
             {
-                Columns[1 + i].Width = 75;
+                Columns[i].Width = i == 0 ? 50 : 75;
+                Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
             }
             AllowUserToAddRows = false;
             foreach (var item in CcyDB.DataBase)

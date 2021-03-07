@@ -49,6 +49,7 @@
     <Compile Include="DataGridViewDesign\DataGridViewStaticsCcy.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DataGridViewDesign\DataGridViewSummary.cs" />
     <Compile Include="SubForms\AboutApplicationForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -30,8 +30,8 @@ namespace Accounting
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,6 +65,9 @@ namespace Accounting
             this.StaticsPage = new System.Windows.Forms.TabPage();
             this.dataGridViewStaticsAsset = new Design.DataGridViewDesign.DataGridViewStaticsAsset();
             this.dataGridViewStaticsCcy = new Design.DataGridViewDesign.DataGridViewStaticsCcy();
+            this.SummaryPage = new System.Windows.Forms.TabPage();
+            this.labelAllocSum = new System.Windows.Forms.Label();
+            this.dataGridViewSummary = new Design.DataGridViewDesign.DataGridViewSummary();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -80,6 +83,8 @@ namespace Accounting
             this.StaticsPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStaticsAsset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStaticsCcy)).BeginInit();
+            this.SummaryPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSummary)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -306,6 +311,7 @@ namespace Accounting
             this.MainTabControl.Controls.Add(this.DataPage);
             this.MainTabControl.Controls.Add(this.GraphPage);
             this.MainTabControl.Controls.Add(this.StaticsPage);
+            this.MainTabControl.Controls.Add(this.SummaryPage);
             this.MainTabControl.Location = new System.Drawing.Point(9, 25);
             this.MainTabControl.Margin = new System.Windows.Forms.Padding(2);
             this.MainTabControl.Name = "MainTabControl";
@@ -405,14 +411,14 @@ namespace Accounting
             this.Chart.BackColor = System.Drawing.SystemColors.Window;
             this.Chart.BackSecondaryColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Chart.BorderlineColor = System.Drawing.Color.Gray;
-            chartArea1.Name = "ChartArea1";
-            this.Chart.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.Chart.ChartAreas.Add(chartArea2);
             this.Chart.Location = new System.Drawing.Point(98, 6);
             this.Chart.Margin = new System.Windows.Forms.Padding(2);
             this.Chart.Name = "Chart";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.Chart.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.Chart.Series.Add(series2);
             this.Chart.Size = new System.Drawing.Size(661, 323);
             this.Chart.TabIndex = 0;
             this.Chart.Text = "chart1";
@@ -465,6 +471,42 @@ namespace Accounting
             this.dataGridViewStaticsCcy.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridViewStaticsCcy_MouseDown);
             this.dataGridViewStaticsCcy.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dataGridViewStaticsCcy_MouseMove);
             // 
+            // SummaryPage
+            // 
+            this.SummaryPage.Controls.Add(this.labelAllocSum);
+            this.SummaryPage.Controls.Add(this.dataGridViewSummary);
+            this.SummaryPage.Location = new System.Drawing.Point(4, 22);
+            this.SummaryPage.Name = "SummaryPage";
+            this.SummaryPage.Padding = new System.Windows.Forms.Padding(3);
+            this.SummaryPage.Size = new System.Drawing.Size(895, 331);
+            this.SummaryPage.TabIndex = 3;
+            this.SummaryPage.Text = "Summary";
+            this.SummaryPage.UseVisualStyleBackColor = true;
+            // 
+            // labelAllocSum
+            // 
+            this.labelAllocSum.AutoSize = true;
+            this.labelAllocSum.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAllocSum.Location = new System.Drawing.Point(22, 3);
+            this.labelAllocSum.Name = "labelAllocSum";
+            this.labelAllocSum.Size = new System.Drawing.Size(127, 16);
+            this.labelAllocSum.TabIndex = 1;
+            this.labelAllocSum.Text = "Allocation Summary";
+            // 
+            // dataGridViewSummary
+            // 
+            this.dataGridViewSummary.AllowUserToAddRows = false;
+            this.dataGridViewSummary.AllowUserToDeleteRows = false;
+            this.dataGridViewSummary.AllowUserToResizeColumns = false;
+            this.dataGridViewSummary.AllowUserToResizeRows = false;
+            this.dataGridViewSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewSummary.Location = new System.Drawing.Point(25, 22);
+            this.dataGridViewSummary.Name = "dataGridViewSummary";
+            this.dataGridViewSummary.RowHeadersVisible = false;
+            this.dataGridViewSummary.Size = new System.Drawing.Size(338, 303);
+            this.dataGridViewSummary.TabIndex = 0;
+            this.dataGridViewSummary.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewSummary_ColumnHeaderMouseClick);
+            // 
             // FormAccounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -497,6 +539,9 @@ namespace Accounting
             this.StaticsPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStaticsAsset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStaticsCcy)).EndInit();
+            this.SummaryPage.ResumeLayout(false);
+            this.SummaryPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSummary)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -537,6 +582,9 @@ namespace Accounting
         private System.Windows.Forms.TabPage StaticsPage;
         private Design.DataGridViewDesign.DataGridViewStaticsCcy dataGridViewStaticsCcy;
         private Design.DataGridViewDesign.DataGridViewStaticsAsset dataGridViewStaticsAsset;
+        private System.Windows.Forms.TabPage SummaryPage;
+        private Design.DataGridViewDesign.DataGridViewSummary dataGridViewSummary;
+        private System.Windows.Forms.Label labelAllocSum;
     }
 }
 

@@ -7,7 +7,7 @@ using Core.Finance;
 
 namespace Core.Interfaces
 {
-    public interface ICcyAsset
+    public interface ICcyAsset : ICloneable
     {
         Currency Ccy { get; }
         Asset Asset { get; }

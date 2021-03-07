@@ -13,7 +13,7 @@ namespace Core
     public class ModifyAmountEventArgs : EventArgs { }
 
     [Serializable]
-    public class Institution : IInstitution, IAccountingElement, IEquatable<Institution>, ISerializable
+    public class Institution : IInstitution, IEquatable<Institution>, ISerializable
     {
         [JsonProperty]
         string _InstitutionName;
@@ -329,6 +329,16 @@ namespace Core
                 item.ModifyTotalCcy(fXMarket, assetMarket, ccy);
                 _TotalAmount += item.TotalAmount;
             }
+        }
+
+        public SummaryReport GetSummary()
+        {
+            SummaryReport sr = new SummaryReport();
+            foreach (var item in Accounts)
+            {
+                sr.Add(item.GetSummary());
+            }
+            return sr;
         }
     }
 }

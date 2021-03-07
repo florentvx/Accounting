@@ -29,8 +29,12 @@ namespace Design.DataGridViewDesign
                     ColumnCount = 2;
                     Columns[0].HeaderText = "Name";
                     Columns[1].HeaderText = "Ccy";
-                    Columns[0].Width = 50;
-                    Columns[1].Width = 50;
+                    for (int i = 0; i < Columns.Count; i++)
+                    {
+                        Columns[i].Width = 50;
+                        Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    }
+                    
                     AllowUserToAddRows = false;
                     foreach (var item in ccyDb.AssetDataBase)
                     {

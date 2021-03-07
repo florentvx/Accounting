@@ -20,5 +20,6 @@ namespace Core.Interfaces
         void ModifyCcy(FXMarket mkt, AssetMarket aMkt, string v, ICcyAsset valueCcy, bool isLastRow);
         void ModifyTotalCcy(FXMarket mkt, AssetMarket aMkt, Currency ccy);
         void Delete(string v); //Delete an item from the ItemList
+        SummaryReport GetSummary();
     }
 }

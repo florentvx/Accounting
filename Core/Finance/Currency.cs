@@ -9,7 +9,7 @@ using Core.Interfaces;
 namespace Core.Finance
 {
     [Serializable]
-    public class Currency : ICcyAsset, IEquatable<Currency>, ICloneable, ISerializable
+    public class Currency : ICcyAsset, IEquatable<Currency>, ISerializable
     {
         private string _Ccy;
 
@@ -46,6 +46,10 @@ namespace Core.Finance
         {
             return new CurrencyPair(this, ccyRef);
         }
+        public object Clone()
+        {
+            return new Currency((string)_Ccy.Clone());
+        }
 
         #endregion
 
@@ -81,15 +85,6 @@ namespace Core.Finance
         public static bool operator !=(Currency ccy1, Currency ccy2)
         {
             return !(ccy1 == ccy2);
-        }
-
-        #endregion
-
-        #region ICloneable
-
-        public object Clone()
-        {
-            return new Currency((string)_Ccy.Clone());
         }
 
         #endregion

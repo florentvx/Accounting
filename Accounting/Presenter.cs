@@ -127,5 +127,10 @@ namespace Accounting
         {
             _view.Statics_Update();
         }
+
+        internal void UpdateSummary()
+        {
+            _view.Summary_Update();
+        }
     }
 }

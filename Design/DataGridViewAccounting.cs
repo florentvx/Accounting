@@ -31,8 +31,8 @@ namespace Design
         private FXMarket FXMarketUsed;
         private AssetMarket AssetMarketUsed;
         private CurrencyAssetStaticsDataBase _CcyDB;
-        public IEnumerable<string> Ccies;
-        public IEnumerable<string> Assets;
+        public IEnumerable<string> Ccies { get { return _CcyDB.Ccies; } }
+        public IEnumerable<string> Assets { get { return _CcyDB.Assets; } }
         private double? _LastTotalMemory;
 
         public double? LastTotalMemory { get { return _LastTotalMemory; } }
@@ -62,8 +62,8 @@ namespace Design
             _CcyDB = ccyDB;
             FXMarketUsed = mkt;
             AssetMarketUsed = aMkt;
-            Ccies = mkt.GetAvailableCurrencies();
-            Assets = aMkt.GetAvailableAssets();
+            //Ccies = mkt.GetAvailableCurrencies();
+            //Assets = aMkt.GetAvailableAssets();
         }
 
         public string CcyToString(ICcyAsset ccy, double value)

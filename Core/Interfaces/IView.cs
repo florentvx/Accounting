@@ -25,6 +25,7 @@ namespace Core.Interfaces
         void UpdateDates();
         void Chart_Update();
         void Statics_Update();
+        void Summary_Update();
 
     }
 }

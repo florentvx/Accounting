@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace Core
 {
     [Serializable]
-    public class Account : IAccount, IAccountingElement, IEquatable<Account>, ISerializable
+    public class Account : IAccount, IEquatable<Account>, ISerializable
     {
         [JsonProperty]
         string _AccountName;
@@ -247,6 +247,11 @@ namespace Core
         internal Account Copy()
         {
             return new Account(_AccountName, _Ccy, _Amount, false);
+        }
+
+        public SummaryReport GetSummary()
+        {
+            return new SummaryReport(CcyRef, Amount);
         }
     }
 }

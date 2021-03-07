@@ -190,11 +190,13 @@ namespace Accounting
             {
                 TabControl tc = (TabControl)sender;
                 if (tc.SelectedTab.Name == "DataPage")
-                    MainPresenter.LoadAccounts();
+                    MainPresenter.LoadAccounts(true);
                 if (tc.SelectedTab.Name == "GraphPage")
                     MainPresenter.UpdateChart();
                 if (tc.SelectedTab.Name == "StaticsPage")
                     MainPresenter.UpdateStatics();
+                if (tc.SelectedTab.Name == "SummaryPage")
+                    MainPresenter.UpdateSummary();
             }
         }
     }

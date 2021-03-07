@@ -7,7 +7,7 @@ using Core.Finance;
 
 namespace Core.Interfaces
 {
-    public interface IInstitution
+    public interface IInstitution : IAccountingElement
     {
         string InstitutionName { get; }
         Currency Ccy { get; }

@@ -53,6 +53,18 @@ namespace Core
             //set { _Ccy = value; }
         }
 
+        public List<ICcyAsset> CciesAndAssets
+        {
+            get
+            {
+                List<ICcyAsset> res = _CcyDB.Ccies.Select(c => (ICcyAsset)new Currency(c)).ToList();
+                List<ICcyAsset> assets = _CcyDB.Assets.Select(a => (ICcyAsset)new Asset(a)).ToList();
+                foreach (var item in assets)
+                    res.Add(item);
+                return res;
+            }
+        }
+
         public Dictionary<string, Category> GetData()
         {
             return _Data.ToDictionary(x => x.CategoryName, x => x);
@@ -496,5 +508,32 @@ namespace Core
             
             return res;
         }
+
+        public SummaryReport GetSummary()
+        {
+            SummaryReport sr = new SummaryReport();
+            foreach (var item in Categories)
+            {
+                sr.Add(item.GetSummary());
+            }
+            return sr;
+        }
+
+        public string GetAmountToString(ICcyAsset ICcyAsset, double amount)
+        {
+            if (ICcyAsset.IsCcy())
+                return _CcyDB.GetCcyStatics(ICcyAsset.Ccy).ValueToString(amount);
+            else
+                return Convert.ToString(amount);
+        }
+
+        public double GetQuote(ICcyAsset item, Currency ccy)
+        {
+            if (item.IsCcy())
+                return FXMarket.GetQuote(new CurrencyPair(item.Ccy, ccy));
+            else
+                return AssetMarket.GetQuote(new AssetCcyPair(item.Asset, Ccy));
+        }
+
     }
 }

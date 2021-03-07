@@ -8,11 +8,14 @@ using Core.Finance;
 
 namespace Core.Statics
 {
-    public class CurrencyAssetStaticsDataBase: IEquatable<CurrencyAssetStaticsDataBase>, ISerializable
+    public class CurrencyAssetStaticsDataBase : IEquatable<CurrencyAssetStaticsDataBase>, ISerializable
     {
         public List<CurrencyStatics> DataBase { get; set; }
         public List<AssetStatics> AssetDataBase { get; set; }
         public Currency RefCcy { get; set; }
+
+        public IEnumerable<string> Ccies { get { return DataBase.Select(x => x.Name); } }
+        public IEnumerable<string> Assets { get { return AssetDataBase.Select(x => x.Name); } }
 
         public CurrencyAssetStaticsDataBase() {
             DataBase = new List<CurrencyStatics> { };

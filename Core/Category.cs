@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Core
 {
     [Serializable]
-    public class Category : ICategory, IAccountingElement, IEquatable<Category>, ISerializable
+    public class Category : ICategory, IEquatable<Category>, ISerializable
     {
         [JsonProperty]
         private string _CategoryName;
@@ -325,6 +325,16 @@ namespace Core
                 res.AddInstitution(item.Copy());
             }
             return res;
+        }
+
+        public SummaryReport GetSummary()
+        {
+            SummaryReport sr = new SummaryReport();
+            foreach (var item in Institutions)
+            {
+                sr.Add(item.GetSummary());
+            }
+            return sr;
         }
     }
 }
