@@ -5,13 +5,18 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Finance;
+using Newtonsoft.Json;
 
 namespace Core.Statics
 {
+    [Serializable]
     public class CurrencyAssetStaticsDataBase : IEquatable<CurrencyAssetStaticsDataBase>, ISerializable
     {
+        [JsonProperty]
         public List<CurrencyStatics> DataBase { get; set; }
+        [JsonProperty]
         public List<AssetStatics> AssetDataBase { get; set; }
+        [JsonProperty]
         public Currency RefCcy { get; set; }
 
         public IEnumerable<string> Ccies { get { return DataBase.Select(x => x.Name); } }
@@ -135,25 +140,17 @@ namespace Core.Statics
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("CcyDB", DataBase, typeof(Dictionary<string, CurrencyStatics>));
-            info.AddValue("AssetDB", AssetDataBase, typeof(Dictionary<string, AssetStatics>));
+            info.AddValue("DataBase", DataBase, typeof(Dictionary<string, CurrencyStatics>));
+            info.AddValue("AssetDataBase", AssetDataBase, typeof(Dictionary<string, AssetStatics>));
+            info.AddValue("RefCcy", RefCcy, typeof(Currency));
         }
 
         public CurrencyAssetStaticsDataBase(SerializationInfo info, StreamingContext context)
         {
-            DataBase = (List<CurrencyStatics>)info.GetValue("CcyDB", typeof(List<CurrencyStatics>));
-            AssetDataBase = (List<AssetStatics>)info.GetValue("AssetDB", typeof(List<AssetStatics>));
+            DataBase = (List<CurrencyStatics>)info.GetValue("DataBase", typeof(List<CurrencyStatics>));
+            AssetDataBase = (List<AssetStatics>)info.GetValue("AssetDataBase", typeof(List<AssetStatics>));
+            RefCcy = (Currency)info.GetValue("RefCcy", typeof(Currency));
         }
-
-        //public void SetAssetOrder(List<AssetStatics> assetList)
-        //{
-        //    AssetDataBase = assetList;
-        //}
-
-        //public void SetCcyOrder(List<CurrencyStatics> ccyList)
-        //{
-        //    Console.WriteLine("ERROR");
-        //}
 
         #endregion
     }

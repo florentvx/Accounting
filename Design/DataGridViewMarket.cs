@@ -59,20 +59,24 @@ namespace Design
                 dgvr.SetValues(titles);
                 Rows.Add(dgvr);
             }
+            ClearSelection();
         }
 
         protected override void OnCellMouseClick(DataGridViewCellMouseEventArgs e)
         {
-            DataGridViewCell cell = Rows[e.RowIndex].Cells[e.ColumnIndex];
-            switch (e.ColumnIndex)
+            if (e.RowIndex != -1)
             {
-                case DataGridViewMarketStatics.Column_Value:
-                    cell.Selected = true;
-                    BeginEdit(true);
-                    break;
-                default:
-                    cell.Selected = false;
-                    break;
+                DataGridViewCell cell = Rows[e.RowIndex].Cells[e.ColumnIndex];
+                switch (e.ColumnIndex)
+                {
+                    case DataGridViewMarketStatics.Column_Value:
+                        cell.Selected = true;
+                        BeginEdit(true);
+                        break;
+                    default:
+                        cell.Selected = false;
+                        break;
+                }
             }
         }
 
@@ -86,7 +90,7 @@ namespace Design
                     DataGridViewCellEventHandler handler = ValueChanged;
                     handler?.Invoke(this, e);
                     break;
-            }
+            }            
         }
     }
 
