@@ -30,19 +30,33 @@ namespace Core.Interfaces
         }
     }
 
-    public class NodeAddress
+    public class NodeAddress: ICloneable
     {
-        public static char Separator = '/';
+        public static char Separator = '\\';
         public NodeType _NodeType;
         public List<string> Address;
 
         public NodeType NodeType { get { return _NodeType; } }
 
+        public string Path { 
+            get 
+            {
+                string res = "";
+                foreach (string item in Address)
+                {
+                    res += item + Separator;
+                }
+                if (res.Length == 0)
+                    return res;
+                return res.Substring(0, res.Length - 1);
+            } 
+        }
+
         public NodeAddress(NodeType nt, string path)
         {
             _NodeType = nt;
             Address = new List<string> { };
-            if (path != null)
+            if (path != null || path != "")
             {
                 var res = path.Split(Separator);
                 for (int i = 0; i < res.Length; i++)
@@ -107,6 +121,11 @@ namespace Core.Interfaces
         {
             _NodeType = NodeType.GetNext();
             Address.Add(v);
+        }
+
+        public object Clone()
+        {
+            return new NodeAddress(_NodeType, (string)Path.Clone());
         }
     }
 }

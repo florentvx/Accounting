@@ -86,6 +86,11 @@ namespace Core
             return GetCategory(catName).GetInstitution(institName);
         }
 
+        private Account GetAccount(string catName, string institName, string accName)
+        {
+            return GetInstitution(catName, institName).GetAccount(accName);
+        }
+
         public IEnumerable<string> GetAvailableCurrencies()
         {
             return FXMarket.GetAvailableCurrencies();
@@ -321,6 +326,10 @@ namespace Core
             _Map = new TreeViewMapping(_Data);
         }
 
+        public IAccountingElement GetAccount(NodeAddress na)
+        {
+            return GetAccount(na.Address[0], na.Address[1], na.Address[2]);
+        }
         public IAccountingElement GetInstitution(NodeAddress na)
         {
             return GetInstitution(na.Address[0], na.Address[1]);
@@ -342,7 +351,7 @@ namespace Core
                 case NodeType.Institution:
                     return GetInstitution(na);
                 case NodeType.Account:
-                    break;
+                    return GetAccount(na);
                 default:
                     break;
             }
@@ -535,5 +544,15 @@ namespace Core
                 return AssetMarket.GetQuote(new AssetCcyPair(item.Asset, Ccy));
         }
 
+        public double GetValue(NodeAddress na)
+        {
+            if (na.NodeType == NodeType.All)
+                return TotalValue;
+            else
+            {
+                try { return GetElement(na).GetTotalAmount(); }
+                catch { return 0.0; }
+            }
+        }
     }
 }

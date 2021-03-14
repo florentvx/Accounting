@@ -247,11 +247,6 @@ namespace Core
             return Map.GetEnumerator();
         }
 
-        //IEnumerator IEnumerable.GetEnumerator()
-        //{
-        //    return Map.GetEnumerator();
-        //}
-
         #endregion
 
         #region IEquatable
@@ -346,6 +341,12 @@ namespace Core
         internal IEnumerable<string> GetList(NodeAddress nodeAddress)
         {
             return GetElement(nodeAddress).Nodes.Select(x => x.Name);
+        }
+
+        public IEnumerable<string> GetSubNodes(NodeAddress na)
+        {
+            var subElmt = GetElement(na);
+            return subElmt.Nodes.Select(x => x.Name);
         }
 
         internal void ChangeName(NodeAddress nodeTag, string after)

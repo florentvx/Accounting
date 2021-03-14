@@ -171,25 +171,22 @@ namespace Accounting
             TreeViewAccounting.NodeMouseRightClick(e);
         }
 
-        public void Chart_Update()
+        #region Chart
+
+        readonly string ChartNone = "None";
+        readonly string ChartAllCategories = "<All Categories>";
+        readonly string ChartAllInstitutions = "<All Institutions>";
+        readonly string ChartAllAccounts = "<All Accounts>";
+
+        private void GraphUpdate()
         {
-            // Combo Box
-
-            comboBoxGraphTotalCcy.Items.Clear();
-            foreach (var item in _DataHistory.CcyDB.DataBase)
-            {
-                comboBoxGraphTotalCcy.Items.Add(item.Name);
-            }
-            comboBoxGraphTotalCcy.SelectedItem = _DataHistory.TotalCcy.CcyString;
-
-            // Charts
             Chart.Series.Clear();
-            Series ser = new Series("Value");
-            ser.XValueType = ChartValueType.String;
+            NodeAddress na = Chart_GetNodeAddress();
+            Series ser = new Series("Value") { XValueType = ChartValueType.String };
             List<double> values = new List<double> { };
             foreach (var item in _DataHistory.Data)
             {
-                double val = item.Value.TotalValue;
+                double val = item.Value.GetValue(na);
                 values.Add(val);
                 ser.Points.AddXY(item.Key, val);
             }
@@ -220,6 +217,129 @@ namespace Accounting
             Chart.ChartAreas[0].AxisX.IntervalOffset = 1;
             Chart.Series[0].BorderWidth = 2;
         }
+
+        public NodeAddress Chart_GetNodeAddress()
+        {
+            string path = "";
+            string categorySelected = (string)comboBoxGraphCategory.SelectedItem;
+            if (categorySelected == ChartAllCategories)
+                return new NodeAddress(NodeType.All, path);
+            else
+            {
+                path += categorySelected;
+                string institSelected = (string)comboBoxGraphInstitution.SelectedItem;
+                if (institSelected == ChartAllInstitutions)
+                    return new NodeAddress(NodeType.Category, path);
+                else
+                {
+                    path += NodeAddress.Separator + institSelected;
+                    string accountSelected = (string)comboBoxGraphAccount.SelectedItem;
+                    if (accountSelected == ChartAllAccounts)
+                        return new NodeAddress(NodeType.Institution, path);
+                    else
+                    {
+                        path += NodeAddress.Separator + accountSelected;
+                        return new NodeAddress(NodeType.Account, path);
+                    }
+                }
+            }
+        }
+
+        public void Chart_ResetComboBoxAccount()
+        {
+            comboBoxGraphAccount.Items.Clear();
+            string selectedCat = (string)comboBoxGraphCategory.SelectedItem;
+            string selectedInstit = (string)comboBoxGraphInstitution.SelectedItem;
+            bool Activate = selectedInstit != ChartAllInstitutions
+                            && selectedInstit != ChartNone;
+            if (Activate)
+            {
+                comboBoxGraphAccount.Items.Add(ChartAllAccounts);
+                NodeAddress na = new NodeAddress(   NodeType.Institution, 
+                                                    selectedCat + NodeAddress.Separator + selectedInstit);
+                var subNodes = Data.Map.GetSubNodes(na);
+                foreach (var item in subNodes)
+                {
+                    comboBoxGraphAccount.Items.Add(item);
+                }
+                comboBoxGraphAccount.SelectedItem = ChartAllAccounts;
+            }
+            else
+            {
+                comboBoxGraphAccount.Items.Add(ChartNone);
+                comboBoxGraphAccount.SelectedItem = ChartNone;
+            }
+        }
+
+        public void Chart_ResetComboBoxInstitution()
+        {
+            comboBoxGraphInstitution.Items.Clear();
+            string selectedCat = (string)comboBoxGraphCategory.SelectedItem;
+            bool Activate = selectedCat != ChartAllCategories;
+            if (Activate)
+            {
+                comboBoxGraphInstitution.Items.Add(ChartAllInstitutions);
+                NodeAddress na = new NodeAddress(NodeType.Category, selectedCat);
+                var subNodes = Data.Map.GetSubNodes(na);
+                foreach (var item in subNodes)
+                {
+                    comboBoxGraphInstitution.Items.Add(item);
+                }
+                comboBoxGraphInstitution.SelectedItem = ChartAllInstitutions;
+            }
+            else
+            {
+                comboBoxGraphInstitution.Items.Add(ChartNone);
+                comboBoxGraphInstitution.SelectedItem = ChartNone;
+            }
+        }
+
+        private void ComboBoxGraphCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Chart_ResetComboBoxInstitution();
+            GraphUpdate();
+        }
+
+        private void ComboBoxGraphInstitution_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Chart_ResetComboBoxAccount();
+            GraphUpdate();
+        }
+
+        private void comboBoxGraphAccount_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GraphUpdate();
+        }
+
+        public void Chart_Update()
+        {
+            // Combo Box - Total Ccy
+            comboBoxGraphTotalCcy.Items.Clear();
+            foreach (var item in _DataHistory.CcyDB.DataBase)
+            {
+                comboBoxGraphTotalCcy.Items.Add(item.Name);
+            }
+            comboBoxGraphTotalCcy.SelectedItem = _DataHistory.TotalCcy.CcyString;
+
+            // Combo Box - Category
+            comboBoxGraphCategory.Items.Clear();
+            comboBoxGraphCategory.Items.Add(ChartAllCategories);
+            var subNodes = Data.Map.GetSubNodes(new NodeAddress(NodeType.All, ""));
+            foreach (var item in subNodes)
+            {
+                comboBoxGraphCategory.Items.Add(item);
+            }
+            comboBoxGraphCategory.SelectedItem = ChartAllCategories;
+
+            // Combo Boxes
+            Chart_ResetComboBoxInstitution();
+            Chart_ResetComboBoxAccount();
+
+            // Charts
+            GraphUpdate();
+        }
+
+        #endregion
 
         public void Statics_Update()
         {

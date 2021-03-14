@@ -138,6 +138,16 @@ namespace Core
             throw new NotImplementedException();
         }
 
+        public SummaryReport GetSummary()
+        {
+            return new SummaryReport(CcyRef, Amount);
+        }
+
+        public double GetTotalAmount()
+        {
+            return TotalAmount;
+        }
+
         #endregion
 
         #region IEquatable
@@ -247,11 +257,6 @@ namespace Core
         internal Account Copy()
         {
             return new Account(_AccountName, _Ccy, _Amount, false);
-        }
-
-        public SummaryReport GetSummary()
-        {
-            return new SummaryReport(CcyRef, Amount);
         }
     }
 }
