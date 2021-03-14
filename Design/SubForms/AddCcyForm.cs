@@ -51,6 +51,7 @@ namespace Design.SubForms
 
         public AddCcyForm(IEnumerable<string> AvailableCcies)
         {
+            StartPosition = FormStartPosition.CenterParent;
             InitializeComponent();
             InitComboBox(AvailableCcies);
             UpdateValueLabel();

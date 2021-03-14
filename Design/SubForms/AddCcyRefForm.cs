@@ -21,6 +21,7 @@ namespace Design.SubForms
 
         public AddCcyRefForm()
         {
+            StartPosition = FormStartPosition.CenterParent;
             InitializeComponent();
         }
 

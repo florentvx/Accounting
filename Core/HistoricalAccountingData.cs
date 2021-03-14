@@ -59,15 +59,22 @@ namespace Core
         {
             if (_Data.Count() == 0)
                 return;
-            int pos = _Data  .Select((item,index) => new
+            int pos = -1;
+            AccountingData ad;
+            var oldDates = _Data.Select((item, index) => new
                                 {
-                                    Date = item.Key, 
+                                    Date = item.Key,
                                     Position = index
                                 })
                                 .Where(x => x.Date <= date)
-                                .Select(x=>x.Position)
-                                .Last();
-            AccountingData ad = _Data[pos].Value.Copy();
+                                .Select(x => x.Position);
+            if (oldDates.Count() > 0)
+            {
+                pos = oldDates.Last();
+                ad = _Data[pos].Value.Copy();
+            }
+            else
+                ad = _Data[0].Value.Copy();
             ad.ModifyCcyEventHandler += this.ModifyCcy;
             _Data.Insert(pos + 1, new KeyValuePair<DateTime, AccountingData>(date, ad));
         }

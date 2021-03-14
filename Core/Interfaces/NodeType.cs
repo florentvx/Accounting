@@ -56,7 +56,7 @@ namespace Core.Interfaces
         {
             _NodeType = nt;
             Address = new List<string> { };
-            if (path != null || path != "")
+            if (path != null && path != "")
             {
                 var res = path.Split(Separator);
                 for (int i = 0; i < res.Length; i++)

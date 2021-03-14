@@ -31,6 +31,7 @@ namespace Design.SubForms
 
         public AboutApplicationForm()
         {
+            StartPosition = FormStartPosition.CenterParent;
             InitializeComponent();
             string filePath = Directory.GetCurrentDirectory();
             ShowMyImage(filePath + @"\..\..\..\Design\Images\AccountingDonationBCHAddress.png", 747, 626);

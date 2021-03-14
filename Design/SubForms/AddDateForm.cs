@@ -18,6 +18,7 @@ namespace Design.SubForms
 
         public AddDateForm()
         {
+            StartPosition = FormStartPosition.CenterParent;
             InitializeComponent();
         }
 

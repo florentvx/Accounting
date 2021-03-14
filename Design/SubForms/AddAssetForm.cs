@@ -26,13 +26,6 @@ namespace Design.SubForms
 
         public void UpdateValueLabel()
         {
-            //string ccyTemp = CcyName;
-            //if (CcyName == null)
-            //    ccyTemp = "???";
-            //if (!CheckBoxIsInversePair.Checked)
-            //    LabelValue.Text = ccyTemp + "/" + ComboBoxOthCcy.Text;
-            //else
-            //    LabelValue.Text = ComboBoxOthCcy.Text + "/" + ccyTemp;
             string assetTemp = AssetName;
             if (AssetName == null)
                 assetTemp = "???";
@@ -51,6 +44,7 @@ namespace Design.SubForms
 
         public AddAssetForm(IEnumerable<string> AvailableCcies)
         {
+            StartPosition = FormStartPosition.CenterParent;
             InitializeComponent();
             InitComboBox(AvailableCcies);
             UpdateValueLabel();
