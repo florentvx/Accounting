@@ -233,7 +233,8 @@ namespace Core
         public void SetCcyDB(CurrencyAssetStaticsDataBase ccyDB)
         {
             _CcyDB = ccyDB;
-            //_TotalCcy = ccyDB.RefCcy;
+            if (_TotalCcy == null)
+                _TotalCcy = ccyDB.RefCcy;
         }
     }
 }
