@@ -36,6 +36,9 @@ namespace Design
             {
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
                 column.Width = 50;
+                if (column.Name == "Asset")
+                    column.Width = 70;
+                
             }
             RowHeadersVisible = false;
         }

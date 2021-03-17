@@ -51,8 +51,10 @@ namespace Core
             _Data.Clear();
             _CcyDB.Reset();
             _CcyDB.AddRefCcy(ccy, cs);
+            _TotalCcy = new Currency(ccy);
             AccountingData ad = new AccountingData(_CcyDB);
-            _Data.Add(new KeyValuePair<DateTime, AccountingData>(date, ad));
+            //_Data.Add(new KeyValuePair<DateTime, AccountingData>(date, ad));
+            AddData(date, ad);
         }
 
         public void AddNewDate(DateTime date)
@@ -231,7 +233,7 @@ namespace Core
         public void SetCcyDB(CurrencyAssetStaticsDataBase ccyDB)
         {
             _CcyDB = ccyDB;
-            _TotalCcy = ccyDB.RefCcy;
+            //_TotalCcy = ccyDB.RefCcy;
         }
     }
 }
