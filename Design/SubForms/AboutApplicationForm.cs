@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Design.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,7 +15,7 @@ namespace Design.SubForms
     public partial class AboutApplicationForm : Form
     {
         private Bitmap MyImage;
-        public void ShowMyImage(string fileToDisplay, int xSize, int ySize)
+        public void ShowMyImage()
         {
             // Sets up an image object to be displayed.
             if (MyImage != null)
@@ -24,7 +25,7 @@ namespace Design.SubForms
 
             // Stretches the image to fit the pictureBox.
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            MyImage = new Bitmap(fileToDisplay);
+            MyImage = new Bitmap(Resources.AccountingDonationBCHAddress);
             //pictureBox1.ClientSize = new Size(xSize, ySize);
             pictureBox1.Image = (Image)MyImage;
         }
@@ -33,8 +34,7 @@ namespace Design.SubForms
         {
             StartPosition = FormStartPosition.CenterParent;
             InitializeComponent();
-            string filePath = Directory.GetCurrentDirectory();
-            ShowMyImage(filePath + @"\..\..\..\Design\Images\AccountingDonationBCHAddress.png", 747, 626);
+            ShowMyImage();
         }
     }
 }
