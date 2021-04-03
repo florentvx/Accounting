@@ -171,6 +171,8 @@ namespace Accounting
             TreeViewAccounting.NodeMouseRightClick(e);
         }
 
+        #endregion
+
         #region Chart
 
         readonly string ChartNone = "None";
@@ -347,7 +349,6 @@ namespace Accounting
             dataGridViewStaticsAsset.Update(CcyDB);
         }
 
-        #endregion
 
         private void UpdateComboBoxDates()
         {

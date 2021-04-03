@@ -149,7 +149,7 @@ namespace Design
             {
                 string valueStr = "";
                 foreach (var c in Convert.ToString(value))
-                    if (Char.IsDigit(c) || c == '.')
+                    if (Char.IsDigit(c) || c == '.' || c == '-')
                         valueStr += c;
                 return Convert.ToDouble(valueStr);
             }

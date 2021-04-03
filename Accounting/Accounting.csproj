@@ -135,7 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cherry.ico" />
-    <None Include="Resources\AccountingDonationBCHAddress.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
