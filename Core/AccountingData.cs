@@ -139,19 +139,20 @@ namespace Core
             }
         }
 
-        public IAccount Total()
+        public IAccount Total(double? lastTotal)
         {
             double total = 0;
             foreach (var item in _Data)
                 total += item.TotalInstitution(_FXMarket, _AssetMarket, Ccy).ConvertedAmount;
             _TotalValue = total;
-            return new Account("Total", Ccy, total);
+            Account res = new Account("Total", Ccy, total, lastAmount: lastTotal);
+            return res;
         }
 
-        public IAccount Total(Currency TotalCcy)
+        public IAccount Total(Currency TotalCcy, double? lastTotal)
         {
             ModifyCcy(TotalCcy);
-            return Total();
+            return Total(lastTotal);
         }
 
         public bool ChangeName(string before, string after, NodeAddress nodeTag)
@@ -550,7 +551,7 @@ namespace Core
                 return TotalValue;
             else
             {
-                try { return GetElement(na).GetTotalAmount(); }
+                try { return GetElement(na).GetTotalAmount(Ccy, FXMarket); }
                 catch { return 0.0; }
             }
         }

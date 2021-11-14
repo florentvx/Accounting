@@ -164,9 +164,9 @@ namespace Core
             return sr;
         }
 
-        public double GetTotalAmount()
+        public double GetTotalAmount(Currency ccy, FXMarket fxMkt)
         {
-            return TotalAmount;
+            return TotalAmount * fxMkt.GetQuote(new CurrencyPair(_TotalCcy, ccy));
         }
 
         #endregion

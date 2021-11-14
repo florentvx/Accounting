@@ -26,6 +26,9 @@ namespace Core
         Currency _TotalCcy = new Currency("NONE");
         double _TotalAmount = 0;
 
+        double? _LastAmount;
+        public double? LastAmount { get { return _LastAmount; } }
+
         public double TotalAmount { get { return _TotalAmount; } }
 
         bool _IsCalculatedAccount; // used for TotalAccount purposes
@@ -143,9 +146,9 @@ namespace Core
             return new SummaryReport(CcyRef, Amount);
         }
 
-        public double GetTotalAmount()
+        public double GetTotalAmount(Currency ccy, FXMarket fxMkt)
         {
-            return TotalAmount;
+            return TotalAmount * fxMkt.GetQuote(new CurrencyPair(_TotalCcy, ccy));
         }
 
         #endregion
@@ -221,7 +224,7 @@ namespace Core
 
         #endregion
 
-        public Account(string name, ICcyAsset ccy, double amount = 0, bool isCalculatedAccount = false)
+        public Account(string name, ICcyAsset ccy, double amount = 0, bool isCalculatedAccount = false, double? lastAmount = null)
         {
             _AccountName = name;
             _Ccy = ccy;
@@ -229,6 +232,8 @@ namespace Core
             _ConvertedCcy = ccy.Ccy;
             _IsCalculatedAccount = isCalculatedAccount;
             _Amount = amount;
+            _LastAmount = lastAmount;
+            _ConvertedAmount = amount;
         }
 
         internal void RecalculateAmount(IMarket mkt, Currency ccyRef, bool forceRecalc = true)

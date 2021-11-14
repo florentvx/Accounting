@@ -221,7 +221,7 @@ namespace Core
         {
             if (_Data.Where(x => x.Key == date).Count() == 0)
             {
-                ad.Total(_TotalCcy);
+                ad.Total(_TotalCcy, null);
                 _Data.Add(new KeyValuePair<DateTime, AccountingData>(date, ad));
                 ad.ModifyCcyEventHandler += this.ModifyCcy;
             }

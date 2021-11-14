@@ -15,22 +15,33 @@ namespace Design
             CreateCells(table);
             string amount = table.CcyToString(account.Ccy, account.Amount);
             string convAmount = table.CcyToString(account.ConvertedCcy, account.ConvertedAmount);
+            double? lastAmount;
+            
+            lastAmount = account.LastAmount;
                 
             if (isTotalRow)
             {
                 convAmount = amount;
-                if (!(isTotalView && table.LastTotalMemory.HasValue))
+                if (!(isTotalView && lastAmount.HasValue))
                     amount = "";
                 else
                 {
-                    double ret = account.Amount / table.LastTotalMemory.Value - 1;
+                    double ret = account.Amount / lastAmount.Value - 1;
                     amount = (ret > 0) ? "+" : "-";
                     amount += System.Math.Round(System.Math.Abs(ret) * 100, 1).ToString() + " %";
                 }
             }
 
+            double? changeAmount = null;
+            string changeData = "";
+            if (isTotalView && lastAmount.HasValue)
+            {
+                changeAmount = account.ConvertedAmount - lastAmount.Value;
+                changeData = table.CcyToString(account.Ccy, changeAmount.Value);
+            }
+
             var titles = new object[] {
-                account.AccountName, account.Ccy, amount, convAmount
+                account.AccountName, account.Ccy, amount, convAmount, changeData
             };
 
             SetValues(titles);
@@ -60,10 +71,11 @@ namespace Design
                 }
             }
 
-            if (isTotalView && table.LastTotalMemory.HasValue) 
+            if (lastAmount.HasValue)
             {
-                Cells[2].Style.ForeColor = (account.Amount < table.LastTotalMemory.Value) ? 
-                    Color.Red : Color.Green;
+                if (isTotalRow)
+                    Cells[DataGridViewAccountingStatics.Column_Amount].Style.ForeColor = (changeAmount.Value < 0) ? Color.Red : Color.Green;
+                Cells[DataGridViewAccountingStatics.Column_Change].Style.ForeColor = (changeAmount.Value < 0) ? Color.Red : Color.Green;
             }
 
         }

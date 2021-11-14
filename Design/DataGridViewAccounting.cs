@@ -15,12 +15,13 @@ namespace Design
 {
     static class DataGridViewAccountingStatics
     {
-        public static string[] ColumnNames = { "Account Name", "Currency", "Amount", "Converted Amount" };
+        public static string[] ColumnNames = { "Account Name", "Currency", "Amount", "Converted Amount", "Change" };
         public const int Column_AccountName = 0;
         public const int Column_Currency = 1;
         public const int Column_Amount = 2;
         public const int Column_ConvertedAmount = 3;
-        public const int ColumnNumber = 4;
+        public const int Column_Change = 4;
+        public const int ColumnNumber = 5;
     }
 
     public class DataGridViewAccounting: DataGridView
@@ -33,9 +34,20 @@ namespace Design
         private CurrencyAssetStaticsDataBase _CcyDB;
         public IEnumerable<string> Ccies { get { return _CcyDB.Ccies; } }
         public IEnumerable<string> Assets { get { return _CcyDB.Assets; } }
-        private double? _LastTotalMemory;
+        public string _LastTotalMemoryMainKey = "<#TOTAL#>";
+        private Dictionary<string, double> _LastTotalMemory = new Dictionary<string, double> { };
 
-        public double? LastTotalMemory { get { return _LastTotalMemory; } }
+        //public Dictionary<string, double> LastTotalMemory { get { return _LastTotalMemory; } }
+        public double? GetLastTotalMemoryAmount(string item = null) 
+        {
+            string key = item;
+            if (item == null)
+                key = _LastTotalMemoryMainKey;
+            if (_LastTotalMemory.ContainsKey(key))
+                return _LastTotalMemory[key];
+            else
+                return null;
+        }
 
         public IEnumerable<string> CciesAndAssets { get { return Ccies.Union(Assets); } }
 
@@ -45,6 +57,7 @@ namespace Design
             ColumnCount = DataGridViewAccountingStatics.ColumnNumber;
             for (int i = 0; i < ColumnCount; i++)
                 Columns[i].HeaderText = DataGridViewAccountingStatics.ColumnNames[i];
+            Columns[DataGridViewAccountingStatics.Column_Currency].Width = 75;
             AllowUserToAddRows = false;
             foreach (DataGridViewColumn column in Columns)
             {
@@ -76,7 +89,7 @@ namespace Design
 
         #region ShowElement
 
-        private void AddRow(IAccount item, bool isTotalRow = false, bool isTotalView = false)
+        private void AddRow(IAccount item, bool isTotalRow = false, bool isTotalView = false, double? lastTotal = null)
         {
             DataGridViewRowAccounting dgvr = new DataGridViewRowAccounting(this, item, isTotalRow, isTotalView);
             Rows.Add(dgvr);
@@ -107,22 +120,26 @@ namespace Design
 
         #region ShowTotal
 
-        private void AddRow(ICategory item, Currency ccy)
+        private void AddRow(ICategory item, Currency ccy, double? lastTotal = null)
         {
-            IAccount sum = item.TotalInstitution(FXMarketUsed, AssetMarketUsed, ccy, item.CategoryName);
-            AddRow(sum, false);
+            IAccount sum = item.TotalInstitution(FXMarketUsed, AssetMarketUsed, ccy, item.CategoryName, lastTotal);
+            AddRow(sum, false, isTotalView: true);
         }
 
-        internal void ShowTotal(IAccountingData iad, double? lastTotal = null)
+        internal void ShowTotal(IAccountingData iad, Dictionary<string, double?> lastTotal = null)
         {
             Rows.Clear();
+            
             foreach (ICategory icat in iad.Categories)
-                AddRow(icat, iad.Ccy);
-            if (lastTotal.HasValue)
-                _LastTotalMemory = lastTotal.Value;
-            else
-                _LastTotalMemory = null;
-            AddRow(iad.Total(), isTotalRow: true, isTotalView: true);
+            {
+                double? lastAmount = null;
+                lastTotal.TryGetValue(icat.CategoryName, out lastAmount);
+                AddRow(icat, iad.Ccy, lastAmount);
+            }
+
+            double? lastTotalAmount = 0;
+            lastTotal.TryGetValue(_LastTotalMemoryMainKey, out lastTotalAmount);
+            AddRow(iad.Total(lastTotalAmount), isTotalRow: true, isTotalView: true);//, lastTotal: lastTotal[_LastTotalMemoryMainKey]);
             ElementShowed = null;
             TotalShowed = iad;
             Rows[0].Cells[0].Selected = false;

@@ -15,5 +15,6 @@ namespace Core.Interfaces
         double Amount { get; }
         double ConvertedAmount { get; }
         bool IsCalculatedAccount { get; }
+        double? LastAmount { get; }
     }
 }

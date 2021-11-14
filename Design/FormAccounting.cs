@@ -107,9 +107,14 @@ namespace Accounting
         {
             labelTable.Text = "Total";
             DateTime? dt = GetPreviousDate();
-            double? lastTotal = null;
+            Dictionary<string, double?> lastTotal = new Dictionary<string, double?> { };
             if (dt.HasValue)
-                lastTotal = _DataHistory.GetData(dt.Value).TotalValue;
+            {
+                AccountingData lastData = _DataHistory.GetData(dt.Value);
+                lastTotal[dataGridViewAccounting._LastTotalMemoryMainKey] = lastData.GetQuote(lastData.Ccy, _DataHistory.TotalCcy) * lastData.TotalValue;
+                foreach (var cat in lastData.Categories)
+                    lastTotal[cat.CategoryName] = cat.GetTotalAmount(_DataHistory.TotalCcy, lastData.FXMarket);
+            }
             dataGridViewAccounting.ShowTotal(Data, lastTotal);
         }
 
