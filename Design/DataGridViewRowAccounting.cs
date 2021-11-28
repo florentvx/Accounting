@@ -34,10 +34,11 @@ namespace Design
 
             double? changeAmount = null;
             string changeData = "";
-            if (isTotalView && lastAmount.HasValue)
+            if (lastAmount.HasValue)
             {
-                changeAmount = account.ConvertedAmount - lastAmount.Value;
-                changeData = table.CcyToString(account.Ccy, changeAmount.Value);
+                changeAmount = account.ConvertedAmount - lastAmount.Value; //Watch out is Asset Account: BNP Shares
+                ICcyAsset iCcy = account.Ccy.IsCcy() ? account.Ccy : account.ConvertedCcy;
+                changeData = table.CcyToString(iCcy, changeAmount.Value);
             }
 
             var titles = new object[] {

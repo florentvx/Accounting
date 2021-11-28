@@ -46,12 +46,12 @@ namespace Core
             return tvme.Nodes.Select(x => InstitutionsDictionary[x.Name]);
         }
 
-        public IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideName, double? lastTotal = null)
+        public IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideName, double? lastAmount = null)
         {
             double total = 0;
             foreach (var item in Institutions)
                 total += item.TotalAccount(mkt, aMkt, Ccy).ConvertedAmount;
-            Account acc = new Account(overrideName, Ccy, total, true, lastTotal);
+            Account acc = new Account(overrideName, Ccy, total, true, lastAmount);
             acc.RecalculateAmount(mkt, convCcy);
             return acc;
         }
@@ -81,14 +81,14 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Category; }
 
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name, double? lastAmount)
         {
-            return TotalInstitution(mkt, aMkt, convCcy.Ccy, name);
+            return TotalInstitution(mkt, aMkt, convCcy.Ccy, name, lastAmount);
         }
 
         public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy)
         {
-            return GetTotalAccount(mkt, aMkt, convCcy, "Total");
+            return GetTotalAccount(mkt, aMkt, convCcy, "Total", null);
         }
 
         public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string v, object valueAmount)

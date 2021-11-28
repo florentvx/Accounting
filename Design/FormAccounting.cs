@@ -126,7 +126,17 @@ namespace Accounting
         public void ShowElement(NodeAddress na)
         {
             labelTable.Text = na.GetLabelText();
-            dataGridViewAccounting.ShowElement(Data.GetElement(na), Data.Map.GetElement(na));
+            DateTime? dt = GetPreviousDate();
+            IAccountingElement element = Data.GetElement(na);
+            Dictionary<string, double?> lastTotal = new Dictionary<string, double?> { };
+            if (dt.HasValue)
+            {
+                AccountingData lastData = _DataHistory.GetData(dt.Value);
+                lastTotal[dataGridViewAccounting._LastTotalMemoryMainKey] = lastData.GetQuote(lastData.Ccy, _DataHistory.TotalCcy) * lastData.GetValue(na);
+                foreach (var subitem in lastData.GetElement(na).GetItemList())
+                    lastTotal[subitem.GetName()] = subitem.GetTotalAmount(_DataHistory.TotalCcy, lastData.FXMarket);
+            }
+            dataGridViewAccounting.ShowElement(Data.GetElement(na), Data.Map.GetElement(na), lastTotal); ;
             _AddressofElementShowed = na;
         }
 

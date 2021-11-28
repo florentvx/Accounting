@@ -48,19 +48,19 @@ namespace Core
             return tvme.Nodes.Select(x => GetAccount(x.Name));
         }
 
-        public IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideAccountName)
+        public IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideAccountName, double? lastAmount)
         {
             double total = 0;
             foreach (var x in _Accounts)
                 total += x.GetTotalAccount(mkt, aMkt, Ccy).ConvertedAmount;
-            Account res = new Account(overrideAccountName, Ccy, total, isCalculatedAccount: true);
+            Account res = new Account(overrideAccountName, Ccy, total, isCalculatedAccount: true, lastAmount);
             res.RecalculateAmount(mkt, convCcy);
             return res;
         }
 
         public IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy)
         {
-            return TotalAccount(mkt, aMkt, convCcy, "Total");
+            return TotalAccount(mkt, aMkt, convCcy, "Total", null);
         }
 
         #endregion
@@ -80,14 +80,14 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Institution; }
 
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name, double? lastAmount)
         {
-            return TotalAccount(mkt, aMkt, convCcy.Ccy, name);
+            return TotalAccount(mkt, aMkt, convCcy.Ccy, name, lastAmount);
         }
 
         public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy)
         {
-            return GetTotalAccount(mkt, aMkt, convCcy, "Total");
+            return GetTotalAccount(mkt, aMkt, convCcy, "Total", null);
         }
 
         public void RecalculateAmount(Account acc, FXMarket mkt, AssetMarket aMkt, bool forceRecalc = true)

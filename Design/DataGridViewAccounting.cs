@@ -35,18 +35,20 @@ namespace Design
         public IEnumerable<string> Ccies { get { return _CcyDB.Ccies; } }
         public IEnumerable<string> Assets { get { return _CcyDB.Assets; } }
         public string _LastTotalMemoryMainKey = "<#TOTAL#>";
-        private Dictionary<string, double> _LastTotalMemory = new Dictionary<string, double> { };
+        private Dictionary<string, double?> _LastTotalMemory = new Dictionary<string, double?> { };
 
-        //public Dictionary<string, double> LastTotalMemory { get { return _LastTotalMemory; } }
+        
+        public void SetLastTotalMemoryAmount(Dictionary<string, double?> data)
+        {
+            if (data != null) { _LastTotalMemory = data; }
+        }
+
         public double? GetLastTotalMemoryAmount(string item = null) 
         {
             string key = item;
-            if (item == null)
-                key = _LastTotalMemoryMainKey;
-            if (_LastTotalMemory.ContainsKey(key))
-                return _LastTotalMemory[key];
-            else
-                return null;
+            if (item == null) { key = _LastTotalMemoryMainKey; }
+            _LastTotalMemory.TryGetValue(key, out double? res);
+            return res;
         }
 
         public IEnumerable<string> CciesAndAssets { get { return Ccies.Union(Assets); } }
@@ -95,21 +97,25 @@ namespace Design
             Rows.Add(dgvr);
         }
 
-        private void AddRow(IAccountingElement item, ICcyAsset convCcy, bool isTotal = false)
+        private void AddRow(IAccountingElement item, ICcyAsset convCcy, bool isTotal = false, double? lastTotal = null)
         {
-            IAccount sum = item.GetTotalAccount(FXMarketUsed, AssetMarketUsed, convCcy, item.GetName());
+            IAccount sum = item.GetTotalAccount(FXMarketUsed, AssetMarketUsed, convCcy, item.GetName(), lastTotal: lastTotal) ;
             AddRow(sum, isTotal);
         }
 
-        public void ShowElement(IAccountingElement iElmt, TreeViewMappingElement tvme = null)
+        public void ShowElement(IAccountingElement iElmt, TreeViewMappingElement tvme = null, Dictionary<string, double?> lastTotal = null)
         {
             if (tvme == null) { tvme = _Memory; }
-            else
-                _Memory = tvme;
+            else { _Memory = tvme; }
+
+            SetLastTotalMemoryAmount(lastTotal);
+
             Rows.Clear();
             foreach (IAccountingElement item in iElmt.GetItemList(tvme))
-                AddRow(item, iElmt.CcyRef);
-            AddRow( iElmt.GetTotalAccount(FXMarketUsed, AssetMarketUsed, iElmt.CcyRef), 
+                AddRow(item, iElmt.CcyRef, lastTotal: GetLastTotalMemoryAmount(item.GetName()));
+            AddRow( iElmt.GetTotalAccount(  FXMarketUsed, AssetMarketUsed, iElmt.CcyRef, 
+                                            overrideName: "Total", 
+                                            lastTotal: GetLastTotalMemoryAmount()), 
                     isTotalRow: iElmt.GetNodeType() != NodeType.Account);
             ElementShowed = iElmt;
             TotalShowed = null;
@@ -129,17 +135,13 @@ namespace Design
         internal void ShowTotal(IAccountingData iad, Dictionary<string, double?> lastTotal = null)
         {
             Rows.Clear();
-            
-            foreach (ICategory icat in iad.Categories)
-            {
-                double? lastAmount = null;
-                lastTotal.TryGetValue(icat.CategoryName, out lastAmount);
-                AddRow(icat, iad.Ccy, lastAmount);
-            }
 
-            double? lastTotalAmount = 0;
-            lastTotal.TryGetValue(_LastTotalMemoryMainKey, out lastTotalAmount);
-            AddRow(iad.Total(lastTotalAmount), isTotalRow: true, isTotalView: true);//, lastTotal: lastTotal[_LastTotalMemoryMainKey]);
+            SetLastTotalMemoryAmount(lastTotal);
+
+            foreach (ICategory icat in iad.Categories)
+                AddRow(icat, iad.Ccy, GetLastTotalMemoryAmount(icat.CategoryName));
+
+            AddRow(iad.Total(GetLastTotalMemoryAmount()), isTotalRow: true, isTotalView: true);
             ElementShowed = null;
             TotalShowed = iad;
             Rows[0].Cells[0].Selected = false;

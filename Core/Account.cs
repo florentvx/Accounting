@@ -31,7 +31,7 @@ namespace Core
 
         public double TotalAmount { get { return _TotalAmount; } }
 
-        bool _IsCalculatedAccount; // used for TotalAccount purposes
+        readonly bool _IsCalculatedAccount; // used for TotalAccount purposes
 
         #region IAccount
 
@@ -90,8 +90,9 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Account; }
 
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name, double? lastAmount)
         {
+            _LastAmount = lastAmount;
             if (Ccy.IsCcy())
                 RecalculateAmount(mkt, convCcy.Ccy);
             else
@@ -101,10 +102,10 @@ namespace Core
 
         public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy)
         {
-            return GetTotalAccount(mkt, aMkt, convCcy, null);
+            return GetTotalAccount(mkt, aMkt, convCcy, null, null);
         }
 
-        public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string v, object valueAmount)
+        public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string v, object valueAmount) //TODO: Change of Ccy
         {
             _Amount = Convert.ToDouble(valueAmount);
             IMarket iMkt = mkt;
