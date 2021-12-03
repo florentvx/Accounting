@@ -17,7 +17,7 @@ namespace Core.Interfaces
         void ModifyCcy(object valueCcy);
         IEnumerable<ICategory> Categories { get; }
         ICategory GetFirstCategory();
-        IAccount Total(double? lastTotal);
+        IAccount Total(Price lastTotal);
         bool ChangeName(string before, string after, NodeAddress nodeType);
         //void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair ccyPair, double ccyPairQuote);
         //void AddNewAsset(string assetName, AssetStatics assetStatics, double assetCcyPairQuote);

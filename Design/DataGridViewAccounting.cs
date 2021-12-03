@@ -30,24 +30,25 @@ namespace Design
         public IAccountingElement ElementShowed;
         private TreeViewMappingElement _Memory;
         private FXMarket FXMarketUsed;
+        private FXMarket? LastFXMarketUsed; // used for LastAmount Conversion
         private AssetMarket AssetMarketUsed;
         private CurrencyAssetStaticsDataBase _CcyDB;
         public IEnumerable<string> Ccies { get { return _CcyDB.Ccies; } }
         public IEnumerable<string> Assets { get { return _CcyDB.Assets; } }
         public string _LastTotalMemoryMainKey = "<#TOTAL#>";
-        private Dictionary<string, double?> _LastTotalMemory = new Dictionary<string, double?> { };
-
+        private Dictionary<string, Price> _LastTotalMemory = new Dictionary<string, Price> { };
         
-        public void SetLastTotalMemoryAmount(Dictionary<string, double?> data)
+        
+        public void SetLastTotalMemoryAmount(Dictionary<string, Price> data)
         {
             if (data != null) { _LastTotalMemory = data; }
         }
 
-        public double? GetLastTotalMemoryAmount(string item = null) 
+        public Price GetLastTotalMemoryAmount(string item = null) 
         {
             string key = item;
             if (item == null) { key = _LastTotalMemoryMainKey; }
-            _LastTotalMemory.TryGetValue(key, out double? res);
+            _LastTotalMemory.TryGetValue(key, out Price res);
             return res;
         }
 
@@ -91,19 +92,19 @@ namespace Design
 
         #region ShowElement
 
-        private void AddRow(IAccount item, bool isTotalRow = false, bool isTotalView = false, double? lastTotal = null)
+        private void AddRow(IAccount item, bool isTotalRow = false, bool isTotalView = false, Price lastTotal = null)
         {
             DataGridViewRowAccounting dgvr = new DataGridViewRowAccounting(this, item, isTotalRow, isTotalView);
             Rows.Add(dgvr);
         }
 
-        private void AddRow(IAccountingElement item, ICcyAsset convCcy, bool isTotal = false, double? lastTotal = null)
+        private void AddRow(IAccountingElement item, ICcyAsset convCcy, bool isTotal = false, Price lastTotal = null)
         {
             IAccount sum = item.GetTotalAccount(FXMarketUsed, AssetMarketUsed, convCcy, item.GetName(), lastTotal: lastTotal) ;
             AddRow(sum, isTotal);
         }
 
-        public void ShowElement(IAccountingElement iElmt, TreeViewMappingElement tvme = null, Dictionary<string, double?> lastTotal = null)
+        public void ShowElement(IAccountingElement iElmt, TreeViewMappingElement tvme = null, Dictionary<string, Price> lastTotal = null)
         {
             if (tvme == null) { tvme = _Memory; }
             else { _Memory = tvme; }
@@ -126,13 +127,13 @@ namespace Design
 
         #region ShowTotal
 
-        private void AddRow(ICategory item, Currency ccy, double? lastTotal = null)
+        private void AddRow(ICategory item, Currency ccy, Price lastTotal = null)
         {
             IAccount sum = item.TotalInstitution(FXMarketUsed, AssetMarketUsed, ccy, item.CategoryName, lastTotal);
             AddRow(sum, false, isTotalView: true);
         }
 
-        internal void ShowTotal(IAccountingData iad, Dictionary<string, double?> lastTotal = null)
+        internal void ShowTotal(IAccountingData iad, Dictionary<string, Price> lastTotal = null)
         {
             Rows.Clear();
 

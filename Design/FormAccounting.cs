@@ -107,11 +107,11 @@ namespace Accounting
         {
             labelTable.Text = "Total";
             DateTime? dt = GetPreviousDate();
-            Dictionary<string, double?> lastTotal = new Dictionary<string, double?> { };
+            Dictionary<string, Price> lastTotal = new Dictionary<string, Price> { };
             if (dt.HasValue)
             {
                 AccountingData lastData = _DataHistory.GetData(dt.Value);
-                lastTotal[dataGridViewAccounting._LastTotalMemoryMainKey] = lastData.GetQuote(lastData.Ccy, _DataHistory.TotalCcy) * lastData.TotalValue;
+                lastTotal[dataGridViewAccounting._LastTotalMemoryMainKey] = lastData.GetTotalPrice(_DataHistory.TotalCcy);
                 foreach (var cat in lastData.Categories)
                     lastTotal[cat.CategoryName] = cat.GetTotalAmount(_DataHistory.TotalCcy, lastData.FXMarket);
             }
@@ -128,11 +128,12 @@ namespace Accounting
             labelTable.Text = na.GetLabelText();
             DateTime? dt = GetPreviousDate();
             IAccountingElement element = Data.GetElement(na);
-            Dictionary<string, double?> lastTotal = new Dictionary<string, double?> { };
+            Dictionary<string, Price> lastTotal = new Dictionary<string, Price> { };
             if (dt.HasValue)
             {
                 AccountingData lastData = _DataHistory.GetData(dt.Value);
-                lastTotal[dataGridViewAccounting._LastTotalMemoryMainKey] = lastData.GetQuote(lastData.Ccy, _DataHistory.TotalCcy) * lastData.GetValue(na);
+                lastTotal[dataGridViewAccounting._LastTotalMemoryMainKey] = lastData.GetTotalPrice(_DataHistory.TotalCcy, na);
+                //lastTotal[dataGridViewAccounting._LastTotalMemoryMainKey] = lastData.GetQuote(lastData.Ccy, _DataHistory.TotalCcy) * lastData.GetValue(na);
                 foreach (var subitem in lastData.GetElement(na).GetItemList())
                     lastTotal[subitem.GetName()] = subitem.GetTotalAmount(_DataHistory.TotalCcy, lastData.FXMarket);
             }
@@ -203,8 +204,8 @@ namespace Accounting
             List<double> values = new List<double> { };
             foreach (var item in _DataHistory.Data)
             {
-                double val = item.Value.GetValue(na);
-                values.Add(val);
+                Price val = item.Value.GetValue(na);
+                values.Add(val.Value);
                 ser.Points.AddXY(item.Key, val);
             }
             Chart.Series.Add(ser);

@@ -125,6 +125,12 @@ namespace Core.Finance
             }
         }
 
+        public Price ConvertPrice(Price p, Currency ccy)
+        {
+            double conv = GetQuote(new CurrencyPair(p.Ccy, ccy));
+            return new Price(conv * p.Value, ccy);
+        }
+
         //public string CcyToString(Currency ccy, double value)
         //{
         //    return _CcyDB.CcyToString(ccy, value);

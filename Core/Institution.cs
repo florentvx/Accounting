@@ -48,12 +48,12 @@ namespace Core
             return tvme.Nodes.Select(x => GetAccount(x.Name));
         }
 
-        public IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideAccountName, double? lastAmount)
+        public IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideAccountName, Price lastAmount)
         {
             double total = 0;
             foreach (var x in _Accounts)
                 total += x.GetTotalAccount(mkt, aMkt, Ccy).ConvertedAmount;
-            Account res = new Account(overrideAccountName, Ccy, total, isCalculatedAccount: true, lastAmount);
+            Account res = new Account(overrideAccountName, Ccy, total, isCalculatedAccount: true, mkt.ConvertPrice(lastAmount, convCcy));
             res.RecalculateAmount(mkt, convCcy);
             return res;
         }
@@ -80,7 +80,7 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Institution; }
 
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name, double? lastAmount)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name, Price lastAmount)
         {
             return TotalAccount(mkt, aMkt, convCcy.Ccy, name, lastAmount);
         }
@@ -164,9 +164,10 @@ namespace Core
             return sr;
         }
 
-        public double GetTotalAmount(Currency ccy, FXMarket fxMkt)
+        public Price GetTotalAmount(Currency ccy, FXMarket fxMkt)
         {
-            return TotalAmount * fxMkt.GetQuote(new CurrencyPair(_TotalCcy, ccy));
+            double value = TotalAmount * fxMkt.GetQuote(new CurrencyPair(_TotalCcy, ccy));
+            return new Price(value, ccy);
         }
 
         #endregion

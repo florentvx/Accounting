@@ -13,6 +13,6 @@ namespace Core.Interfaces
         Currency Ccy { get; }
         IEnumerable<IInstitution> GetInstitutions(TreeViewMappingElement tvm);
         IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy);
-        IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideName, double? lastAmount);
+        IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideName, Price lastAmount);
     }
 }

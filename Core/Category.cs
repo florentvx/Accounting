@@ -46,7 +46,7 @@ namespace Core
             return tvme.Nodes.Select(x => InstitutionsDictionary[x.Name]);
         }
 
-        public IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideName, double? lastAmount = null)
+        public IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideName, Price lastAmount = null)
         {
             double total = 0;
             foreach (var item in Institutions)
@@ -81,7 +81,7 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Category; }
 
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name, double? lastAmount)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name, Price lastAmount)
         {
             return TotalInstitution(mkt, aMkt, convCcy.Ccy, name, lastAmount);
         }
@@ -137,9 +137,10 @@ namespace Core
             return sr;
         }
 
-        public double GetTotalAmount(Currency ccy, FXMarket fxMkt)
+        public Price GetTotalAmount(Currency ccy, FXMarket fxMkt)
         {
-            return TotalAmount * fxMkt.GetQuote(new CurrencyPair(_TotalCcy, ccy));
+            double value = TotalAmount * fxMkt.GetQuote(new CurrencyPair(_TotalCcy, ccy));
+            return new Price(value, ccy);
         }
 
         #endregion
