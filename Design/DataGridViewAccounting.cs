@@ -30,7 +30,7 @@ namespace Design
         public IAccountingElement ElementShowed;
         private TreeViewMappingElement _Memory;
         private FXMarket FXMarketUsed;
-        private FXMarket? LastFXMarketUsed; // used for LastAmount Conversion
+        private FXMarket LastFXMarketUsed; // used for LastAmount Conversion
         private AssetMarket AssetMarketUsed;
         private CurrencyAssetStaticsDataBase _CcyDB;
         public IEnumerable<string> Ccies { get { return _CcyDB.Ccies; } }
