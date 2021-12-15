@@ -53,7 +53,7 @@ namespace Core
             double total = 0;
             foreach (var x in _Accounts)
                 total += x.GetTotalAccount(mkt, aMkt, Ccy).ConvertedAmount;
-            Account res = new Account(overrideAccountName, Ccy, total, isCalculatedAccount: true, mkt.ConvertPrice(lastAmount, convCcy));
+            Account res = new Account(overrideAccountName, Ccy, total, isCalculatedAccount: true, (lastAmount == null) ? null : mkt.ConvertPrice(lastAmount, convCcy));
             res.RecalculateAmount(mkt, convCcy);
             return res;
         }

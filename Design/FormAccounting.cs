@@ -114,7 +114,9 @@ namespace Accounting
                 lastTotal[dataGridViewAccounting._LastTotalMemoryMainKey] = lastData.GetTotalPrice(_DataHistory.TotalCcy);
                 foreach (var cat in lastData.Categories)
                     lastTotal[cat.CategoryName] = cat.GetTotalAmount(_DataHistory.TotalCcy, lastData.FXMarket);
+                dataGridViewAccounting.SetPreviousFXMarket(lastData.FXMarket);
             }
+            
             dataGridViewAccounting.ShowTotal(Data, lastTotal);
         }
 
@@ -141,10 +143,10 @@ namespace Accounting
             _AddressofElementShowed = na;
         }
 
-        public void SetUpMarkets(CurrencyAssetStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt)
+        public void SetUpMarkets(CurrencyAssetStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt, FXMarket prevMkt)
         {
             _DataHistory.SetCcyDB(ccyDB);
-            dataGridViewAccounting.SetUpMarkets(ccyDB, mkt, aMkt);
+            dataGridViewAccounting.SetUpMarkets(ccyDB, mkt, aMkt, prevMkt);
             dataGridViewFXMarket.ShowMarket(mkt, ccyDB);
             dataGridViewAssetMarket.ShowMarket(aMkt, ccyDB);
         }
@@ -162,7 +164,7 @@ namespace Accounting
 
         public void SetUpAccountingData(CurrencyAssetStaticsDataBase ccyDB, IAccountingData iad)
         {
-            SetUpMarkets(ccyDB, iad.FXMarket, iad.AssetMarket);
+            SetUpMarkets(ccyDB, iad.FXMarket, iad.AssetMarket, null);
             SetUpTree(iad.Map);
         }
 

@@ -94,7 +94,13 @@ namespace Core
         {
             _LastAmount = null;
             if (lastAmount != null)
-                _LastAmount = mkt.ConvertPrice(lastAmount, convCcy.Ccy); // TODO: Do not use mkt but prevmkt (if possible)
+            {
+                _LastAmount = lastAmount;
+                if (!_LastAmount.Ccy.Equals(convCcy))
+                    // lastAmount should already converted since you need to convert it with prevFxmkt
+                    throw new Exception($"Last Amount {_LastAmount.Ccy} not converted in {convCcy.Ccy}!");
+            }
+
             if (Ccy.IsCcy())
                 RecalculateAmount(mkt, convCcy.Ccy);
             else
