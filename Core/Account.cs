@@ -29,6 +29,7 @@ namespace Core
         double? _LastAmount;
         public double? LastAmount { get { return _LastAmount; } }
 
+        public Currency TotalCcy { get { return _TotalCcy; } }
         public double TotalAmount { get { return _TotalAmount; } }
 
         readonly bool _IsCalculatedAccount; // used for TotalAccount purposes
@@ -105,7 +106,7 @@ namespace Core
             return GetTotalAccount(mkt, aMkt, convCcy, null, null);
         }
 
-        public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string v, object valueAmount) //TODO: Change of Ccy
+        public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string v, object valueAmount)
         {
             _Amount = Convert.ToDouble(valueAmount);
             IMarket iMkt = mkt;

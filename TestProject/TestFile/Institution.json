@@ -11,7 +11,7 @@
       "Name": "Checking",
       "Currency": {
         "$type": "Core.Finance.Currency, Core",
-        "Ccy": "GBP"
+        "Ccy": "EUR"
       },
       "Asset": null,
       "Amount": 1000.0

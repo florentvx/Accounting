@@ -95,7 +95,7 @@
                     "Name": "Checking",
                     "Currency": {
                       "$type": "Core.Finance.Currency, Core",
-                      "Ccy": "GBP"
+                      "Ccy": "EUR"
                     },
                     "Asset": null,
                     "Amount": 1000.0
@@ -125,7 +125,7 @@
                     "Name": "Checking2",
                     "Currency": {
                       "$type": "Core.Finance.Currency, Core",
-                      "Ccy": "EUR"
+                      "Ccy": "USD"
                     },
                     "Asset": null,
                     "Amount": 1500.0
@@ -165,7 +165,7 @@
                     "Name": "ExtraAccount",
                     "Currency": {
                       "$type": "Core.Finance.Currency, Core",
-                      "Ccy": "EUR"
+                      "Ccy": "GBP"
                     },
                     "Asset": null,
                     "Amount": 100.0
@@ -305,7 +305,7 @@
                     "Name": "Checking",
                     "Currency": {
                       "$type": "Core.Finance.Currency, Core",
-                      "Ccy": "GBP"
+                      "Ccy": "EUR"
                     },
                     "Asset": null,
                     "Amount": 1000.0
@@ -335,7 +335,7 @@
                     "Name": "Checking2",
                     "Currency": {
                       "$type": "Core.Finance.Currency, Core",
-                      "Ccy": "EUR"
+                      "Ccy": "USD"
                     },
                     "Asset": null,
                     "Amount": 1500.0
@@ -375,7 +375,7 @@
                     "Name": "ExtraAccount",
                     "Currency": {
                       "$type": "Core.Finance.Currency, Core",
-                      "Ccy": "EUR"
+                      "Ccy": "GBP"
                     },
                     "Asset": null,
                     "Amount": 100.0

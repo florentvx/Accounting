@@ -30,8 +30,12 @@ namespace Core.Finance
 
         public CurrencyPair(ICcyAsset ccy1, ICcyAsset ccy2)
         {
-            _Ccy1 = ccy1.Ccy;
-            _Ccy2 = ccy2.Ccy;
+            if (ccy1.IsCcy() && ccy2.IsCcy())
+            {
+                _Ccy1 = ccy1.Ccy;
+                _Ccy2 = ccy2.Ccy;
+            }
+            else { throw new Exception($"CurrencyPair needs 2 currencies {ccy1.ToString()} {ccy2.ToString()}!"); }
         }
 
         public CurrencyPair(string ccy1, string ccy2)

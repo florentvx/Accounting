@@ -10,6 +10,7 @@ namespace Core.Finance
     public class SummaryReport
     {
         Dictionary<ICcyAsset, double> Data;
+        public long Count { get { return Data.Count; } }
 
         public IEnumerable<ICcyAsset> Ccies { get { return Data.Keys; } }
 

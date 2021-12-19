@@ -7,7 +7,6 @@ using System.IO;
 using System.Runtime.Serialization;
 using Core;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace TestProject
 {
@@ -73,34 +72,22 @@ namespace TestProject
             Assert.IsTrue(acp == desAcp);
         }
 
-        private FXMarket CreateFXMarket()
-        {
-            FXMarket mkt = new FXMarket(new Currency("USD"));
-            mkt.AddQuote(new CurrencyPair("EUR", "USD"), 1.1);
-            return mkt;
-        }
+        
 
         [TestMethod]
         public void FxMarket()
         {
-            FXMarket mkt = CreateFXMarket();
+            FXMarket mkt = Init.CreateFXMarket();
             string fileName = SerializeObject(mkt, "FXMarket");
             FXMarket desMkt = DeserializeObject<FXMarket>(fileName);
             Assert.IsTrue(mkt == desMkt);
         }
 
-        private AssetMarket CreateAssetMarket()
-        {
-            AssetMarket aMkt = new AssetMarket();
-            aMkt.AddQuote(new AssetCcyPair(new Asset("BNP"), new Currency("EUR")), 48.5);
-            aMkt.AddQuote(new AssetCcyPair(new Asset("BTC"), new Currency("EUR")), 15000.0);
-            return aMkt;
-        }
 
         [TestMethod]
         public void AssetMarket()
         {
-            AssetMarket aMkt = CreateAssetMarket();
+            AssetMarket aMkt = Init.CreateAssetMarket();
             string fileName = SerializeObject(aMkt, "AssetMarket");
             AssetMarket desAMkt = DeserializeObject<AssetMarket>(fileName);
             Assert.IsTrue(aMkt == desAMkt);
@@ -130,7 +117,7 @@ namespace TestProject
 
         private CurrencyAssetStaticsDataBase GetCcyDB()
         {
-            CurrencyAssetStaticsDataBase casdb = new Core.Statics.CurrencyAssetStaticsDataBase();
+            CurrencyAssetStaticsDataBase casdb = new global::Core.Statics.CurrencyAssetStaticsDataBase();
             casdb.AddCcy("GBP", new CurrencyStatics("GBP", "£", 3, 2));
             casdb.AddCcy("EUR", new CurrencyStatics("EUR", "€", 3, 2, new CurrencyPair("GBP","EUR")));
             casdb.AddCcy("JPY", new CurrencyStatics("JPY", "¥", 4, 0, new CurrencyPair("GBP", "JPY")));
@@ -152,73 +139,10 @@ namespace TestProject
 
         #region Core
 
-        private Account CreateAccountCurrency1()
-        {
-            return new Account("Checking", new Currency("GBP"), 1000);
-        }
-
-        private Account CreateAccountCurrency2()
-        {
-            return new Account("Checking2", new Currency("EUR"), 1500);
-        }
-
-        private Account CreateAccountCurrency3()
-        {
-            return new Account("ExtraAccount", new Currency("EUR"), 100.0);
-        }
-
-        private Account CreateAccountAsset1()
-        {
-            return new Account("Wallet", new Asset("BTC"), 0.0001);
-        }
-
-        private Account CreateAccountAsset2()
-        {
-            return new Account("Stocks", new Asset("AAPL"), 1.0);
-        }
-
-        private Institution CreateInstitution1()
-        {
-            Institution instit = new Institution("Institution1", new Currency("JPY"));
-            instit.AddAccount(CreateAccountCurrency1());
-            instit.AddAccount(CreateAccountAsset1());
-            return instit;
-        }
-
-        private Institution CreateInstitution2()
-        {
-            Institution instit = new Institution("Institution2", new Currency("USD"));
-            instit.AddAccount(CreateAccountCurrency2());
-            instit.AddAccount(CreateAccountAsset2());
-            return instit;   
-        }
-
-        private Institution CreateInstitution3()
-        {
-            Institution instit = new Institution("Institution3", new Currency("EUR"));
-            instit.AddAccount(CreateAccountCurrency3());
-            return instit;
-        }
-
-        private Category CreateCategory1()
-        {
-            Category cat = new Category("Category1", new Currency("GBP"));
-            cat.AddInstitution(CreateInstitution1());
-            cat.AddInstitution(CreateInstitution2());
-            return cat;
-        }
-
-        private Category CreateCategory2()
-        {
-            Category cat = new Category("Category", new Currency("EUR"));
-            cat.AddInstitution(CreateInstitution3());
-            return cat;
-        }
-
         [TestMethod]
         public void Account_Ccy()
         {
-            Account acc = CreateAccountCurrency1();
+            Account acc = Init.CreateAccountCurrency1();
             string fileName = SerializeObject(acc, "Account_Ccy");
             Account desAcc = DeserializeObject<Account>(fileName);
             Assert.IsTrue(acc == desAcc);
@@ -227,7 +151,7 @@ namespace TestProject
         [TestMethod]
         public void Account_Asset()
         {
-            Account acc = CreateAccountAsset1();
+            Account acc = Init.CreateAccountAsset1();
             string fileName = SerializeObject(acc, "Account_Asset");
             Account desAcc = DeserializeObject<Account>(fileName);
             Assert.IsTrue(acc == desAcc);
@@ -236,7 +160,7 @@ namespace TestProject
         [TestMethod]
         public void Institution()
         {
-            Institution instit = CreateInstitution1();
+            Institution instit = Init.CreateInstitution1();
             string fileName = SerializeObject(instit, "Institution");
             Institution desInstit = DeserializeObject<Institution>(fileName);
             Assert.IsTrue(instit == desInstit);
@@ -245,7 +169,7 @@ namespace TestProject
         [TestMethod]
         public void Category()
         {
-            Category cat = CreateCategory1();
+            Category cat = Init.CreateCategory1();
             string fileName = SerializeObject(cat, "Category");
             Category desCat = DeserializeObject<Category>(fileName);
             Assert.IsTrue(cat == desCat);
@@ -282,7 +206,7 @@ namespace TestProject
         [TestMethod]
         public void TreeViewMapping()
         {
-            List<Category> list = new List<Category> { CreateCategory1(), CreateCategory2() };
+            List<Category> list = new List<Category> { Init.CreateCategory1(), Init.CreateCategory2() };
             TreeViewMapping tvm = new TreeViewMapping(list);
             string fileName = SerializeObject(tvm, "TreeViewMapping");
             TreeViewMapping desTvm = DeserializeObject<TreeViewMapping>(fileName);
@@ -292,8 +216,8 @@ namespace TestProject
         [TestMethod]
         public void AccountingData()
         {
-            List<Category> list = new List<Category> { CreateCategory1(), CreateCategory2() };
-            AccountingData ad = new AccountingData(list, CreateFXMarket(), CreateAssetMarket());
+            List<Category> list = new List<Category> { Init.CreateCategory1(), Init.CreateCategory2() };
+            AccountingData ad = new AccountingData(list, Init.CreateFXMarket(), Init.CreateAssetMarket());
             string fileName = SerializeObject(ad, "AccountingData");
             AccountingData desAd = DeserializeObject<AccountingData>(fileName);
             Assert.IsTrue(ad == desAd);
@@ -310,14 +234,14 @@ namespace TestProject
             had.SetCcyDB(GetCcyDB());
 
             // Create AccData 1
-            FXMarket fx1 = CreateFXMarket();
+            FXMarket fx1 = Init.CreateFXMarket();
             fx1.CcyRef = had.CcyDB.RefCcy;
             fx1.AddQuote(new CurrencyPair("GBP", "EUR"), 1.1);
             fx1.AddQuote(new CurrencyPair("GBP", "JPY"), 130);
-            AssetMarket amkt1 = CreateAssetMarket();
+            AssetMarket amkt1 = Init.CreateAssetMarket();
             amkt1.AddQuote(new AssetCcyPair(new Asset("AAPL"), new Currency("USD")), 1234.56);
             amkt1.PopulateWithFXMarket(fx1);
-            List<Category> list = new List<Category> { CreateCategory1(), CreateCategory2() };
+            List<Category> list = new List<Category> { Init.CreateCategory1(), Init.CreateCategory2() };
             AccountingData ad1 = new AccountingData(list, fx1, amkt1);
             had.AddData(new DateTime(2020, 1, 1), ad1);
 
