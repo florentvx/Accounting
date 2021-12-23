@@ -126,5 +126,28 @@ namespace Test.Core
                         );
         }
 
+        [TestMethod]
+        public void GetSummary_AssetTest()
+        {
+            Account acc = Init.CreateAccountAsset1();
+            SummaryReport summ = acc.GetSummary();
+            Assert.IsTrue(
+                            summ.Count == 1
+                            && summ.Get(Init.Asset1()) == acc.Amount
+                        );
+        }
+
+        [TestMethod]
+        public void GetTotalAmount()
+        {
+            Account acc = Init.CreateAccountCurrency1();
+            FXMarket fxMkt = Init.CreateFXMarket();
+            AssetMarket aMkt = Init.CreateAssetMarket();
+            acc.ModifyTotalCcy(fxMkt, aMkt, Init.Ccy2());
+            double tot = acc.GetTotalAmount(Init.Ccy1(), fxMkt);
+            Assert.IsTrue(tot == acc.Amount);
+        }
+
+
     }
 }
