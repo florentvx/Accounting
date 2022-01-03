@@ -9,11 +9,45 @@ using Core.Finance;
 using Core.Interfaces;
 using TestProject;
 
+
 namespace Test.Core
 {
     [TestClass]
     public class AccountTests
     { 
+        [TestMethod]
+        public void CcyRef()
+        {
+            Account acc_ccy = Init.CreateAccountCurrency1();
+            bool test1 = acc_ccy.CcyRef.Equals(Init.Ccy1());
+            Account acc_asset = Init.CreateAccountAsset1();
+            bool test2 = acc_asset.CcyRef.Equals(Init.Asset1());
+            Assert.IsTrue(test1 && test2);
+        }
+
+        [TestMethod]
+        public void ItemsList()
+        {
+            TreeViewMappingElement tvme = new TreeViewMappingElement("test");
+            Account acc_ccy = Init.CreateAccountCurrency1();
+            bool test1 = acc_ccy.GetItemList().Count() == 0;
+            bool test1bis = acc_ccy.GetItemList(tvme).Count() == 0;
+            Account acc_asset = Init.CreateAccountAsset1();
+            bool test2 = acc_asset.GetItemList().Count() == 0;
+            bool test2bis = acc_asset.GetItemList(tvme).Count() == 0;
+            Assert.IsTrue(test1 && test1bis && test2 && test2bis);
+        }
+
+        [TestMethod]
+        public void NodeTypeTest()
+        {
+            Account acc_ccy = Init.CreateAccountCurrency1();
+            bool test1 = acc_ccy.GetNodeType() == NodeType.Account;
+            Account acc_asset = Init.CreateAccountAsset1();
+            bool test2 = acc_asset.GetNodeType() == NodeType.Account;
+            Assert.IsTrue(test1 && test2);
+        }
+
         [TestMethod]
         public void TotalAccount_CcyTest()
         {
