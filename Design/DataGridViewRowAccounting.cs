@@ -1,7 +1,8 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using Core.Interfaces;
-using Core;
+using Core.Finance;
+using System;
 
 namespace Design
 {
@@ -15,7 +16,7 @@ namespace Design
             CreateCells(table);
             string amount = table.CcyToString(account.Ccy, account.Amount);
             string convAmount = table.CcyToString(account.ConvertedCcy, account.ConvertedAmount);
-            double? lastAmount;
+            Price lastAmount;
             
             lastAmount = account.LastAmount;
                 
@@ -36,9 +37,10 @@ namespace Design
             string changeData = "";
             if (lastAmount.HasValue)
             {
-                changeAmount = account.ConvertedAmount - lastAmount.Value; //Watch out is Asset Account: BNP Shares
-                ICcyAsset iCcy = account.Ccy.IsCcy() ? account.Ccy : account.ConvertedCcy;
-                changeData = table.CcyToString(iCcy, changeAmount.Value);
+                if (!account.ConvertedCcy.Equals(lastAmount.Ccy))
+                    throw new Exception($"Account converted Ccy [{account.ConvertedCcy}] is different from lastAmount Ccy [{lastAmount.Ccy}]");
+                changeAmount = account.ConvertedAmount - lastAmount.Value;
+                changeData = table.CcyToString(lastAmount.Ccy, changeAmount.Value);
             }
 
             var titles = new object[] {

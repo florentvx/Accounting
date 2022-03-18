@@ -93,14 +93,13 @@ namespace Accounting
         internal void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair ccyPair, double ccyPairQuote)
         {
             _had.AddNewCcy(ccyName, ccyStatics, ccyPair, ccyPairQuote);
-            _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket);
+            _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket, null);
         }
 
         internal void AddNewAsset(string assetName, AssetStatics assetStatics, double assetCcyPairQuote)
         {
             _had.AddNewAsset(assetName, assetStatics, assetCcyPairQuote);
-            //_ad.AssetMarket.PopulateWithFXMarket(_ad.FXMarket);
-            _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket);
+            _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket, null);
         }
 
         internal void AddNewDate(DateTime date)
@@ -114,7 +113,8 @@ namespace Accounting
         internal void ResetAndAddRefCcy(DateTime date, string ccyName, CurrencyStatics ccyStatics)
         {
             _had.Reset(date, ccyName, ccyStatics);
-            _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket);
+            AccountingData prev_ac = _had.GetPreviousData(date);
+            _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket, prev_ac.FXMarket);
             _view.UpdateDates();
         }
 

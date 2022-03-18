@@ -30,25 +30,26 @@ namespace Design
         public IAccountingElement ElementShowed;
         private TreeViewMappingElement _Memory;
         private FXMarket FXMarketUsed;
+        private FXMarket PreviousFXMarketUsed; // used for LastAmount Conversion
         private AssetMarket AssetMarketUsed;
         private CurrencyAssetStaticsDataBase _CcyDB;
         public IEnumerable<string> Ccies { get { return _CcyDB.Ccies; } }
         public IEnumerable<string> Assets { get { return _CcyDB.Assets; } }
         public string _LastTotalMemoryMainKey = "<#TOTAL#>";
-        private Dictionary<string, double?> _LastTotalMemory = new Dictionary<string, double?> { };
-
+        private Dictionary<string, Price> _LastTotalMemory = new Dictionary<string, Price> { };
         
-        public void SetLastTotalMemoryAmount(Dictionary<string, double?> data)
+        
+        public void SetLastTotalMemoryAmount(Dictionary<string, Price> data)
         {
             if (data != null) { _LastTotalMemory = data; }
         }
 
-        public double? GetLastTotalMemoryAmount(string item = null) 
+        public Price GetLastTotalMemoryAmount(Currency ccy, string item = null) 
         {
             string key = item;
             if (item == null) { key = _LastTotalMemoryMainKey; }
-            _LastTotalMemory.TryGetValue(key, out double? res);
-            return res;
+            _LastTotalMemory.TryGetValue(key, out Price res);
+            return PreviousFXMarketUsed.ConvertPrice(res, ccy);
         }
 
         public IEnumerable<string> CciesAndAssets { get { return Ccies.Union(Assets); } }
@@ -72,11 +73,12 @@ namespace Design
             AutoGenerateColumns = false;
         }
 
-        internal void SetUpMarkets(CurrencyAssetStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt)
+        internal void SetUpMarkets(CurrencyAssetStaticsDataBase ccyDB, FXMarket mkt, AssetMarket aMkt, FXMarket prevMkt)
         {
             _CcyDB = ccyDB;
             FXMarketUsed = mkt;
             AssetMarketUsed = aMkt;
+            PreviousFXMarketUsed = prevMkt;
             //Ccies = mkt.GetAvailableCurrencies();
             //Assets = aMkt.GetAvailableAssets();
         }
@@ -91,19 +93,24 @@ namespace Design
 
         #region ShowElement
 
-        private void AddRow(IAccount item, bool isTotalRow = false, bool isTotalView = false, double? lastTotal = null)
+        private void AddRow(IAccount item, bool isTotalRow = false, bool isTotalView = false, Price lastTotal = null)
         {
             DataGridViewRowAccounting dgvr = new DataGridViewRowAccounting(this, item, isTotalRow, isTotalView);
             Rows.Add(dgvr);
         }
 
-        private void AddRow(IAccountingElement item, ICcyAsset convCcy, bool isTotal = false, double? lastTotal = null)
+        private void AddRow(IAccountingElement item, ICcyAsset convCcy, bool isTotal = false, Price lastTotal = null)
         {
             IAccount sum = item.GetTotalAccount(FXMarketUsed, AssetMarketUsed, convCcy, item.GetName(), lastTotal: lastTotal) ;
             AddRow(sum, isTotal);
         }
 
-        public void ShowElement(IAccountingElement iElmt, TreeViewMappingElement tvme = null, Dictionary<string, double?> lastTotal = null)
+        internal void SetPreviousFXMarket(FXMarket fXMarket)
+        {
+            PreviousFXMarketUsed = fXMarket;
+        }
+
+        public void ShowElement(IAccountingElement iElmt, TreeViewMappingElement tvme = null, Dictionary<string, Price> lastTotal = null)
         {
             if (tvme == null) { tvme = _Memory; }
             else { _Memory = tvme; }
@@ -112,10 +119,10 @@ namespace Design
 
             Rows.Clear();
             foreach (IAccountingElement item in iElmt.GetItemList(tvme))
-                AddRow(item, iElmt.CcyRef, lastTotal: GetLastTotalMemoryAmount(item.GetName()));
+                AddRow(item, iElmt.CcyRef, lastTotal: GetLastTotalMemoryAmount(iElmt.CcyRef.Ccy, item.GetName()));
             AddRow( iElmt.GetTotalAccount(  FXMarketUsed, AssetMarketUsed, iElmt.CcyRef, 
                                             overrideName: "Total", 
-                                            lastTotal: GetLastTotalMemoryAmount()), 
+                                            lastTotal: GetLastTotalMemoryAmount(iElmt.CcyRef.Ccy)), 
                     isTotalRow: iElmt.GetNodeType() != NodeType.Account);
             ElementShowed = iElmt;
             TotalShowed = null;
@@ -126,22 +133,22 @@ namespace Design
 
         #region ShowTotal
 
-        private void AddRow(ICategory item, Currency ccy, double? lastTotal = null)
+        private void AddRow(ICategory item, Currency ccy, Price lastTotal = null)
         {
             IAccount sum = item.TotalInstitution(FXMarketUsed, AssetMarketUsed, ccy, item.CategoryName, lastTotal);
             AddRow(sum, false, isTotalView: true);
         }
 
-        internal void ShowTotal(IAccountingData iad, Dictionary<string, double?> lastTotal = null)
+        internal void ShowTotal(IAccountingData iad, Dictionary<string, Price> lastTotal = null, FXMarket prevFX = null)
         {
             Rows.Clear();
 
             SetLastTotalMemoryAmount(lastTotal);
 
             foreach (ICategory icat in iad.Categories)
-                AddRow(icat, iad.Ccy, GetLastTotalMemoryAmount(icat.CategoryName));
+                AddRow(icat, iad.Ccy, GetLastTotalMemoryAmount(iad.Ccy, icat.CategoryName));
 
-            AddRow(iad.Total(GetLastTotalMemoryAmount()), isTotalRow: true, isTotalView: true);
+            AddRow(iad.Total(GetLastTotalMemoryAmount(iad.Ccy)), isTotalRow: true, isTotalView: true);
             ElementShowed = null;
             TotalShowed = iad;
             Rows[0].Cells[0].Selected = false;

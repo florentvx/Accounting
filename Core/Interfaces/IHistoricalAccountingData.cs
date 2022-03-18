@@ -11,6 +11,7 @@ namespace Core.Interfaces
     public interface IHistoricalAccountingData
     {
         AccountingData GetData(DateTime date);
+        AccountingData GetPreviousData(DateTime date);
         void Reset(DateTime date, string ccyName, CurrencyStatics ccyStatics);
         void AddNewDate(DateTime date);
         void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair ccyPair, double ccyPairQuote);

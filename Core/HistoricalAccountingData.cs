@@ -45,6 +45,13 @@ namespace Core
         #region IHistoricalAccountingData
 
         public AccountingData GetData(DateTime date) { return Data[date]; }
+        public AccountingData GetPreviousData(DateTime date) 
+        {
+            DateTime prevDate = Dates.Where(t => t < date).LastOrDefault();
+            if (prevDate == null)
+                return null;
+            return GetData(prevDate);
+        }
 
         public void Reset(DateTime date, string ccy, CurrencyStatics cs)
         {

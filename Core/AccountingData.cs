@@ -32,6 +32,15 @@ namespace Core
 
         private double _TotalValue; // Total value in Ccy Total
         public double TotalValue { get { return _TotalValue; } } 
+        public Price TotalPrice { get { return new Price(TotalValue, Ccy); } }
+        public Price GetTotalPrice(Currency ccy, NodeAddress na = null)
+        {
+            Price res = TotalPrice;
+            if (na != null) { res = GetValue(na); }
+            if (ccy.Equals(res.Ccy)) return res;
+            else
+                return new Price(GetQuote(res.Ccy, ccy) * res.Value, ccy);
+        }
 
         CurrencyAssetStaticsDataBase _CcyDB; //Copy By Ref of CcyAssetDataBase
 
@@ -139,7 +148,7 @@ namespace Core
             }
         }
 
-        public IAccount Total(double? lastTotal)
+        public IAccount Total(Price lastTotal)
         {
             double total = 0;
             foreach (var item in _Data)
@@ -149,7 +158,7 @@ namespace Core
             return res;
         }
 
-        public IAccount Total(Currency TotalCcy, double? lastTotal)
+        public IAccount Total(Currency TotalCcy, Price lastTotal)
         {
             ModifyCcy(TotalCcy);
             return Total(lastTotal);
@@ -545,14 +554,14 @@ namespace Core
                 return AssetMarket.GetQuote(new AssetCcyPair(item.Asset, Ccy));
         }
 
-        public double GetValue(NodeAddress na)
+        public Price GetValue(NodeAddress na)
         {
             if (na.NodeType == NodeType.All)
-                return TotalValue;
+                return new Price(TotalValue, Ccy);
             else
             {
                 try { return GetElement(na).GetTotalAmount(Ccy, FXMarket); }
-                catch { return 0.0; }
+                catch { return new Price(0.0, Ccy); }
             }
         }
     }

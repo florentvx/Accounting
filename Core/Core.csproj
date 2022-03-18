@@ -51,6 +51,7 @@
     <Compile Include="Finance\AssetMarket.cs" />
     <Compile Include="Finance\AssetCcyPair.cs" />
     <Compile Include="Finance\Currency.cs" />
+    <Compile Include="Finance\Price.cs" />
     <Compile Include="Finance\SummaryReport.cs" />
     <Compile Include="Statics\AssetStatics.cs" />
     <Compile Include="Statics\CurrencyAssetStaticsDataBase.cs" />

@@ -26,8 +26,8 @@ namespace Core
         Currency _TotalCcy = new Currency("NONE");
         double _TotalAmount = 0;
 
-        double? _LastAmount;
-        public double? LastAmount { get { return _LastAmount; } }
+        Price _LastAmount;
+        public Price LastAmount { get { return _LastAmount; } }
 
         public Currency TotalCcy { get { return _TotalCcy; } }
         public double TotalAmount { get { return _TotalAmount; } }
@@ -91,9 +91,17 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Account; }
 
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name, double? lastAmount)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name, Price lastAmount)
         {
-            _LastAmount = lastAmount;
+            _LastAmount = null;
+            if (lastAmount != null)
+            {
+                _LastAmount = lastAmount;
+                if (!_LastAmount.Ccy.Equals(convCcy))
+                    // lastAmount should already converted since you need to convert it with prevFxmkt
+                    throw new Exception($"Last Amount {_LastAmount.Ccy} not converted in {convCcy.Ccy}!");
+            }
+
             if (Ccy.IsCcy())
                 RecalculateAmount(mkt, convCcy.Ccy);
             else
@@ -148,9 +156,10 @@ namespace Core
             return new SummaryReport(CcyRef, Amount);
         }
 
-        public double GetTotalAmount(Currency ccy, FXMarket fxMkt)
+        public Price GetTotalAmount(Currency ccy, FXMarket fxMkt)
         {
-            return TotalAmount * fxMkt.GetQuote(new CurrencyPair(_TotalCcy, ccy));
+            double value = TotalAmount * fxMkt.GetQuote(new CurrencyPair(_TotalCcy, ccy));
+            return new Price(value, ccy);
         }
 
         #endregion
@@ -226,7 +235,7 @@ namespace Core
 
         #endregion
 
-        public Account(string name, ICcyAsset ccy, double amount = 0, bool isCalculatedAccount = false, double? lastAmount = null)
+        public Account(string name, ICcyAsset ccy, double amount = 0, bool isCalculatedAccount = false, Price lastAmount = null)
         {
             _AccountName = name;
             _Ccy = ccy;
