@@ -14,7 +14,7 @@ namespace Design.SubForms
     {
         public DateTime _Date = DateTime.Today;
 
-        public DateTime GetDate() { return _Date.Date; }
+        public long GetDate() { return _Date.Date.Ticks; }
 
         public AddDateForm()
         {

@@ -102,10 +102,11 @@ namespace Accounting
             _view.SetUpMarkets(_view.CcyDB, _ad.FXMarket, _ad.AssetMarket, null);
         }
 
-        internal void AddNewDate(DateTime date)
+        internal void AddNewDate(long date_ticks)
         {
-            _had.AddNewDate(date);
-            _view.CurrentDate = date;
+            DateTime new_date = new DateTime(date_ticks);
+            _had.AddNewDate(date_ticks);
+            _view.CurrentDate = new_date;
             _view.UpdateDates();
             _view.SetUpAccountingData(_view.CcyDB, _ad);
         }

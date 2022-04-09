@@ -144,7 +144,10 @@ namespace Accounting
                 using (AddDateForm form = new AddDateForm())
                 {
                     if (form.ShowDialog() == DialogResult.OK)
-                        MainPresenter.AddNewDate(form.GetDate());
+                    {
+                        long new_date_in_ticks = form.GetDate(); // issues with release mode
+                        MainPresenter.AddNewDate(new_date_in_ticks);
+                    }
                 }
             }   
         }

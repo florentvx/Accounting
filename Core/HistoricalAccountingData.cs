@@ -64,8 +64,9 @@ namespace Core
             AddData(date, ad);
         }
 
-        public void AddNewDate(DateTime date)
+        public void AddNewDate(long date_ticks)
         {
+            DateTime date = new DateTime(date_ticks);
             if (_Data.Count() == 0)
                 return;
             int pos = -1;

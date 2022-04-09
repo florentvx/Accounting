@@ -13,7 +13,7 @@ namespace Core.Interfaces
         AccountingData GetData(DateTime date);
         AccountingData GetPreviousData(DateTime date);
         void Reset(DateTime date, string ccyName, CurrencyStatics ccyStatics);
-        void AddNewDate(DateTime date);
+        void AddNewDate(long date_ticks);
         void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair ccyPair, double ccyPairQuote);
         void AddNewAsset(string assetName, AssetStatics assetStatics, double assetCcyPairQuote);
         void PrepareForLoading();
