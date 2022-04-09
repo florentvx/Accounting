@@ -178,7 +178,7 @@ namespace Test.Core
             FXMarket fxMkt = Init.CreateFXMarket();
             AssetMarket aMkt = Init.CreateAssetMarket();
             acc.ModifyTotalCcy(fxMkt, aMkt, Init.Ccy2());
-            double tot = acc.GetTotalAmount(Init.Ccy1(), fxMkt);
+            double tot = acc.GetTotalAmount(Init.Ccy1(), fxMkt).Value;
             Assert.IsTrue(tot == acc.Amount);
         }
 

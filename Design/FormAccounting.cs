@@ -164,7 +164,9 @@ namespace Accounting
 
         public void SetUpAccountingData(CurrencyAssetStaticsDataBase ccyDB, IAccountingData iad)
         {
-            SetUpMarkets(ccyDB, iad.FXMarket, iad.AssetMarket, null);
+            FXMarket prevFxMkt = new FXMarket();
+            prevFxMkt.Copy(iad.FXMarket);
+            SetUpMarkets(ccyDB, iad.FXMarket, iad.AssetMarket, prevFxMkt);
             SetUpTree(iad.Map);
         }
 
@@ -208,7 +210,7 @@ namespace Accounting
             {
                 Price val = item.Value.GetValue(na);
                 values.Add(val.Value);
-                ser.Points.AddXY(item.Key, val);
+                ser.Points.AddXY(item.Key, val.Value);
             }
             Chart.Series.Add(ser);
             Chart.Series[0].ChartType = SeriesChartType.Line;

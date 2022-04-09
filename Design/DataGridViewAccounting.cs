@@ -41,14 +41,17 @@ namespace Design
         
         public void SetLastTotalMemoryAmount(Dictionary<string, Price> data)
         {
-            if (data != null) { _LastTotalMemory = data; }
+            if (data != null) { _LastTotalMemory = data.ToDictionary(   entry => entry.Key,
+                                                                        entry => entry.Value); }
         }
 
         public Price GetLastTotalMemoryAmount(Currency ccy, string item = null) 
         {
             string key = item;
             if (item == null) { key = _LastTotalMemoryMainKey; }
-            _LastTotalMemory.TryGetValue(key, out Price res);
+            Price res = new Price(0, ccy);
+            if (_LastTotalMemory.ContainsKey(key))
+                res = _LastTotalMemory[key];
             return PreviousFXMarketUsed.ConvertPrice(res, ccy);
         }
 
