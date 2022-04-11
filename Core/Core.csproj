@@ -45,27 +45,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs" />
-    <Compile Include="AccountingData.cs" />
-    <Compile Include="Category.cs" />
     <Compile Include="Finance\Asset.cs" />
     <Compile Include="Finance\AssetMarket.cs" />
     <Compile Include="Finance\AssetCcyPair.cs" />
     <Compile Include="Finance\Currency.cs" />
     <Compile Include="Finance\Price.cs" />
     <Compile Include="Finance\SummaryReport.cs" />
+    <Compile Include="Interfaces\IInstitution.cs" />
     <Compile Include="Statics\AssetStatics.cs" />
     <Compile Include="Statics\CurrencyAssetStaticsDataBase.cs" />
     <Compile Include="Statics\CurrencyStatics.cs" />
     <Compile Include="Finance\Market.cs" />
-    <Compile Include="HistoricalAccountingData.cs" />
-    <Compile Include="Institution.cs" />
     <Compile Include="Interfaces\IAccount.cs" />
     <Compile Include="Interfaces\IAccountingData.cs" />
     <Compile Include="Interfaces\IAccountingElement.cs" />
     <Compile Include="Interfaces\ICategory.cs" />
     <Compile Include="Interfaces\ICcyAsset.cs" />
     <Compile Include="Interfaces\IHistoricalAccountingData.cs" />
-    <Compile Include="Interfaces\IInstitution.cs" />
     <Compile Include="Interfaces\IMarket.cs" />
     <Compile Include="Interfaces\IMarketInput.cs" />
     <Compile Include="Interfaces\ISummary.cs" />

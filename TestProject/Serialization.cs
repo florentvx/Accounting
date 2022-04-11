@@ -84,14 +84,14 @@ namespace TestProject
         }
 
 
-        [TestMethod]
-        public void AssetMarket()
-        {
-            AssetMarket aMkt = Init.CreateAssetMarket();
-            string fileName = SerializeObject(aMkt, "AssetMarket");
-            AssetMarket desAMkt = DeserializeObject<AssetMarket>(fileName);
-            Assert.IsTrue(aMkt == desAMkt);
-        }
+        //[TestMethod]
+        //public void AssetMarket()
+        //{
+        //    AssetMarket aMkt = Init.CreateAssetMarket();
+        //    string fileName = SerializeObject(aMkt, "AssetMarket");
+        //    AssetMarket desAMkt = DeserializeObject<AssetMarket>(fileName);
+        //    Assert.IsTrue(aMkt == desAMkt);
+        //}
 
         #endregion
 
@@ -157,23 +157,23 @@ namespace TestProject
             Assert.IsTrue(acc == desAcc);
         }
 
-        [TestMethod]
-        public void Institution()
-        {
-            Institution instit = Init.CreateInstitution1();
-            string fileName = SerializeObject(instit, "Institution");
-            Institution desInstit = DeserializeObject<Institution>(fileName);
-            Assert.IsTrue(instit == desInstit);
-        }
+        //[TestMethod]
+        //public void Institution()
+        //{
+        //    Institution instit = Init.CreateInstitution1();
+        //    string fileName = SerializeObject(instit, "Institution");
+        //    Institution desInstit = DeserializeObject<Institution>(fileName);
+        //    Assert.IsTrue(instit == desInstit);
+        //}
 
-        [TestMethod]
-        public void Category()
-        {
-            Category cat = Init.CreateCategory1();
-            string fileName = SerializeObject(cat, "Category");
-            Category desCat = DeserializeObject<Category>(fileName);
-            Assert.IsTrue(cat == desCat);
-        }
+        //[TestMethod]
+        //public void Category()
+        //{
+        //    Category cat = Init.CreateCategory1();
+        //    string fileName = SerializeObject(cat, "Category");
+        //    Category desCat = DeserializeObject<Category>(fileName);
+        //    Assert.IsTrue(cat == desCat);
+        //}
 
         private void FillTvme(TreeViewMappingElement tvme)
         {
@@ -203,64 +203,64 @@ namespace TestProject
             Assert.IsTrue(tvme == desTvme);
         }
 
-        [TestMethod]
-        public void TreeViewMapping()
-        {
-            List<Category> list = new List<Category> { Init.CreateCategory1(), Init.CreateCategory2() };
-            TreeViewMapping tvm = new TreeViewMapping(list);
-            string fileName = SerializeObject(tvm, "TreeViewMapping");
-            TreeViewMapping desTvm = DeserializeObject<TreeViewMapping>(fileName);
-            Assert.IsTrue(tvm == desTvm);
-        }
+        //[TestMethod]
+        //public void TreeViewMapping()
+        //{
+        //    List<Category> list = new List<Category> { Init.CreateCategory1(), Init.CreateCategory2() };
+        //    TreeViewMapping tvm = new TreeViewMapping(list);
+        //    string fileName = SerializeObject(tvm, "TreeViewMapping");
+        //    TreeViewMapping desTvm = DeserializeObject<TreeViewMapping>(fileName);
+        //    Assert.IsTrue(tvm == desTvm);
+        //}
 
-        [TestMethod]
-        public void AccountingData()
-        {
-            List<Category> list = new List<Category> { Init.CreateCategory1(), Init.CreateCategory2() };
-            AccountingData ad = new AccountingData(list, Init.CreateFXMarket(), Init.CreateAssetMarket());
-            string fileName = SerializeObject(ad, "AccountingData");
-            AccountingData desAd = DeserializeObject<AccountingData>(fileName);
-            Assert.IsTrue(ad == desAd);
-        }
+        //[TestMethod]
+        //public void AccountingData()
+        //{
+        //    List<Category> list = new List<Category> { Init.CreateCategory1(), Init.CreateCategory2() };
+        //    AccountingData ad = new AccountingData(list, Init.CreateFXMarket(), Init.CreateAssetMarket());
+        //    string fileName = SerializeObject(ad, "AccountingData");
+        //    AccountingData desAd = DeserializeObject<AccountingData>(fileName);
+        //    Assert.IsTrue(ad == desAd);
+        //}
 
 
 
         #endregion
 
-        [TestMethod]
-        public void HistoricalAccountingData()
-        {
-            HistoricalAccountingData had = new HistoricalAccountingData();
-            had.SetCcyDB(GetCcyDB());
+        //[TestMethod]
+        //public void HistoricalAccountingData()
+        //{
+        //    HistoricalAccountingData had = new HistoricalAccountingData();
+        //    had.SetCcyDB(GetCcyDB());
 
-            // Create AccData 1
-            FXMarket fx1 = Init.CreateFXMarket();
-            fx1.CcyRef = had.CcyDB.RefCcy;
-            fx1.AddQuote(new CurrencyPair("GBP", "EUR"), 1.1);
-            fx1.AddQuote(new CurrencyPair("GBP", "JPY"), 130);
-            AssetMarket amkt1 = Init.CreateAssetMarket();
-            amkt1.AddQuote(new AssetCcyPair(new Asset("AAPL"), new Currency("USD")), 1234.56);
-            amkt1.PopulateWithFXMarket(fx1);
-            List<Category> list = new List<Category> { Init.CreateCategory1(), Init.CreateCategory2() };
-            AccountingData ad1 = new AccountingData(list, fx1, amkt1);
-            had.AddData(new DateTime(2020, 1, 1), ad1);
+        //    // Create AccData 1
+        //    FXMarket fx1 = Init.CreateFXMarket();
+        //    fx1.CcyRef = had.CcyDB.RefCcy;
+        //    fx1.AddQuote(new CurrencyPair("GBP", "EUR"), 1.1);
+        //    fx1.AddQuote(new CurrencyPair("GBP", "JPY"), 130);
+        //    AssetMarket amkt1 = Init.CreateAssetMarket();
+        //    amkt1.AddQuote(new AssetCcyPair(new Asset("AAPL"), new Currency("USD")), 1234.56);
+        //    amkt1.PopulateWithFXMarket(fx1);
+        //    List<Category> list = new List<Category> { Init.CreateCategory1(), Init.CreateCategory2() };
+        //    AccountingData ad1 = new AccountingData(list, fx1, amkt1);
+        //    had.AddData(new DateTime(2020, 1, 1), ad1);
 
-            // Create AccData2
-            FXMarket fx2 = new FXMarket();
-            fx2.Copy(fx1);
-            fx2.AddQuote(new CurrencyPair("EUR", "USD"), 1.2);
-            fx2.AddQuote(new CurrencyPair("GBP", "EUR"), 1.15);
-            AssetMarket amkt2 = new AssetMarket();
-            amkt2.Copy(amkt1);
-            amkt2.AddQuote(new AssetCcyPair(new Asset("BNP"), new Currency("EUR")), 50.0);
-            amkt2.PopulateWithFXMarket(fx2);
-            AccountingData ad2 = new AccountingData(list, fx2, amkt2);
-            had.AddData(new DateTime(2020, 2, 3), ad2);
+        //    // Create AccData2
+        //    FXMarket fx2 = new FXMarket();
+        //    fx2.Copy(fx1);
+        //    fx2.AddQuote(new CurrencyPair("EUR", "USD"), 1.2);
+        //    fx2.AddQuote(new CurrencyPair("GBP", "EUR"), 1.15);
+        //    AssetMarket amkt2 = new AssetMarket();
+        //    amkt2.Copy(amkt1);
+        //    amkt2.AddQuote(new AssetCcyPair(new Asset("BNP"), new Currency("EUR")), 50.0);
+        //    amkt2.PopulateWithFXMarket(fx2);
+        //    AccountingData ad2 = new AccountingData(list, fx2, amkt2);
+        //    had.AddData(new DateTime(2020, 2, 3), ad2);
 
-            // Test
-            string fileName = SerializeObject(had, "HistoricalAccountingData");
-            HistoricalAccountingData desHad = DeserializeObject<HistoricalAccountingData>(fileName);
-            Assert.IsTrue(had == desHad);
-        }
+        //    // Test
+        //    string fileName = SerializeObject(had, "HistoricalAccountingData");
+        //    HistoricalAccountingData desHad = DeserializeObject<HistoricalAccountingData>(fileName);
+        //    Assert.IsTrue(had == desHad);
+        //}
     }
 }

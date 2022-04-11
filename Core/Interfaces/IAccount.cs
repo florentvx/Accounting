@@ -10,11 +10,8 @@ namespace Core.Interfaces
     public interface IAccount : IAccountingElement
     {
         string AccountName { get; set; }
-        ICcyAsset Ccy { get; }
-        Currency ConvertedCcy { get; }
-        double Amount { get; }
-        double ConvertedAmount { get; }
-        bool IsCalculatedAccount { get; }
-        Price LastAmount { get; }
+        Price Value { get; }
+        double Amount { get; set; }
+
     }
 }

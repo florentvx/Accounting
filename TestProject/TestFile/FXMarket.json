@@ -4,11 +4,11 @@
     {
       "Key": {
         "$type": "Core.Finance.CurrencyPair, Core",
-        "_Ccy1": {
+        "_Ccy": {
           "$type": "Core.Finance.Currency, Core",
           "Ccy": "EUR"
         },
-        "_Ccy2": {
+        "_CcyPrice": {
           "$type": "Core.Finance.Currency, Core",
           "Ccy": "USD"
         }

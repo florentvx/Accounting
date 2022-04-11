@@ -8,16 +8,17 @@ using Core.Finance;
 
 namespace Core.Interfaces
 {
-    public interface IMarketInput: IEquatable<IMarketInput>, ISerializable
+    public interface IMarketInput: IEquatable<IMarketInput>, ISerializable, ICloneable
     {
-        Currency Ccy1 { get; }
-        Asset Asset1 { get; }
-        Currency Ccy2 { get; }
-        object Item1 { get; }
-        ICcyAsset OtherAsset(ICcyAsset ccy);
+        Currency Ccy { get; }
+        Asset Asset { get; }
+        Currency CcyPrice { get; }
+
+        ICcyAsset Other(ICcyAsset ccy);
+
+        bool IsIdentity { get; }
         bool IsEqual(IMarketInput other);
         bool IsEquivalent(IMarketInput other);
-        bool IsIdentity { get; }
         bool Contains(ICcyAsset ccy);
     }
 }

@@ -14,39 +14,32 @@ namespace Core.Finance
     {
         [JsonProperty]
         public Asset Asset { get; set; }
+
         [JsonProperty]
-        public Currency Ccy { get; set; }
+        public Currency CcyPrice { get; set; }
 
         public AssetCcyPair(Asset asset, Currency ccy)
         {
             Asset = asset;
-            Ccy = ccy;
+            CcyPrice = ccy;
         }
 
         #region IMarketInput
 
-        public Currency Ccy1 => null;
-
-        public Asset Asset1 => Asset;
-
-        public Currency Ccy2 => Ccy;
-
-        public object Item1 { get => Asset1; }
-
-        public ICcyAsset OtherAsset(ICcyAsset ccy)
-        {
-            if (ccy.Ccy == Ccy)
-                return Asset;
-            if (ccy.Asset == Asset)
-                return Ccy;
-            throw new Exception();
-        }
-
         public bool IsIdentity => false;
+
+        public Currency Ccy => null;
+
+        public ICcyAsset Other(ICcyAsset ccy)
+        {
+            if (ccy.Ccy == CcyPrice) return Asset;
+            if (ccy.Asset == Asset) return CcyPrice;
+            return null;
+        }
 
         public bool IsEqual(IMarketInput other)
         {
-            return other.Asset1 == Asset1 && other.Ccy2 == Ccy;
+            return other.Asset == Asset && other.CcyPrice == CcyPrice;
         }
 
         public bool IsEquivalent(IMarketInput other)
@@ -56,7 +49,12 @@ namespace Core.Finance
         
         public bool Contains(ICcyAsset ccy)
         {
-            return ccy.Ccy == Ccy || ccy.Asset == Asset;
+            return ccy.Ccy == CcyPrice || ccy.Asset == Asset;
+        }
+
+        public object Clone()
+        {
+            return new AssetCcyPair((Asset)Asset.Clone(), (Currency)CcyPrice.Clone());
         }
 
         #endregion
@@ -67,7 +65,7 @@ namespace Core.Finance
         {
             if (imi == null)
                 return false;
-            return Asset1 == imi.Asset1 && Ccy2 == imi.Ccy2;
+            return Asset == imi.Asset && CcyPrice == imi.CcyPrice;
         }
 
         public override bool Equals(object obj)
@@ -77,7 +75,7 @@ namespace Core.Finance
 
         public override int GetHashCode()
         {
-            return Asset1.GetHashCode() + Ccy2.GetHashCode();
+            return Asset.GetHashCode() + CcyPrice.GetHashCode();
         }
 
         public static bool operator ==(AssetCcyPair imi1, IMarketInput imi2)
@@ -102,13 +100,13 @@ namespace Core.Finance
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Asset1", Asset, typeof(Asset));
-            info.AddValue("Ccy2", Ccy, typeof(Currency));
+            info.AddValue("Ccy2", CcyPrice, typeof(Currency));
         }
 
         public AssetCcyPair(SerializationInfo info, StreamingContext context)
         {
             Asset = (Asset)info.GetValue("Asset1", typeof(Asset));
-            Ccy = (Currency)info.GetValue("Ccy2", typeof(Currency));
+            CcyPrice = (Currency)info.GetValue("Ccy2", typeof(Currency));
         }
 
         #endregion

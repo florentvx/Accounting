@@ -58,24 +58,18 @@ namespace Core.Finance
 
         #endregion
 
-        virtual public void Reset()
-        {
-            //_Data = new Dictionary<IMarketInput, double> { };
-            //_Pairs = new List<IMarketInput> { };
-        }
-
         public IEnumerable<Tuple<IMarketInput, double>> EnumerateData()
         {
             var data = GetData();
             return Pairs.Select(x => new Tuple<IMarketInput, double>(x, data[x]));
         }
 
-            public IEnumerable<Tuple<IMarketInput, double>> EnumerateData(CurrencyAssetStaticsDataBase ccyDB)
+        public IEnumerable<Tuple<IMarketInput, double>> EnumerateData(CurrencyAssetStaticsDataBase ccyDB)
         {
             var data = GetData();
             if (data.Keys.Count() == 0)
                 return new List<Tuple<IMarketInput, double>> { };
-            if (data.Keys.First().Ccy1 != null)
+            if (data.Keys.First().Ccy != null)
                 return ccyDB.DataBase   .Select(x => x.PricingCcyPair)
                                         .Where(x => x != null)
                                         .Select(x => new Tuple<IMarketInput, double>(x, data[x]));

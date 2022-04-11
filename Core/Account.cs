@@ -11,28 +11,14 @@ using Newtonsoft.Json;
 namespace Core
 {
     [Serializable]
-    public class Account : IAccount, IEquatable<Account>, ISerializable
+    public class Account : IAccount, IEquatable<Account>, ISerializable, ICloneable
     {
         [JsonProperty]
         string _AccountName;
         [JsonProperty]
-        ICcyAsset _Ccy;
-        [JsonProperty]
-        double _Amount;
+        Price _Value;
 
-        Currency _ConvertedCcy;
-        double _ConvertedAmount;
-
-        Currency _TotalCcy = new Currency("NONE");
-        double _TotalAmount = 0;
-
-        Price _LastAmount;
-        public Price LastAmount { get { return _LastAmount; } }
-
-        public Currency TotalCcy { get { return _TotalCcy; } }
-        public double TotalAmount { get { return _TotalAmount; } }
-
-        readonly bool _IsCalculatedAccount; // used for TotalAccount purposes
+        public Price Value { get { return _Value; } }
 
         #region IAccount
 
@@ -44,31 +30,14 @@ namespace Core
 
         public ICcyAsset Ccy
         {
-            get { return _Ccy; }
-            set { _Ccy = value; }
-        }
-
-        public Currency ConvertedCcy
-        {
-            get { return _ConvertedCcy; }
-            set { _ConvertedCcy = value; }
+            get { return _Value.Ccy; }
+            set { _Value.Ccy = value; }
         }
 
         public double Amount
         {
-            get { return _Amount; }
-            set { _Amount = value; }
-        }
-
-        public double ConvertedAmount
-        {
-            get { return _ConvertedAmount; }
-        }
-
-
-        public bool IsCalculatedAccount
-        {
-            get { return _IsCalculatedAccount; }
+            get { return _Value.Amount; }
+            set { Value.Amount = value; }
         }
 
         #endregion
@@ -76,8 +45,6 @@ namespace Core
         #region IAccountingElement
 
         public string GetName() { return AccountName; }
-
-        public ICcyAsset CcyRef { get { return _Ccy; } }
 
         public IEnumerable<IAccountingElement> GetItemList()
         {
@@ -91,59 +58,30 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Account; }
 
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name, Price lastAmount)
+        public Price GetTotalAmount(Currency ccy, FXMarket fxMkt, AssetMarket aMkt)
         {
-            _LastAmount = null;
-            if (lastAmount != null)
-            {
-                _LastAmount = lastAmount;
-                if (!_LastAmount.Ccy.Equals(convCcy))
-                    // lastAmount should already converted since you need to convert it with prevFxmkt
-                    throw new Exception($"Last Amount {_LastAmount.Ccy} not converted in {convCcy.Ccy}!");
-            }
-
-            if (Ccy.IsCcy())
-                RecalculateAmount(mkt, convCcy.Ccy);
-            else
-                RecalculateAmount(aMkt, convCcy.Ccy);
-            return this;
+            return fxMkt.Convert(_Value, ccy, aMkt);
         }
 
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy, string name)
         {
-            return GetTotalAccount(mkt, aMkt, convCcy, null, null);
+            return new Account(name, GetTotalAmount(ccy, mkt, aMkt));
         }
 
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy)
+        {
+            return GetTotalAccount(mkt, aMkt, ccy, "TOTAL_ACCOUNT");
+        }
+
+        // explain what is string v?
         public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string v, object valueAmount)
         {
-            _Amount = Convert.ToDouble(valueAmount);
-            IMarket iMkt = mkt;
-            if (!_Ccy.IsCcy())
-                iMkt = aMkt;
-            _ConvertedAmount = _Amount * iMkt.GetQuote(_Ccy.CreateMarketInput(_ConvertedCcy));
-            _TotalAmount = _Amount * iMkt.GetQuote(_Ccy.CreateMarketInput(_TotalCcy));
+            Amount = Convert.ToDouble(valueAmount);
         }
 
         public void ModifyCcy(FXMarket mkt, AssetMarket aMkt, string v, ICcyAsset valueCcy, bool isLastRow)
         {
-            _Ccy = valueCcy;
-            IMarket iMkt = mkt;
-            if (!_Ccy.IsCcy())
-                iMkt = aMkt;
-            _ConvertedAmount = _Amount * iMkt.GetQuote(_Ccy.CreateMarketInput(_ConvertedCcy));
-            _TotalAmount = _Amount * iMkt.GetQuote(_Ccy.CreateMarketInput(_TotalCcy));
-        }
-
-        public void ModifyTotalCcy(FXMarket mkt, AssetMarket aMkt, Currency ccy)
-        {
-            if (_TotalCcy != ccy)
-            {
-                _TotalCcy = ccy;
-                IMarket iMkt = mkt;
-                if (!_Ccy.IsCcy())
-                    iMkt = aMkt;
-                _TotalAmount = _Amount * iMkt.GetQuote(_Ccy.CreateMarketInput(_TotalCcy));
-            }
+            Ccy = valueCcy;
         }
 
         public void Delete(string v)
@@ -151,16 +89,12 @@ namespace Core
             throw new NotImplementedException();
         }
 
-        public SummaryReport GetSummary()
-        {
-            return new SummaryReport(CcyRef, Amount);
-        }
+        //public SummaryReport GetSummary()
+        //{
+        //    return new SummaryReport(CcyRef, Amount);
+        //}
 
-        public Price GetTotalAmount(Currency ccy, FXMarket fxMkt)
-        {
-            double value = TotalAmount * fxMkt.GetQuote(new CurrencyPair(_TotalCcy, ccy));
-            return new Price(value, ccy);
-        }
+
 
         #endregion
 
@@ -170,10 +104,8 @@ namespace Core
         {
             if (acc == null)
                 return false;
-            return _AccountName == acc._AccountName
-                && _Ccy.Ccy == acc._Ccy.Ccy
-                && _Ccy.Asset == acc._Ccy.Asset
-                && _Amount == acc._Amount;
+            return AccountName == acc.AccountName
+                    && Value == acc.Value;
         }
 
         public override bool Equals(object obj)
@@ -181,18 +113,10 @@ namespace Core
             return this.Equals(obj as Account);
         }
 
-        internal void RecalculateConvertedAmount(Currency ccy, FXMarket mkt, AssetMarket aMkt)
-        {
-            _ConvertedCcy = ccy;
-            IMarket iMkt = mkt;
-            if (!_Ccy.IsCcy())
-                iMkt = aMkt;
-            _ConvertedAmount = _Amount * iMkt.GetQuote(_Ccy.CreateMarketInput(_ConvertedCcy));
-        }
 
         public override int GetHashCode()
         {
-            return _AccountName.GetHashCode() + _Ccy.GetHashCode() + _Amount.GetHashCode();
+            return AccountName.GetHashCode() + Value.GetHashCode();
         }
 
         public static bool operator ==(Account acc1, Account acc2)
@@ -216,63 +140,34 @@ namespace Core
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Name", _AccountName, typeof(string));
-            info.AddValue("Currency", _Ccy.Ccy, typeof(Currency));
-            info.AddValue("Asset", _Ccy.Asset, typeof(Asset));
-            info.AddValue("Amount", _Amount, typeof(double));
+            info.AddValue("Name", AccountName, typeof(string));
+            info.AddValue("Value", Value, typeof(Currency));
         }
 
         public Account(SerializationInfo info, StreamingContext context)
         {
             _AccountName = (string)info.GetValue("Name", typeof(string));
-            Currency ccy = (Currency)info.GetValue("Currency", typeof(Currency));
-            if (!(ccy == null))
-                _Ccy = (ICcyAsset)ccy;
-            else
-                _Ccy = (ICcyAsset)info.GetValue("Asset", typeof(Asset));
-            _Amount = (double)info.GetValue("Amount", typeof(double));
+            _Value = (Price)info.GetValue("Value", typeof(Price));
         }
 
         #endregion
 
-        public Account(string name, ICcyAsset ccy, double amount = 0, bool isCalculatedAccount = false, Price lastAmount = null)
+        public Account() { }
+
+        public Account(string name, ICcyAsset ccy, double amount = 0)
         {
             _AccountName = name;
-            _Ccy = ccy;
-            _TotalCcy = ccy.Ccy;
-            _ConvertedCcy = ccy.Ccy;
-            _IsCalculatedAccount = isCalculatedAccount;
-            _Amount = amount;
-            _LastAmount = lastAmount;
-            _ConvertedAmount = amount;
+            _Value = new Price(amount, ccy);
+        }
+        public Account(string name, Price price)
+        {
+            _AccountName = name;
+            _Value = (Price)price.Clone();
         }
 
-        internal void RecalculateAmount(IMarket mkt, Currency ccyRef, bool forceRecalc = true)
+        public object Clone()
         {
-            if (forceRecalc || ccyRef != _ConvertedCcy)
-            {
-                _ConvertedCcy = ccyRef;
-                _ConvertedAmount = _Amount * mkt.GetQuote(_Ccy.CreateMarketInput(ccyRef));
-            }
-        }
-
-        internal void RefreshTotalAmount(FXMarket fXMarket, AssetMarket assetMarket)
-        {
-            IMarket iMkt = fXMarket;
-            if (!Ccy.IsCcy())
-                iMkt = assetMarket;
-            _TotalAmount = _Amount * iMkt.GetQuote(_Ccy.CreateMarketInput(_TotalCcy));
-        }
-
-        // function to set TotalCcy for copying process purposes
-        internal void SetTotalCcy(Currency totalCcy)
-        {
-            _TotalCcy = totalCcy;
-        }
-
-        internal Account Copy()
-        {
-            return new Account(_AccountName, _Ccy, _Amount, false);
+            return new Account(AccountName, (Price)Value.Clone());
         }
     }
 }

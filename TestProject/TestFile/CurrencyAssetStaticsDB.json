@@ -17,11 +17,11 @@
       "ThousandMark": 3,
       "PricingCcyPair": {
         "$type": "Core.Finance.CurrencyPair, Core",
-        "_Ccy1": {
+        "_Ccy": {
           "$type": "Core.Finance.Currency, Core",
           "Ccy": "GBP"
         },
-        "_Ccy2": {
+        "_CcyPrice": {
           "$type": "Core.Finance.Currency, Core",
           "Ccy": "EUR"
         }
@@ -35,11 +35,11 @@
       "ThousandMark": 4,
       "PricingCcyPair": {
         "$type": "Core.Finance.CurrencyPair, Core",
-        "_Ccy1": {
+        "_Ccy": {
           "$type": "Core.Finance.Currency, Core",
           "Ccy": "GBP"
         },
-        "_Ccy2": {
+        "_CcyPrice": {
           "$type": "Core.Finance.Currency, Core",
           "Ccy": "JPY"
         }

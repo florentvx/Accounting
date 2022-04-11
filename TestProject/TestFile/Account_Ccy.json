@@ -1,10 +1,13 @@
 {
   "$type": "Core.Account, Core",
   "Name": "Checking",
-  "Currency": {
-    "$type": "Core.Finance.Currency, Core",
-    "Ccy": "EUR"
-  },
-  "Asset": null,
-  "Amount": 1000.0
+  "Value": {
+    "$type": "Core.Finance.Price, Core",
+    "Amount": 1000.0,
+    "Currency": {
+      "$type": "Core.Finance.Currency, Core",
+      "Ccy": "EUR"
+    },
+    "Asset": null
+  }
 }

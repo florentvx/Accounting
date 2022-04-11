@@ -304,20 +304,21 @@ namespace Core
             Map = new TreeViewMappingElement("Root");
         }
 
-        public TreeViewMapping(List<Category> data)
-        {
-            Reset();
-            foreach (var itemC in data)
-            {
-                TreeViewMappingElement Map2 = Map.AddElement(itemC.CategoryName);
-                foreach (var itemI in itemC.Institutions)
-                {
-                    TreeViewMappingElement Map3 = Map2.AddElement(itemI.InstitutionName);
-                    foreach (var itemA in itemI.Accounts)
-                        Map3.AddElement(itemA.AccountName);
-                }
-            }
-        }
+        public TreeViewMapping() { }
+        //public TreeViewMapping(List<Category> data)
+        //{
+        //    Reset();
+        //    foreach (var itemC in data)
+        //    {
+        //        TreeViewMappingElement Map2 = Map.AddElement(itemC.CategoryName);
+        //        foreach (var itemI in itemC.Institutions)
+        //        {
+        //            TreeViewMappingElement Map3 = Map2.AddElement(itemI.InstitutionName);
+        //            foreach (var itemA in itemI.Accounts)
+        //                Map3.AddElement(itemA.AccountName);
+        //        }
+        //    }
+        //}
 
         public TreeViewMappingElement GetElement(NodeAddress na)
         {

@@ -37,16 +37,6 @@ namespace Core.Finance
             _Data = new List<KeyValuePair<CurrencyPair, double>> { };
         }
 
-        //[JsonProperty]
-        //public List<KeyValuePair<CurrencyPair, double>> SerializedData
-        //{
-        //    get { return _Data.Select(x => new KeyValuePair<CurrencyPair, double>((CurrencyPair)x.Key, x.Value)).ToList(); }
-        //    set
-        //    {
-        //        _Data = value.ToDictionary(x => x.Key, x => x.Value);
-        //    }
-        //}
-
         #region ISerializable
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -63,83 +53,81 @@ namespace Core.Finance
 
         #endregion
 
-        private IEnumerable<ICcyAsset> GetAllConnectedCcy(ICcyAsset ccy, List<ICcyAsset> excludedCcies)
+        // simplest GetQuote function that looks if adequate data is there
+        private double? GetQuote_Simple(CurrencyPair cp)
         {
-            return _Data.Where(x => x.Key.Contains(ccy) && !excludedCcies.Contains(x.Key.OtherAsset(ccy)))
-                        .Select(x => x.Key.OtherAsset(ccy));
+            var filtered_list = _Data.Where(x => x.Key.IsEquivalent(cp)).Select(x => x);
+            if (filtered_list.Count() == 0) return null;
+            if (filtered_list.Count() == 1)
+            {
+                KeyValuePair<CurrencyPair, double> cp_data = filtered_list.First();
+                if (cp_data.Key.Equals(cp)) return cp_data.Value;
+                return 1 / cp_data.Value;
+            }
+            throw new NotImplementedException("filtered list should have only one item...");
+
         }
 
-        private double Aux_GetQuote(ICcyAsset ccy, ICcyAsset ccy2, List<ICcyAsset> excludedCcies)
+        // List all the currencies linked to `ccy` (not part of the `excludedCcies` list)
+        private IEnumerable<Currency> GetAllConnectedCcy(ICcyAsset ccy)
         {
-            var connectedCcies = GetAllConnectedCcy(ccy, excludedCcies);
+            return _Data    .Where( x => x.Key.Contains(ccy) )
+                            .Select( x => x.Key.Other(ccy).Ccy );
+        }
+
+
+        // Calcule through a triangular operation (because you have to!)
+        private double Aux_GetQuote(CurrencyPair ccyPair)
+        {
+            var connectedCcies = GetAllConnectedCcy(ccyPair.Ccy);
             if (connectedCcies.Count() == 0)
                 return 0;
-            else if (connectedCcies.Contains(ccy2))
-                return GetQuote(new CurrencyPair(ccy, ccy2));
+            else if (connectedCcies.Contains(ccyPair.CcyPrice))
+                throw new InvalidOperationException("ccyPrice should not be part of the commected ccies by construction");
             else
             {
                 foreach (var ccy_k in connectedCcies)
                 {
-                    List<ICcyAsset> exL_k = excludedCcies.Select(x => (ICcyAsset)x.Ccy.Clone()).ToList();
-                    exL_k.Add(ccy);
-                    double value = GetQuote(new CurrencyPair(ccy, ccy_k));
-                    value *= Aux_GetQuote(ccy_k.Ccy, ccy2, exL_k);
-                    if (value != 0)
-                        return value;
+                    // made a strong assumption that there is a triangular relationship
+                    double value = GetQuote_Simple(new CurrencyPair(ccyPair.Ccy, ccy_k)).Value;
+                    double? value2 = GetQuote_Simple(new CurrencyPair(ccy_k.Ccy, ccyPair.CcyPrice));
+                    if (value2.HasValue)
+                        return value * value2.Value;
                 }
             }
-            throw new Exception("Error in Aux_GetQuote()");
+            throw new Exception("Error");
         }
 
-        public double GetQuote(IMarketInput ccyPair)
+        public double GetQuote(CurrencyPair ccyPair)
         {
             if (ccyPair.IsIdentity)
                 return 1.0;
 
-            var data = GetData();
+            double? naive_value = GetQuote_Simple(ccyPair);
+            if (naive_value != null)
+                return naive_value.Value;
 
-            // Find exact CcyPair
-            var presentData = data .Where(x => x.Key.IsEquivalent(ccyPair))
-                                    .Select(x => (CurrencyPair)x.Key)
-                                    .ToList();
-            if (presentData.Count() == 1)
-            {
-                if (presentData[0].IsEqual(ccyPair))
-                    return data[presentData[0]];
-                else
-                    return 1 / data[presentData[0]];
-            }
-
-            // Find triangle
-            var ccyPairData = _Data.Where(x => x.Key.Contains(ccyPair.Ccy1) || x.Key.Contains(ccyPair.Ccy2));
-            var ccyData = ccyPairData   .Select(x => x.Key.Ccy1 == ccyPair.Ccy1 || x.Key.Ccy1 == ccyPair.Ccy2 ? x.Key.Ccy2 : x.Key.Ccy1)
-                                        .ToList();
-            
-            try
-            {
-                return Aux_GetQuote(ccyPair.Ccy1, ccyPair.Ccy2, new List<ICcyAsset> { });
-            }
-            catch (Exception)
-            {
-                throw new Exception($"Issue with Data for {ccyPair.ToString()}");
-            }
+            return Aux_GetQuote(ccyPair);
         }
 
         public Price ConvertPrice(Price p, Currency ccy)
         {
+            if (!p.Ccy.IsCcy())
+                throw new InvalidOperationException($"price input has to be a currency not an asset: {p.ToString()}");
             double conv = GetQuote(new CurrencyPair(p.Ccy, ccy));
-            return new Price(conv * p.Value, ccy);
+            return new Price(conv * p.Amount, ccy);
         }
 
-        //public string CcyToString(Currency ccy, double value)
-        //{
-        //    return _CcyDB.CcyToString(ccy, value);
-        //}
+        internal Price Convert(Price price, Currency ccy, AssetMarket aMkt)
+        {
+            return ConvertPrice(price.Ccy.IsCcy()? price : aMkt.PriceAsset(price), ccy);
+        }
+
 
         public IEnumerable<string> GetAvailableCurrencies()
         {
-            var Ccy1List = _Data.Select(x => x.Key.Ccy1.ToString());
-            var Ccy2List = _Data.Select(x => x.Key.Ccy2.ToString());
+            var Ccy1List = _Data.Select(x => x.Key.Ccy.ToString());
+            var Ccy2List = _Data.Select(x => x.Key.CcyPrice.ToString());
             var res = Ccy1List.Union(Ccy2List).ToList();
             if (!res.Contains(CcyRef.ToString()))
                 res.Add(CcyRef.ToString());
