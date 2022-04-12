@@ -18,14 +18,62 @@ namespace Core
         [JsonProperty]
         string _InstitutionName;
         [JsonProperty]
-        Currency _Ccy;
+        Currency _CcyRef;
         [JsonProperty]
         List<Account> _Accounts;
 
-        Currency _TotalCcy = new Currency("NONE");
-        double _TotalAmount = 0;
+        public Currency CcyRef
+        {
+            get { return _CcyRef; }
+            set { _CcyRef = value; }
+        }
 
-        public double TotalAmount { get { return _TotalAmount; } }
+
+        #region IAccountingElement
+
+        public string GetName() { return InstitutionName; }
+
+        public ICcyAsset Ccy { get { return CcyRef; } }
+
+        public IEnumerable<IAccountingElement> GetItemList() => _Accounts;
+
+        public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
+        {
+            return GetAccounts(tvme);
+        }
+
+        public NodeType GetNodeType() { return NodeType.Institution; }
+
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy, string name)
+        {
+            return TotalAccount(mkt, aMkt, ccy, name);
+        }
+
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy)
+        {
+            return GetTotalAccount(mkt, aMkt, ccy, "Total");
+        }
+
+        public void Delete(string v)
+        {
+            if (GetItemList().Count() > 1)
+            {
+                Account accDel = _Accounts.Where(x => x.AccountName == v).First();
+                _Accounts.Remove(accDel);
+            }
+        }
+
+        //public SummaryReport GetSummary()
+        //{
+        //    SummaryReport sr = new SummaryReport();
+        //    foreach (var item in Accounts)
+        //    {
+        //        sr.Add(item.GetSummary());
+        //    }
+        //    return sr;
+        //}
+
+        #endregion
 
         #region IInstitution
 
@@ -35,12 +83,6 @@ namespace Core
             set { _InstitutionName = value; }
         }
 
-        public Currency Ccy
-        {
-            get { return _Ccy; }
-            set { _Ccy = value; }
-        }
-
         public IEnumerable<IAccount> Accounts { get { return _Accounts; } }
 
         public IEnumerable<IAccount> GetAccounts(TreeViewMappingElement tvme)
@@ -48,129 +90,14 @@ namespace Core
             return tvme.Nodes.Select(x => GetAccount(x.Name));
         }
 
-        public IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideAccountName, Price lastAmount)
-        {
-            double total = 0;
-            foreach (var x in _Accounts)
-                total += x.GetTotalAccount(mkt, aMkt, Ccy).ConvertedAmount;
-            Account res = new Account(overrideAccountName, Ccy, total, isCalculatedAccount: true, (lastAmount == null) ? null : mkt.ConvertPrice(lastAmount, convCcy));
-            res.RecalculateAmount(mkt, convCcy);
-            return res;
-        }
-
         public IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy)
         {
-            return TotalAccount(mkt, aMkt, convCcy, "Total", null);
+            return TotalAccount(mkt, aMkt, convCcy, "Total");
         }
 
         #endregion
 
-        #region IAccountingElement
 
-        public string GetName() { return InstitutionName; }
-
-        public ICcyAsset CcyRef { get { return _Ccy; } }
-
-        public IEnumerable<IAccountingElement> GetItemList() => _Accounts;
-
-        public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
-        {
-            return (IEnumerable<IAccountingElement>)GetAccounts(tvme);
-        }
-
-        public NodeType GetNodeType() { return NodeType.Institution; }
-
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name, Price lastAmount)
-        {
-            return TotalAccount(mkt, aMkt, convCcy.Ccy, name, lastAmount);
-        }
-
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy)
-        {
-            return GetTotalAccount(mkt, aMkt, convCcy, "Total", null);
-        }
-
-        public void RecalculateAmount(Account acc, FXMarket mkt, AssetMarket aMkt, bool forceRecalc = true)
-        {
-            if (acc.Ccy.IsCcy())
-                acc.RecalculateAmount(mkt, Ccy, forceRecalc);
-            else
-                acc.RecalculateAmount(aMkt, Ccy, forceRecalc);
-        }
-
-        public void RefreshTotal(FXMarket fxMkt, AssetMarket aMkt, Currency ccy)
-        {
-            _TotalAmount = 0;
-            foreach (Account acc in Accounts)
-            {
-                acc.ModifyTotalCcy(fxMkt, aMkt, ccy);
-                _TotalAmount += acc.TotalAmount;
-            }
-        }
-
-        public event EventHandler<ModifyAmountEventArgs> ModifyAmountEventHandler;
-
-        public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string accountName, object value)
-        {
-            Account acc = GetAccount(accountName);
-            acc.ModifyAmount(mkt, aMkt, "", value);
-            RefreshTotal(mkt, aMkt, _TotalCcy);
-            ModifyAmountEventArgs e = new ModifyAmountEventArgs();
-            ModifyAmountEventHandler?.Invoke(this, e);
-        }
-
-        public void ModifyCcy(FXMarket mkt, AssetMarket aMkt, string accountName, ICcyAsset value, bool IsLastRow)
-        {
-            if (IsLastRow)
-            {
-                Ccy = value.Ccy;
-                foreach (Account item in Accounts)
-                {
-                    item.RecalculateConvertedAmount(Ccy, mkt, aMkt);
-                }
-            }
-            else
-            {
-                Account acc = GetAccount(accountName);
-                acc.ModifyCcy(mkt, aMkt, "", value, false);
-            }
-        }
-
-        public void ModifyTotalCcy(FXMarket mkt, AssetMarket aMkt, Currency ccy)
-        {
-            if (_TotalCcy != ccy)
-            {
-                _TotalCcy = ccy;
-                RefreshTotal(mkt, aMkt, ccy);
-            }
-        }
-
-        public void Delete(string v)
-        {
-            if(GetItemList().Count() > 1)
-            {
-                Account accDel = _Accounts.Where(x => x.AccountName == v).First();
-                _Accounts.Remove(accDel);
-            }
-        }
-
-        public SummaryReport GetSummary()
-        {
-            SummaryReport sr = new SummaryReport();
-            foreach (var item in Accounts)
-            {
-                sr.Add(item.GetSummary());
-            }
-            return sr;
-        }
-
-        public Price GetTotalAmount(Currency ccy, FXMarket fxMkt)
-        {
-            double value = TotalAmount * fxMkt.GetQuote(new CurrencyPair(_TotalCcy, ccy));
-            return new Price(value, ccy);
-        }
-
-        #endregion
 
         #region IEquatable
 
@@ -179,7 +106,7 @@ namespace Core
             if (instit == null)
                 return false;
             if (_InstitutionName == instit._InstitutionName
-                && _Ccy == instit._Ccy
+                && Ccy == instit.Ccy
                 && _Accounts.Count == instit._Accounts.Count)
             {
                 for (int i = 0; i < _Accounts.Count; i++)
@@ -200,7 +127,7 @@ namespace Core
 
         public override int GetHashCode()
         {
-            int res = _InstitutionName.GetHashCode() + _Ccy.GetHashCode();
+            int res = _InstitutionName.GetHashCode() + Ccy.GetHashCode();
             foreach (Account item in _Accounts)
                 res += item.GetHashCode();
             return res;
@@ -228,14 +155,14 @@ namespace Core
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Name", _InstitutionName, typeof(string));
-            info.AddValue("Currency", _Ccy, typeof(Currency));
+            info.AddValue("Currency", _CcyRef, typeof(Currency));
             info.AddValue("Accounts", _Accounts, typeof(List<Account>));
         }
 
         public Institution(SerializationInfo info, StreamingContext context)
         {
             _InstitutionName = (string)info.GetValue("Name", typeof(string));
-            _Ccy = (Currency)info.GetValue("Currency", typeof(Currency));
+            _CcyRef = (Currency)info.GetValue("Currency", typeof(Currency));
             _Accounts = (List<Account>)info.GetValue("Accounts", typeof(List<Account>));
         }
 
@@ -244,8 +171,7 @@ namespace Core
         public Institution(string name, Currency ccy)
         {
             _InstitutionName = name;
-            Ccy = ccy;
-            _TotalCcy = ccy;
+            _CcyRef = ccy;
             _Accounts = new List<Account> { };
         }
 
@@ -308,42 +234,29 @@ namespace Core
             List<Account> res = new List<Account> { };
             foreach (string item in enumerable)
             {
-                res.Add(GetAccount(item).Copy());
+                res.Add((Account)GetAccount(item).Clone());
             }
             _Accounts = res;
         }
 
-        internal Institution Copy()
+        public IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy, string overrideAccountName)
         {
-            Institution res = new Institution(_InstitutionName, (Currency)_Ccy.Clone());
-            foreach (var item in _Accounts)
-            {
-                Account copyItem = item.Copy();
-                copyItem.SetTotalCcy(_TotalCcy);
-                res.AddAccount(copyItem);
-            }
+            Price total = new Price(0, (Currency)ccy.Clone());
+            foreach (var x in _Accounts)
+                total += x.GetTotalAccount(mkt, aMkt, ccy).Value;
+            Account res = new Account(overrideAccountName, total);
             return res;
         }
 
-        internal void RefreshTotalAmount(FXMarket fXMarket, AssetMarket assetMarket)
+        internal Institution Copy()
         {
-            _TotalAmount = 0;
-            foreach (Account item in Accounts)
+            Institution res = new Institution(InstitutionName, (Currency)Ccy.Clone());
+            foreach (var item in _Accounts)
             {
-                item.RefreshTotalAmount(fXMarket, assetMarket);
-                _TotalAmount += item.TotalAmount;
+                Account copyItem = (Account)item.Clone();
+                res.AddAccount(copyItem);
             }
-        }
-
-        internal void PrepareForLoading(Currency ccy, FXMarket fXMarket, AssetMarket assetMarket)
-        {
-            _TotalCcy = ccy;
-            _TotalAmount = 0;
-            foreach (Account item in Accounts)
-            {
-                item.ModifyTotalCcy(fXMarket, assetMarket, ccy);
-                _TotalAmount += item.TotalAmount;
-            }
+            return res;
         }
     }
 }

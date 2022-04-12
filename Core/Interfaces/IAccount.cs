@@ -12,6 +12,8 @@ namespace Core.Interfaces
         string AccountName { get; set; }
         Price Value { get; }
         double Amount { get; set; }
+        void ModifyAmount(double valueAmount);
+        void ModifyCcy(ICcyAsset Ccy);
 
     }
 }

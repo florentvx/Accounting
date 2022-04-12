@@ -20,28 +20,6 @@ namespace Core
 
         public Price Value { get { return _Value; } }
 
-        #region IAccount
-
-        public string AccountName
-        {
-            get { return _AccountName; }
-            set { _AccountName = value; }
-        }
-
-        public ICcyAsset Ccy
-        {
-            get { return _Value.Ccy; }
-            set { _Value.Ccy = value; }
-        }
-
-        public double Amount
-        {
-            get { return _Value.Amount; }
-            set { Value.Amount = value; }
-        }
-
-        #endregion
-
         #region IAccountingElement
 
         public string GetName() { return AccountName; }
@@ -73,17 +51,6 @@ namespace Core
             return GetTotalAccount(mkt, aMkt, ccy, "TOTAL_ACCOUNT");
         }
 
-        // explain what is string v?
-        public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string v, object valueAmount)
-        {
-            Amount = Convert.ToDouble(valueAmount);
-        }
-
-        public void ModifyCcy(FXMarket mkt, AssetMarket aMkt, string v, ICcyAsset valueCcy, bool isLastRow)
-        {
-            Ccy = valueCcy;
-        }
-
         public void Delete(string v)
         {
             throw new NotImplementedException();
@@ -95,6 +62,39 @@ namespace Core
         //}
 
 
+
+        #endregion
+
+        #region IAccount
+
+        public string AccountName
+        {
+            get { return _AccountName; }
+            set { _AccountName = value; }
+        }
+
+        public ICcyAsset Ccy
+        {
+            get { return _Value.Ccy; }
+            set { _Value.Ccy = value; }
+        }
+
+        public double Amount
+        {
+            get { return _Value.Amount; }
+            set { Value.Amount = value; }
+        }
+
+        // explain what is string v?
+        public void ModifyAmount(double valueAmount)
+        {
+            Amount = Convert.ToDouble(valueAmount);
+        }
+
+        public void ModifyCcy(ICcyAsset valueCcy)
+        {
+            Ccy = valueCcy;
+        }
 
         #endregion
 

@@ -36,6 +36,15 @@ namespace Core.Finance
             return new Price(_Amount, (ICcyAsset)_Ccy.Clone());
         }
 
+        public static Price operator +(Price p1, Price p2)
+        {
+            if (p1.Ccy != p2.Ccy)
+            {
+                throw new InvalidOperationException("sum of price in different ccies");
+            }
+            return new Price(p1.Amount + p2.Amount, p1.Ccy);
+        }
+
         public override string ToString()
         {
             return $"PRICE: {_Amount} {_Ccy}";
@@ -49,6 +58,18 @@ namespace Core.Finance
             info.AddValue("Currency", Ccy.Ccy, typeof(Currency));
             info.AddValue("Asset", Ccy.Asset, typeof(Asset));
         }
+
+        public Price(SerializationInfo info, StreamingContext context)
+        {
+            Amount = (double)info.GetValue("Amount", typeof(double));
+            Currency ccy = (Currency)info.GetValue("Currency", typeof(Currency));
+            if (!(ccy == null))
+                Ccy = (ICcyAsset)ccy;
+            else
+                Ccy = (ICcyAsset)info.GetValue("Asset", typeof(Asset));
+        }
+
+        #endregion
 
         #region IEquatable
 
@@ -81,19 +102,6 @@ namespace Core.Finance
         public static bool operator !=(Price p1, Price p2)
         {
             return !(p1 == p2);
-        }
-
-
-        #endregion
-
-        public Price(SerializationInfo info, StreamingContext context)
-        {
-            Amount = (double)info.GetValue("Amount", typeof(double));
-            Currency ccy = (Currency)info.GetValue("Currency", typeof(Currency));
-            if (!(ccy == null))
-                Ccy = (ICcyAsset)ccy;
-            else
-                Ccy = (ICcyAsset)info.GetValue("Asset", typeof(Asset));
         }
 
         #endregion
