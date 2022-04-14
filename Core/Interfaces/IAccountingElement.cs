@@ -17,7 +17,7 @@ namespace Core.Interfaces
         IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy, string overrideName);
         IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy);
         void Delete(string name); //Delete an item from the ItemList
-        //SummaryReport GetSummary();
-        //Price GetTotalAmount(Currency Ccy, FXMarket fxMkt);
+        SummaryReport GetSummary();
+        
     }
 }

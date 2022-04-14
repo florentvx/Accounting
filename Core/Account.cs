@@ -51,15 +51,15 @@ namespace Core
             return GetTotalAccount(mkt, aMkt, ccy, "TOTAL_ACCOUNT");
         }
 
-        public void Delete(string v)
+        public void Delete(string name)
         {
             throw new NotImplementedException();
         }
 
-        //public SummaryReport GetSummary()
-        //{
-        //    return new SummaryReport(CcyRef, Amount);
-        //}
+        public SummaryReport GetSummary()
+        {
+            return new SummaryReport(Ccy, Amount);
+        }
 
         public object Clone()
         {

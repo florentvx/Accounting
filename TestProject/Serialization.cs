@@ -203,15 +203,15 @@ namespace TestProject
             Assert.IsTrue(tvme == desTvme);
         }
 
-        //[TestMethod]
-        //public void TreeViewMapping()
-        //{
-        //    List<Category> list = new List<Category> { Init.CreateCategory1(), Init.CreateCategory2() };
-        //    TreeViewMapping tvm = new TreeViewMapping(list);
-        //    string fileName = SerializeObject(tvm, "TreeViewMapping");
-        //    TreeViewMapping desTvm = DeserializeObject<TreeViewMapping>(fileName);
-        //    Assert.IsTrue(tvm == desTvm);
-        //}
+        [TestMethod]
+        public void TreeViewMapping()
+        {
+            List<Category> list = new List<Category> { Init.CreateCategory1(), Init.CreateCategory2() };
+            TreeViewMapping tvm = new TreeViewMapping(list);
+            string fileName = SerializeObject(tvm, "TreeViewMapping");
+            TreeViewMapping desTvm = DeserializeObject<TreeViewMapping>(fileName);
+            Assert.IsTrue(tvm == desTvm);
+        }
 
         //[TestMethod]
         //public void AccountingData()

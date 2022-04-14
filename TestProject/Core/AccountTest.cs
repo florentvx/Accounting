@@ -117,27 +117,27 @@ namespace Test.Core
                         );
         }
 
-        //[TestMethod]
-        //public void GetSummary_CcyTest()
-        //{
-        //    Account acc = Init.CreateAccountCurrency1();
-        //    SummaryReport summ = acc.GetSummary();
-        //    Assert.IsTrue(  
-        //                    summ.Count == 1
-        //                    && summ.Get(Init.Ccy1()) == acc.Amount
-        //                );
-        //}
+        [TestMethod]
+        public void GetSummary_CcyTest()
+        {
+            Account acc = Init.CreateAccountCurrency1();
+            SummaryReport summ = acc.GetSummary();
+            Assert.IsTrue(
+                            summ.Count == 1
+                            && summ.Get(Init.Ccy1()) == acc.Amount
+                        );
+        }
 
-        //[TestMethod]
-        //public void GetSummary_AssetTest()
-        //{
-        //    Account acc = Init.CreateAccountAsset1();
-        //    SummaryReport summ = acc.GetSummary();
-        //    Assert.IsTrue(
-        //                    summ.Count == 1
-        //                    && summ.Get(Init.Asset1()) == acc.Amount
-        //                );
-        //}
+        [TestMethod]
+        public void GetSummary_AssetTest()
+        {
+            Account acc = Init.CreateAccountAsset1();
+            SummaryReport summ = acc.GetSummary();
+            Assert.IsTrue(
+                            summ.Count == 1
+                            && summ.Get(Init.Asset1()) == acc.Amount
+                        );
+        }
 
         [TestMethod]
         public void GetTotalAmount()

@@ -65,15 +65,15 @@ namespace Core
             }
         }
 
-        //public SummaryReport GetSummary()
-        //{
-        //    SummaryReport sr = new SummaryReport();
-        //    foreach (var item in Institutions)
-        //    {
-        //        sr.Add(item.GetSummary());
-        //    }
-        //    return sr;
-        //}
+        public SummaryReport GetSummary()
+        {
+            SummaryReport sr = new SummaryReport();
+            foreach (var item in Institutions)
+            {
+                sr.Add(item.GetSummary());
+            }
+            return sr;
+        }
 
         public object Clone()
         {

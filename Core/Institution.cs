@@ -28,7 +28,6 @@ namespace Core
             //set { _CcyRef = value; }
         }
 
-
         #region IAccountingElement
 
         public string GetName() { return InstitutionName; }
@@ -54,24 +53,24 @@ namespace Core
             return GetTotalAccount(mkt, aMkt, ccy, "Total");
         }
 
-        public void Delete(string v)
+        public void Delete(string name)
         {
             if (GetItemList().Count() > 1)
             {
-                Account accDel = _Accounts.Where(x => x.AccountName == v).First();
+                Account accDel = _Accounts.Where(x => x.AccountName == name).First();
                 _Accounts.Remove(accDel);
             }
         }
 
-        //public SummaryReport GetSummary()
-        //{
-        //    SummaryReport sr = new SummaryReport();
-        //    foreach (var item in Accounts)
-        //    {
-        //        sr.Add(item.GetSummary());
-        //    }
-        //    return sr;
-        //}
+        public SummaryReport GetSummary()
+        {
+            SummaryReport sr = new SummaryReport();
+            foreach (var item in Accounts)
+            {
+                sr.Add(item.GetSummary());
+            }
+            return sr;
+        }
 
         public object Clone()
         {
