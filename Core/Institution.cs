@@ -25,7 +25,7 @@ namespace Core
         public Currency CcyRef
         {
             get { return _CcyRef; }
-            set { _CcyRef = value; }
+            //set { _CcyRef = value; }
         }
 
 

@@ -15,7 +15,8 @@ namespace Core.Interfaces
         IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme);
         NodeType GetNodeType();
         IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy, string overrideName);
-        void Delete(string v); //Delete an item from the ItemList
+        IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy);
+        void Delete(string name); //Delete an item from the ItemList
         //SummaryReport GetSummary();
         //Price GetTotalAmount(Currency Ccy, FXMarket fxMkt);
     }

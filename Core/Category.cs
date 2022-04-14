@@ -17,19 +17,75 @@ namespace Core
         private string _CategoryName;
 
         [JsonProperty]
-        Currency _Ccy;
+        Currency _CcyRef;
 
         [JsonProperty]
         public List<Institution> _Institutions;
 
-        Currency _TotalCcy = new Currency("NONE");
-        double _TotalAmount = 0;
-        public double TotalAmount { get { return _TotalAmount; } }
-
+        public Currency CcyRef { get { return _CcyRef; } }
+           
         public Dictionary<string, Institution> InstitutionsDictionary
         {
             get { return _Institutions.ToDictionary(x => x.InstitutionName, x => x); }
         }
+
+        #region IAccountingElement
+
+        public string GetName() { return _CategoryName; }
+
+        public ICcyAsset Ccy { get { return CcyRef; } }
+
+        public IEnumerable<IAccountingElement> GetItemList()
+        {
+            return _Institutions.ToList<IAccountingElement>();
+        }
+
+        public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
+        {
+            return GetInstitutions(tvme);
+        }
+
+        public NodeType GetNodeType() { return NodeType.Category; }
+
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string name)
+        {
+            return TotalInstitution(mkt, aMkt, convCcy.Ccy, name);
+        }
+
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy)
+        {
+            return GetTotalAccount(mkt, aMkt, convCcy, "Total");
+        }
+
+        public void Delete(string name)
+        {
+            if (GetItemList().Count() > 1)
+            {
+                _Institutions = _Institutions.Where(x => x.InstitutionName != name).Select(x => x).ToList();
+            }
+        }
+
+        //public SummaryReport GetSummary()
+        //{
+        //    SummaryReport sr = new SummaryReport();
+        //    foreach (var item in Institutions)
+        //    {
+        //        sr.Add(item.GetSummary());
+        //    }
+        //    return sr;
+        //}
+
+        public object Clone()
+        {
+            Category res = new Category(CategoryName, (Currency)Ccy.Clone());
+            foreach (var item in _Institutions)
+            {
+                res.AddInstitution((Institution)item.Clone());
+            }
+            return res;
+        }
+
+        #endregion
 
         #region ICategory
 
@@ -39,108 +95,23 @@ namespace Core
             set { _CategoryName = value; }
         }
 
-        public Currency Ccy { get { return _Ccy; } }
-
         public IEnumerable<IInstitution> GetInstitutions(TreeViewMappingElement tvme)
         {
             return tvme.Nodes.Select(x => InstitutionsDictionary[x.Name]);
         }
 
-        public IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideName, Price lastAmount = null)
+        public IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency ccy, string overrideName)
         {
-            double total = 0;
+            Price total = new Price(0, ccy);
             foreach (var item in Institutions)
-                total += item.TotalAccount(mkt, aMkt, Ccy).ConvertedAmount;
-            Account acc = new Account(overrideName, Ccy, total, true, lastAmount);
-            acc.RecalculateAmount(mkt, convCcy);
+                total += item.GetTotalAccount(mkt, aMkt, ccy).Value;
+            Account acc = new Account(overrideName, total);
             return acc;
         }
 
         public IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy)
         {
             return TotalInstitution(mkt, aMkt, convCcy, "Total");
-        }
-
-        #endregion
-
-        #region IAccountingElement
-
-        public string GetName() { return _CategoryName; }
-
-        public ICcyAsset CcyRef { get{ return Ccy; } }
-
-        public IEnumerable<IAccountingElement> GetItemList()
-        {
-            return _Institutions.ToList<IAccountingElement>();
-        }
-
-        public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
-        {
-            return (IEnumerable<IAccountingElement>)GetInstitutions(tvme);
-        }
-
-        public NodeType GetNodeType() { return NodeType.Category; }
-
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy, string name, Price lastAmount)
-        {
-            return TotalInstitution(mkt, aMkt, convCcy.Ccy, name, lastAmount);
-        }
-
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, ICcyAsset convCcy)
-        {
-            return GetTotalAccount(mkt, aMkt, convCcy, "Total", null);
-        }
-
-        public void ModifyAmount(FXMarket mkt, AssetMarket aMkt, string v, object valueAmount)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ModifyCcy(FXMarket mkt, AssetMarket aMkt, string v, ICcyAsset valueCcy, bool isLastRow)
-        {
-            if (isLastRow)
-            {
-                _Ccy = valueCcy.Ccy;
-            }
-        }
-
-        public void ModifyTotalCcy(FXMarket mkt, AssetMarket aMkt, Currency ccy)
-        {
-            if (_TotalCcy != ccy)
-            {
-                _TotalCcy = ccy;
-                _TotalAmount = 0;
-                foreach (Institution instit in Institutions)
-                {
-                    instit.ModifyTotalCcy(mkt, aMkt, ccy);
-                    _TotalAmount += instit.TotalAmount;
-                }
-            }
-        }
-
-        public void Delete(string v)
-        {
-            if (GetItemList().Count() > 1)
-            {
-                _Institutions = _Institutions.Where(x => x.InstitutionName != v).Select(x => x).ToList();
-                //_Institutions.Remove(v);
-            }
-        }
-
-        public SummaryReport GetSummary()
-        {
-            SummaryReport sr = new SummaryReport();
-            foreach (var item in Institutions)
-            {
-                sr.Add(item.GetSummary());
-            }
-            return sr;
-        }
-
-        public Price GetTotalAmount(Currency ccy, FXMarket fxMkt)
-        {
-            double value = TotalAmount * fxMkt.GetQuote(new CurrencyPair(_TotalCcy, ccy));
-            return new Price(value, ccy);
         }
 
         #endregion
@@ -152,7 +123,7 @@ namespace Core
             if (cat == null)
                 return false;
             if (_CategoryName == cat._CategoryName
-                && _Ccy == cat._Ccy
+                && _CcyRef == cat._CcyRef
                 && _Institutions.Count == cat._Institutions.Count)
             {
                 for (int i = 0; i < _Institutions.Count; i++)
@@ -173,7 +144,7 @@ namespace Core
 
         public override int GetHashCode()
         {
-            int res = _CategoryName.GetHashCode() + _Ccy.GetHashCode();
+            int res = _CategoryName.GetHashCode() + _CcyRef.GetHashCode();
             foreach (Institution item in _Institutions)
                 res += item.GetHashCode();
             return res;
@@ -201,14 +172,14 @@ namespace Core
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Name", _CategoryName, typeof(string));
-            info.AddValue("Currency", _Ccy, typeof(Currency));
+            info.AddValue("Currency", _CcyRef, typeof(Currency));
             info.AddValue("Institutions", _Institutions, typeof(List<Institution>));
         }
 
         public Category(SerializationInfo info, StreamingContext context)
         {
             _CategoryName = (string)info.GetValue("Name", typeof(string));
-            _Ccy = (Currency)info.GetValue("Currency", typeof(Currency));
+            _CcyRef = (Currency)info.GetValue("Currency", typeof(Currency));
             _Institutions = (List<Institution>)info.GetValue("Institutions", typeof(List<Institution>));
         }
 
@@ -217,8 +188,7 @@ namespace Core
         public Category(string name, Currency ccy)
         {
             _CategoryName = name;
-            _Ccy = ccy;
-            _TotalCcy = ccy;
+            _CcyRef = ccy;
             _Institutions = new List<Institution> { };
         }
 
@@ -235,16 +205,16 @@ namespace Core
         public void AddInstitution(string name, Currency currency = null)
         {
             if (currency == null)
-                currency = Ccy;
+                currency = CcyRef;
             Institution instit = new Institution(name, currency);
             _Institutions.Add(instit);
-            instit.ModifyAmountEventHandler += this.UpdateTotalAmount;
+            //instit.ModifyAmountEventHandler += this.UpdateTotalAmount;
         }
 
         public void AddInstitution(Institution instit)
         {
             _Institutions.Add(instit);
-            instit.ModifyAmountEventHandler += this.UpdateTotalAmount;
+            //instit.ModifyAmountEventHandler += this.UpdateTotalAmount;
         }
 
         public Institution AddNewInstitution()
@@ -260,87 +230,42 @@ namespace Core
             AddInstitution(newName);
             Institution newInstit = GetInstitution(newName);
             newInstit.AddAccount("New Account");
-            newInstit.ModifyAmountEventHandler += this.UpdateTotalAmount;
+            //newInstit.ModifyAmountEventHandler += this.UpdateTotalAmount;
             return newInstit;
-        }
-
-        public void AddAccount(string name, string institutionName)
-        {
-            Institution instit = GetInstitution(institutionName);
-            instit.AddAccount(name, instit.Ccy);
         }
 
         public bool ChangeName(string before, string after, NodeAddress nodeTag)
         {
             bool test = false;
-            if (nodeTag.NodeType == NodeType.Institution)
+            switch (nodeTag.NodeType)
             {
-                if (InstitutionsDictionary.ContainsKey(before) && !InstitutionsDictionary.ContainsKey(after))
-                {
-                    Institution instit_before = GetInstitution(before);
-                    instit_before.InstitutionName = after;
-                    test = true;
-                }
-            }
-            else
-            {
-                test = GetInstitution(nodeTag.Address[1]).ChangeName(before, after, nodeTag);
+                case NodeType.Institution:
+                    if (InstitutionsDictionary.ContainsKey(before) && !InstitutionsDictionary.ContainsKey(after))
+                    {
+                        Institution instit_before = GetInstitution(before);
+                        instit_before.InstitutionName = after;
+                        test = true;
+                    }
+                    break;
+                case NodeType.Account:
+                    test = GetInstitution(nodeTag.Address[1]).ChangeName(before, after, nodeTag);
+                    break;
+                default:
+                    throw new InvalidOperationException();
             }
             return test;
         }
 
-        public event EventHandler<ModifyAmountEventArgs> ModifyAmountEventHandler;
-
-        public void UpdateTotalAmount(object sender, ModifyAmountEventArgs e)
-        {
-            _TotalAmount = 0;
-            foreach (Institution item in Institutions)
-            {
-                _TotalAmount += item.TotalAmount;
-            }
-            ModifyAmountEventHandler?.Invoke(this, e);
-        }
-
-        internal void RefreshTotalAmount(FXMarket fXMarket, AssetMarket assetMarket)
-        {
-            _TotalAmount = 0;
-            foreach (Institution item in Institutions)
-            {
-                item.RefreshTotalAmount(fXMarket, assetMarket);
-                _TotalAmount += item.TotalAmount;
-            }
-        }
-        
-        internal void PrepareForLoading(Currency ccy, FXMarket fXMarket, AssetMarket assetMarket)
-        {
-            _TotalCcy = ccy;
-            _TotalAmount = 0;
-            foreach (Institution item in Institutions)
-            {
-                item.PrepareForLoading(_TotalCcy, fXMarket, assetMarket);
-                item.ModifyAmountEventHandler += this.UpdateTotalAmount;
-                _TotalAmount += item.TotalAmount;
-            }
-        }
+        //public event EventHandler<ModifyAmountEventArgs> ModifyAmountEventHandler;
 
         internal void ReorgItems(IEnumerable<string> enumerable)
         {
             List<Institution> res = new List<Institution> { };
             foreach (string item in enumerable)
             {
-                res.Add(GetInstitution(item).Copy());
+                res.Add((Institution)GetInstitution(item).Clone());
             }
             _Institutions = res;
-        }
-
-        public Category Copy()
-        {
-            Category res = new Category(_CategoryName, (Currency)_Ccy.Clone());
-            foreach (var item in _Institutions)
-            {
-                res.AddInstitution(item.Copy());
-            }
-            return res;
         }
     }
 }

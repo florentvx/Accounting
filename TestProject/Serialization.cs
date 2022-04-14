@@ -166,14 +166,14 @@ namespace TestProject
             Assert.IsTrue(instit == desInstit);
         }
 
-        //[TestMethod]
-        //public void Category()
-        //{
-        //    Category cat = Init.CreateCategory1();
-        //    string fileName = SerializeObject(cat, "Category");
-        //    Category desCat = DeserializeObject<Category>(fileName);
-        //    Assert.IsTrue(cat == desCat);
-        //}
+        [TestMethod]
+        public void Category()
+        {
+            Category cat = Init.CreateCategory1();
+            string fileName = SerializeObject(cat, "Category");
+            Category desCat = DeserializeObject<Category>(fileName);
+            Assert.IsTrue(cat == desCat);
+        }
 
         private void FillTvme(TreeViewMappingElement tvme)
         {

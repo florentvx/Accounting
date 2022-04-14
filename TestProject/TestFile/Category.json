@@ -17,22 +17,28 @@
         {
           "$type": "Core.Account, Core",
           "Name": "Checking",
-          "Currency": {
-            "$type": "Core.Finance.Currency, Core",
-            "Ccy": "EUR"
-          },
-          "Asset": null,
-          "Amount": 1000.0
+          "Value": {
+            "$type": "Core.Finance.Price, Core",
+            "Amount": 1000.0,
+            "Currency": {
+              "$type": "Core.Finance.Currency, Core",
+              "Ccy": "EUR"
+            },
+            "Asset": null
+          }
         },
         {
           "$type": "Core.Account, Core",
           "Name": "Wallet",
-          "Currency": null,
-          "Asset": {
-            "$type": "Core.Finance.Asset, Core",
-            "Asset": "BTC"
-          },
-          "Amount": 0.0001
+          "Value": {
+            "$type": "Core.Finance.Price, Core",
+            "Amount": 0.0001,
+            "Currency": null,
+            "Asset": {
+              "$type": "Core.Finance.Asset, Core",
+              "Asset": "BTC"
+            }
+          }
         }
       ]
     },
@@ -47,22 +53,28 @@
         {
           "$type": "Core.Account, Core",
           "Name": "Checking2",
-          "Currency": {
-            "$type": "Core.Finance.Currency, Core",
-            "Ccy": "USD"
-          },
-          "Asset": null,
-          "Amount": 1500.0
+          "Value": {
+            "$type": "Core.Finance.Price, Core",
+            "Amount": 1500.0,
+            "Currency": {
+              "$type": "Core.Finance.Currency, Core",
+              "Ccy": "USD"
+            },
+            "Asset": null
+          }
         },
         {
           "$type": "Core.Account, Core",
           "Name": "Stocks",
-          "Currency": null,
-          "Asset": {
-            "$type": "Core.Finance.Asset, Core",
-            "Asset": "AAPL"
-          },
-          "Amount": 1.0
+          "Value": {
+            "$type": "Core.Finance.Price, Core",
+            "Amount": 1.0,
+            "Currency": null,
+            "Asset": {
+              "$type": "Core.Finance.Asset, Core",
+              "Asset": "AAPL"
+            }
+          }
         }
       ]
     }

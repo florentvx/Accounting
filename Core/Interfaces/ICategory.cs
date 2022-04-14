@@ -12,6 +12,6 @@ namespace Core.Interfaces
         string CategoryName { get; }
         IEnumerable<IInstitution> GetInstitutions(TreeViewMappingElement tvm);
         IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy);
-        IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideName, Price lastAmount);
+        IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string overrideName);
     }
 }

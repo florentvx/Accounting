@@ -94,20 +94,20 @@ namespace TestProject
             return instit;
         }
 
-        //public static Category CreateCategory1()
-        //{
-        //    Category cat = new Category("Category1", Ccy3());
-        //    cat.AddInstitution(CreateInstitution1());
-        //    cat.AddInstitution(CreateInstitution2());
-        //    return cat;
-        //}
+        public static Category CreateCategory1()
+        {
+            Category cat = new Category("Category1", Ccy3());
+            cat.AddInstitution(CreateInstitution1());
+            cat.AddInstitution(CreateInstitution2());
+            return cat;
+        }
 
-        //public static Category CreateCategory2()
-        //{
-        //    Category cat = new Category("Category", Ccy1());
-        //    cat.AddInstitution(CreateInstitution3());
-        //    return cat;
-        //}
+        public static Category CreateCategory2()
+        {
+            Category cat = new Category("Category", Ccy1());
+            cat.AddInstitution(CreateInstitution3());
+            return cat;
+        }
 
         public static FXMarket CreateFXMarket()
         {
