@@ -7,7 +7,7 @@ using Core.Finance;
 
 namespace Core.Interfaces
 {
-    public interface IAccountingElement
+    public interface IAccountingElement : ICloneable
     {
         string GetName();
         ICcyAsset Ccy { get; }

@@ -73,6 +73,17 @@ namespace Core
         //    return sr;
         //}
 
+        public object Clone()
+        {
+            Institution res = new Institution(InstitutionName, (Currency)Ccy.Clone());
+            foreach (var item in _Accounts)
+            {
+                Account copyItem = (Account)item.Clone();
+                res.AddAccount(copyItem);
+            }
+            return res;
+        }
+
         #endregion
 
         #region IInstitution
@@ -97,16 +108,14 @@ namespace Core
 
         #endregion
 
-
-
         #region IEquatable
 
         public bool Equals(Institution instit)
         {
             if (instit == null)
                 return false;
-            if (_InstitutionName == instit._InstitutionName
-                && Ccy == instit.Ccy
+            if (InstitutionName == instit.InstitutionName
+                && Ccy.Equals(instit.Ccy)
                 && _Accounts.Count == instit._Accounts.Count)
             {
                 for (int i = 0; i < _Accounts.Count; i++)
@@ -245,17 +254,6 @@ namespace Core
             foreach (var x in _Accounts)
                 total += x.GetTotalAccount(mkt, aMkt, ccy).Value;
             Account res = new Account(overrideAccountName, total);
-            return res;
-        }
-
-        internal Institution Copy()
-        {
-            Institution res = new Institution(InstitutionName, (Currency)Ccy.Clone());
-            foreach (var item in _Accounts)
-            {
-                Account copyItem = (Account)item.Clone();
-                res.AddAccount(copyItem);
-            }
             return res;
         }
     }

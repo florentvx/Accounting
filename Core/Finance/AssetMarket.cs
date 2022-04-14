@@ -62,7 +62,7 @@ namespace Core.Finance
             KeyValuePair<AssetCcyPair, double> data = _Data .Where(x => x.Key.Asset == price.Ccy.Asset)
                                                             .Select(x => x)
                                                             .First();
-            return new Price(price.Amount * data.Value, data.Key.Ccy);
+            return new Price(price.Amount * data.Value, data.Key.CcyPrice);
         }
 
         

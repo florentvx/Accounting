@@ -84,14 +84,14 @@ namespace TestProject
         }
 
 
-        //[TestMethod]
-        //public void AssetMarket()
-        //{
-        //    AssetMarket aMkt = Init.CreateAssetMarket();
-        //    string fileName = SerializeObject(aMkt, "AssetMarket");
-        //    AssetMarket desAMkt = DeserializeObject<AssetMarket>(fileName);
-        //    Assert.IsTrue(aMkt == desAMkt);
-        //}
+        [TestMethod]
+        public void AssetMarket()
+        {
+            AssetMarket aMkt = Init.CreateAssetMarket();
+            string fileName = SerializeObject(aMkt, "AssetMarket");
+            AssetMarket desAMkt = DeserializeObject<AssetMarket>(fileName);
+            Assert.IsTrue(aMkt == desAMkt);
+        }
 
         #endregion
 
@@ -157,14 +157,14 @@ namespace TestProject
             Assert.IsTrue(acc == desAcc);
         }
 
-        //[TestMethod]
-        //public void Institution()
-        //{
-        //    Institution instit = Init.CreateInstitution1();
-        //    string fileName = SerializeObject(instit, "Institution");
-        //    Institution desInstit = DeserializeObject<Institution>(fileName);
-        //    Assert.IsTrue(instit == desInstit);
-        //}
+        [TestMethod]
+        public void Institution()
+        {
+            Institution instit = Init.CreateInstitution1();
+            string fileName = SerializeObject(instit, "Institution");
+            Institution desInstit = DeserializeObject<Institution>(fileName);
+            Assert.IsTrue(instit == desInstit);
+        }
 
         //[TestMethod]
         //public void Category()

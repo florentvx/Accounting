@@ -71,28 +71,28 @@ namespace TestProject
             return new Account("Stocks", Asset2(), 1.0);
         }
 
-        //public static Institution CreateInstitution1()
-        //{
-        //    Institution instit = new Institution("Institution1", Ccy4());
-        //    instit.AddAccount(CreateAccountCurrency1());
-        //    instit.AddAccount(CreateAccountAsset1());
-        //    return instit;
-        //}
+        public static Institution CreateInstitution1()
+        {
+            Institution instit = new Institution("Institution1", Ccy4());
+            instit.AddAccount(CreateAccountCurrency1());
+            instit.AddAccount(CreateAccountAsset1());
+            return instit;
+        }
 
-        //public static Institution CreateInstitution2()
-        //{
-        //    Institution instit = new Institution("Institution2", Ccy2());
-        //    instit.AddAccount(CreateAccountCurrency2());
-        //    instit.AddAccount(CreateAccountAsset2());
-        //    return instit;
-        //}
+        public static Institution CreateInstitution2()
+        {
+            Institution instit = new Institution("Institution2", Ccy2());
+            instit.AddAccount(CreateAccountCurrency2());
+            instit.AddAccount(CreateAccountAsset2());
+            return instit;
+        }
 
-        //public static Institution CreateInstitution3()
-        //{
-        //    Institution instit = new Institution("Institution3", Ccy1());
-        //    instit.AddAccount(CreateAccountCurrency3());
-        //    return instit;
-        //}
+        public static Institution CreateInstitution3()
+        {
+            Institution instit = new Institution("Institution3", Ccy1());
+            instit.AddAccount(CreateAccountCurrency3());
+            return instit;
+        }
 
         //public static Category CreateCategory1()
         //{
@@ -116,14 +116,12 @@ namespace TestProject
             return mkt;
         }
 
-        //public static AssetMarket CreateAssetMarket(FXMarket populate_fx = null)
-        //{
-        //    AssetMarket aMkt = new AssetMarket();
-        //    aMkt.AddQuote(new AssetCcyPair(Asset3(), Ccy1()), 48.5);
-        //    aMkt.AddQuote(new AssetCcyPair(Asset1(), Ccy1()), 15000.0);
-        //    if (populate_fx != null)
-        //        aMkt.PopulateWithFXMarket(populate_fx);
-        //    return aMkt;
-        //}
+        public static AssetMarket CreateAssetMarket()
+        {
+            AssetMarket aMkt = new AssetMarket();
+            aMkt.AddQuote(new AssetCcyPair(Asset3(), Ccy1()), 48.5);
+            aMkt.AddQuote(new AssetCcyPair(Asset1(), Ccy1()), 15000.0);
+            return aMkt;
+        }
     }
 }

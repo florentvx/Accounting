@@ -110,17 +110,17 @@ namespace Core.Finance
             return Aux_GetQuote(ccyPair);
         }
 
-        public Price ConvertPrice(Price p, Currency ccy)
+        public Price Convert(Price p, Currency ccy)
         {
             if (!p.Ccy.IsCcy())
-                throw new InvalidOperationException($"price input has to be a currency not an asset: {p.ToString()}");
+                throw new InvalidOperationException($"price input has to be a currency not an asset: {p}");
             double conv = GetQuote(new CurrencyPair(p.Ccy, ccy));
             return new Price(conv * p.Amount, ccy);
         }
 
         internal Price Convert(Price price, Currency ccy, AssetMarket aMkt)
         {
-            return ConvertPrice(price.Ccy.IsCcy()? price : aMkt.PriceAsset(price), ccy);
+            return Convert(price.Ccy.IsCcy()? price : aMkt.PriceAsset(price), ccy);
         }
 
 

@@ -61,7 +61,10 @@ namespace Core
         //    return new SummaryReport(CcyRef, Amount);
         //}
 
-
+        public object Clone()
+        {
+            return new Account(AccountName, (Price)Value.Clone());
+        }
 
         #endregion
 
@@ -163,11 +166,6 @@ namespace Core
         {
             _AccountName = name;
             _Value = (Price)price.Clone();
-        }
-
-        public object Clone()
-        {
-            return new Account(AccountName, (Price)Value.Clone());
         }
     }
 }
