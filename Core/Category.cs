@@ -248,7 +248,7 @@ namespace Core
                     }
                     break;
                 case NodeType.Account:
-                    test = GetInstitution(nodeTag.Address[1]).ChangeName(before, after, nodeTag);
+                    test = GetInstitution(nodeTag.Address[1]).ChangeName(before, after);
                     break;
                 default:
                     throw new InvalidOperationException();

@@ -41,6 +41,8 @@ namespace Core
             return GetAccounts(tvme);
         }
 
+        public IEnumerable<string> AccountNames => _Accounts.Select(x => x.AccountName);
+
         public NodeType GetNodeType() { return NodeType.Institution; }
 
         public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy, string name)
@@ -93,9 +95,9 @@ namespace Core
             set { _InstitutionName = value; }
         }
 
-        public IEnumerable<IAccount> Accounts { get { return _Accounts; } }
+        public IEnumerable<Account> Accounts { get { return _Accounts; } }
 
-        public IEnumerable<IAccount> GetAccounts(TreeViewMappingElement tvme)
+        public IEnumerable<Account> GetAccounts(TreeViewMappingElement tvme)
         {
             return tvme.Nodes.Select(x => GetAccount(x.Name));
         }
@@ -185,9 +187,8 @@ namespace Core
 
         public Account GetAccount(string accountName)
         {
-            foreach (Account item in Accounts)
-                if (item.AccountName == accountName)
-                    return item;
+            var list = Accounts.Where(x => x.AccountName == accountName);
+            if (list.Count() > 0) { return list.First(); }
             throw new Exception($"Account Name [{accountName}] not found in Insitution [{InstitutionName}]");
         }
 
@@ -224,28 +225,26 @@ namespace Core
             return AddAccount(newName);
         }
 
-        public bool ChangeName(string before, string after, NodeAddress nodeTag)
+        public bool ChangeName(string before, string after)
         {
-            if (nodeTag.NodeType != NodeType.Account)
-                throw new Exception($"Node Tag Unknown! [{nodeTag.NodeType}]");
-            if (Accounts.Where(x => x.AccountName == after).Count() == 0)
+            if (!AccountNames.Contains(after))
             {
-                var acc = Accounts.Where(x => x.AccountName == before).FirstOrDefault();
+                var acc = GetAccount(before);
                 acc.AccountName = after;
                 return true;
             }
             return false;
         }
 
-        internal void ReorgItems(IEnumerable<string> enumerable)
-        {
-            List<Account> res = new List<Account> { };
-            foreach (string item in enumerable)
-            {
-                res.Add((Account)GetAccount(item).Clone());
-            }
-            _Accounts = res;
-        }
+        //internal void ReorgItems(IEnumerable<string> enumerable)
+        //{
+        //    List<Account> res = new List<Account> { };
+        //    foreach (string item in enumerable)
+        //    {
+        //        res.Add((Account)GetAccount(item).Clone());
+        //    }
+        //    _Accounts = res;
+        //}
 
         public IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy, string overrideAccountName)
         {

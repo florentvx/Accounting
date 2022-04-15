@@ -10,7 +10,7 @@ namespace Core.Interfaces
     public interface IInstitution : IAccountingElement
     {
         string InstitutionName { get; }
-        IEnumerable<IAccount> Accounts { get; }
-        IEnumerable<IAccount> GetAccounts(TreeViewMappingElement tvme);
+        IEnumerable<Account> Accounts { get; }
+        IEnumerable<Account> GetAccounts(TreeViewMappingElement tvme);
     }
 }
