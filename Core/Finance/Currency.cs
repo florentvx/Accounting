@@ -59,7 +59,7 @@ namespace Core.Finance
         {
             if (ccy == null)
                 return false;
-            return _Ccy == ccy._Ccy;
+            return _Ccy == ccy.Ccy.CcyString;
         }
 
         public override bool Equals(object obj)

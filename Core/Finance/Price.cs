@@ -38,7 +38,7 @@ namespace Core.Finance
 
         public static Price operator +(Price p1, Price p2)
         {
-            if (p1.Ccy != p2.Ccy)
+            if (!p1.Ccy.Equals(p2.Ccy))
             {
                 throw new InvalidOperationException("sum of price in different ccies");
             }
