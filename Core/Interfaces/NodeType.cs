@@ -105,6 +105,26 @@ namespace Core.Interfaces
             return Address.Last();
         }
 
+        public string GetLabel(NodeType nt)
+        {
+            if (NodeType == nt)
+                return GetLast();
+            switch (NodeType)
+            {
+                case NodeType.Institution:
+                    if (nt == NodeType.Category)
+                        return GetParent().GetLast();
+                    break;
+                case NodeType.Account:
+                    if (nt == NodeType.Category)
+                        return GetParent().GetParent().GetLast();
+                    if (nt == NodeType.Institution)
+                        return GetParent().GetLast();
+                    break;
+            }
+            return null;
+        }
+
         internal bool IsEqual(NodeAddress na)
         {
             if (NodeType == na.NodeType && Address.Count == na.Address.Count)

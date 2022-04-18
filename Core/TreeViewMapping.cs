@@ -135,7 +135,7 @@ namespace Core
         public void AddElement(TreeViewMappingElement elmt)
         {
             if (Nodes == null)
-                Nodes = new List<TreeViewMappingElement> { };
+                throw new InvalidProgramException("Nodes should not be null");
             Nodes.Add(elmt);
         }
 
@@ -149,10 +149,8 @@ namespace Core
         internal TreeViewMappingElement AddElement(string stringRef, TreeViewMappingElement elmt)
         {
             if (Nodes == null)
-            {
-                AddElement(elmt);
-                return elmt;
-            }
+                throw new InvalidProgramException("Nodes should not be null");
+            
             TreeViewMappingElement last;
             int i = 0;
             while (Nodes[i].Name != stringRef)
@@ -179,8 +177,9 @@ namespace Core
 
         public static TreeViewMappingElement CreateElement(IAccountingElement iNewElmt)
         {
+            throw new NotImplementedException();
             var res = new TreeViewMappingElement(iNewElmt.GetName());
-            foreach (IAccountingElement item in iNewElmt.GetItemList())
+            foreach (IAccountingElement item in iNewElmt.GetTreeStructure())
             {
                 res.AddElement(CreateElement(item));
             }
@@ -301,13 +300,14 @@ namespace Core
 
         internal void Reset()
         {
-            Map = new TreeViewMappingElement("Root");
+            
         }
 
-        public TreeViewMapping() { }
+        public TreeViewMapping() { Map = new TreeViewMappingElement("Root"); }
+
         public TreeViewMapping(List<Category> data)
         {
-            Reset();
+            Map = new TreeViewMappingElement("Root");
             foreach (var itemC in data)
             {
                 TreeViewMappingElement Map2 = Map.AddElement(itemC.CategoryName);
@@ -329,7 +329,8 @@ namespace Core
                 case NodeType.Category:
                     return Map  .GetElement(na.Address[0]);
                 case NodeType.Institution:
-                    return Map  .GetElement(na.Address[0]).GetElement(na.Address[1]);
+                    return Map  .GetElement(na.Address[0])
+                                .GetElement(na.Address[1]);
                 case NodeType.Account:
                     return Map  .GetElement(na.Address[0])
                                 .GetElement(na.Address[1])
@@ -359,6 +360,11 @@ namespace Core
         {
             TreeViewMappingElement elmt = GetElement(nodeAddress.GetParent());
             TreeViewMappingElement newElmt = elmt.AddElement(nodeAddress.Address.Last(), TreeViewMappingElement.CreateElement(iNewAcc));
+        }
+
+        internal void AddItem_Simple(string item_name)
+        {
+            Map.AddElement(item_name);
         }
 
         internal NodeAddress DeleteNode(NodeAddress na)

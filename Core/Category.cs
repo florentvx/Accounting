@@ -35,14 +35,32 @@ namespace Core
 
         public ICcyAsset Ccy { get { return CcyRef; } }
 
-        public IEnumerable<IAccountingElement> GetItemList()
+        //public IEnumerable<IAccountingElement> GetItemList()
+        //{
+        //    return _Institutions.ToList<IAccountingElement>();
+        //}
+
+        //public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
+        //{
+        //    return GetInstitutions(tvme);
+        //}
+
+        public IAccountingElement GetItem(NodeAddress na)
         {
-            return _Institutions.ToList<IAccountingElement>();
+            if (na.GetLabel(NodeType.Category) != CategoryName)
+                throw new KeyNotFoundException($"Node Address not Found: NodeAddress {na}");
+            if (na.NodeType == NodeType.Category)
+                return (Category)this.Clone();
+            else
+            {
+                return GetInstitution(na.GetLabel(NodeType.Institution)).GetItem(na);
+            }
+            throw new KeyNotFoundException($"Node Address not Found: NodeAddress {na}");
         }
 
-        public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
+        public TreeViewMapping GetTreeStructure()
         {
-            return GetInstitutions(tvme);
+            return null;
         }
 
         public NodeType GetNodeType() { return NodeType.Category; }
@@ -57,9 +75,14 @@ namespace Core
             return GetTotalAccount(mkt, aMkt, convCcy, "Total");
         }
 
+        public Price GetTotalAmount(FXMarket mkt, AssetMarket aMkt, Currency ccy)
+        {
+            return GetTotalAccount(mkt, aMkt, ccy).Value;
+        }
+
         public void Delete(string name)
         {
-            if (GetItemList().Count() > 1)
+            if (_Institutions.Count() > 1)
             {
                 _Institutions = _Institutions.Where(x => x.InstitutionName != name).Select(x => x).ToList();
             }
@@ -207,6 +230,7 @@ namespace Core
             if (currency == null)
                 currency = CcyRef;
             Institution instit = new Institution(name, currency);
+            instit.AddNewAccount();
             _Institutions.Add(instit);
             //instit.ModifyAmountEventHandler += this.UpdateTotalAmount;
         }

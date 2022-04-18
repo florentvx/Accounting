@@ -28,23 +28,23 @@ namespace Test.Core
             Assert.IsTrue(instit.GetName() == instit.InstitutionName);
         }
 
-        [TestMethod]
-        public void Institution_ItemList()
-        {
-            Institution instit = Init.CreateInstitution2();
-            string name_test = "Checking2";
-            string name_test_2 = "Stocks";
-            TreeViewMappingElement tvme = new TreeViewMappingElement("TEST");
-            IEnumerable<IAccountingElement> list_0 = instit.GetItemList(tvme);
-            bool test_0 = list_0.Count() == 0;
-            tvme.AddElement(new TreeViewMappingElement(name_test));
-            IEnumerable<IAccountingElement> list_1 = instit.GetItemList(tvme);
-            bool test_1 = (list_1.Count() == 1) && list_1.First().GetName() == name_test;
-            tvme.AddElement(new TreeViewMappingElement(name_test_2));
-            IEnumerable<IAccountingElement> list_2 = instit.GetItemList(tvme);
-            bool test_2 = (list_2.Count() == 2);
-            Assert.IsTrue(test_0 && test_1 && test_2);
-        }
+        //[TestMethod]
+        //public void Institution_ItemList()
+        //{
+        //    Institution instit = Init.CreateInstitution2();
+        //    string name_test = "Checking2";
+        //    string name_test_2 = "Stocks";
+        //    TreeViewMappingElement tvme = new TreeViewMappingElement("TEST");
+        //    IEnumerable<IAccountingElement> list_0 = instit.GetItemList(tvme);
+        //    bool test_0 = list_0.Count() == 0;
+        //    tvme.AddElement(new TreeViewMappingElement(name_test));
+        //    IEnumerable<IAccountingElement> list_1 = instit.GetItemList(tvme);
+        //    bool test_1 = (list_1.Count() == 1) && list_1.First().GetName() == name_test;
+        //    tvme.AddElement(new TreeViewMappingElement(name_test_2));
+        //    IEnumerable<IAccountingElement> list_2 = instit.GetItemList(tvme);
+        //    bool test_2 = (list_2.Count() == 2);
+        //    Assert.IsTrue(test_0 && test_1 && test_2);
+        //}
 
         [TestMethod]
         public void Institution_NodeTypeTest()

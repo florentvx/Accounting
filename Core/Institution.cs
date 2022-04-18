@@ -34,11 +34,31 @@ namespace Core
 
         public ICcyAsset Ccy { get { return CcyRef; } }
 
-        public IEnumerable<IAccountingElement> GetItemList() => _Accounts;
+        //public IEnumerable<IAccountingElement> GetItemList() => _Accounts;
 
-        public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
+        //public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
+        //{
+        //    return GetAccounts(tvme);
+        //}
+
+        public IAccountingElement GetItem(NodeAddress na)
         {
-            return GetAccounts(tvme);
+            if (na.NodeType == NodeType.Institution && na.GetLast() == InstitutionName)
+                return (Institution)this.Clone();
+            else if (na.NodeType == NodeType.Account)
+            {
+                if (na.GetParent().GetLast() == InstitutionName)
+                {
+                    return GetAccount(na.GetLast());
+                }
+                throw new KeyNotFoundException($"Node Address not Found: Institution: {InstitutionName} vs NodeAddress {na.GetLast()}");
+            }
+            throw new KeyNotFoundException($"Node Address not Found: NodeAddress {na}");
+        }
+
+        public TreeViewMapping GetTreeStructure()
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<string> AccountNames => _Accounts.Select(x => x.AccountName);
@@ -55,9 +75,14 @@ namespace Core
             return GetTotalAccount(mkt, aMkt, ccy, "Total");
         }
 
+        public Price GetTotalAmount(FXMarket mkt, AssetMarket aMkt, Currency ccy)
+        {
+            return GetTotalAccount(mkt, aMkt, ccy).Value;
+        }
+
         public void Delete(string name)
         {
-            if (GetItemList().Count() > 1)
+            if (_Accounts.Count() > 1)
             {
                 Account accDel = _Accounts.Where(x => x.AccountName == name).First();
                 _Accounts.Remove(accDel);

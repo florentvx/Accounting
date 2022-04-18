@@ -25,24 +25,10 @@ namespace Core
     }
 
     [Serializable]
-    public class AccountingData : IAccountingData, IEquatable<AccountingData>, ISerializable
+    public class AccountingData : IAccountingData, IEquatable<AccountingData>, ISerializable, ICloneable
     {
         [JsonProperty]
-        Currency _Ccy; // Ccy Total
-
-        private double _TotalValue; // Total value in Ccy Total
-        public double TotalValue { get { return _TotalValue; } } 
-        public Price TotalPrice { get { return new Price(TotalValue, Ccy); } }
-        public Price GetTotalPrice(Currency ccy, NodeAddress na = null)
-        {
-            Price res = TotalPrice;
-            if (na != null) { res = GetValue(na); }
-            if (ccy.Equals(res.Ccy)) return res;
-            else
-                return new Price(GetQuote(res.Ccy, ccy) * res.Value, ccy);
-        }
-
-        CurrencyAssetStaticsDataBase _CcyDB; //Copy By Ref of CcyAssetDataBase
+        Currency _Ccy;
 
         [JsonProperty]
         List<Category> _Data = new List<Category> { };
@@ -53,36 +39,31 @@ namespace Core
         [JsonProperty]
         AssetMarket _AssetMarket;
 
-        //[JsonProperty]
         TreeViewMapping _Map;
 
-        public Currency Ccy
-        {
-            get { return _Ccy; }
-            //set { _Ccy = value; }
-        }
+        public Currency Ccy => _Ccy;
 
-        public List<ICcyAsset> CciesAndAssets
-        {
-            get
-            {
-                List<ICcyAsset> res = _CcyDB.Ccies.Select(c => (ICcyAsset)new Currency(c)).ToList();
-                List<ICcyAsset> assets = _CcyDB.Assets.Select(a => (ICcyAsset)new Asset(a)).ToList();
-                foreach (var item in assets)
-                    res.Add(item);
-                return res;
-            }
-        }
+        //public List<ICcyAsset> CciesAndAssets
+        //{
+        //    get
+        //    {
+        //        List<ICcyAsset> res = _CcyDB.Ccies.Select(c => (ICcyAsset)new Currency(c)).ToList();
+        //        List<ICcyAsset> assets = _CcyDB.Assets.Select(a => (ICcyAsset)new Asset(a)).ToList();
+        //        foreach (var item in assets)
+        //            res.Add(item);
+        //        return res;
+        //    }
+        //}
 
         public Dictionary<string, Category> GetData()
         {
             return _Data.ToDictionary(x => x.CategoryName, x => x);
         }
 
-        public void SetCcyDB(CurrencyAssetStaticsDataBase ccyDB)
-        {
-            _CcyDB = ccyDB;
-        }
+        //public void SetCcyDB(CurrencyAssetStaticsDataBase ccyDB)
+        //{
+        //    _CcyDB = ccyDB;
+        //}
 
         private Category GetCategory(string catName)
         {
@@ -122,15 +103,9 @@ namespace Core
             ModifyCcyEventHandler?.Invoke(this, e);
         }
 
-        public void ModifyTotalCcy(Currency ccy)
+        public void ModifyCcy(Currency ccy)
         {
             _Ccy = ccy;
-            _TotalValue = 0;
-            foreach (Category item in Categories)
-            {
-                item.ModifyTotalCcy(_FXMarket, _AssetMarket, ccy);
-                _TotalValue += item.TotalAmount;
-            }
         }
 
         public ICategory GetFirstCategory()
@@ -148,20 +123,12 @@ namespace Core
             }
         }
 
-        public IAccount Total(Price lastTotal)
+        public Price TotalPrice()
         {
-            double total = 0;
+            Price total = new Price();
             foreach (var item in _Data)
-                total += item.TotalInstitution(_FXMarket, _AssetMarket, Ccy).ConvertedAmount;
-            _TotalValue = total;
-            Account res = new Account("Total", Ccy, total, lastAmount: lastTotal);
-            return res;
-        }
-
-        public IAccount Total(Currency TotalCcy, Price lastTotal)
-        {
-            ModifyCcy(TotalCcy);
-            return Total(lastTotal);
+                total += item.TotalInstitution(_FXMarket, _AssetMarket, Ccy).Value;
+            return total;
         }
 
         public bool ChangeName(string before, string after, NodeAddress nodeTag)
@@ -174,9 +141,6 @@ namespace Core
                 {
                     Category cat = GetCategory(before);
                     cat.CategoryName = after;
-                    //_Data[after] = _Data[before];
-                    //_Data.Remove(before);
-                    //_Data[after].CategoryName = after;
                     test = true;
                 }
             }
@@ -189,48 +153,36 @@ namespace Core
             return test;
         }
 
-        //public void AddNewCcy(string ccyName, CurrencyStatics ccyStatics, CurrencyPair cp, double cpValue)
+        //public void AddNewAsset(string assetName, AssetStatics aSt, double acpValue)
         //{
-        //    bool testAdd = _CcyDB.AddCcy(ccyName, ccyStatics);
+        //    bool testAdd = _CcyDB.AddAsset(assetName, aSt);
         //    if (!testAdd)
-        //        MessageBox.Show($"The new Currency [{ccyName}] does already exist.");
+        //        MessageBox.Show($"The new Asset [{assetName}] does already exist.");
         //    else
         //    {
-        //        _FXMarket.AddQuote(cp, cpValue);
+        //        AssetCcyPair acp = new AssetCcyPair(new Asset(assetName), aSt.Ccy);
+        //        _AssetMarket.AddQuote(acp, acpValue);
         //    }
         //}
 
-        //public void AddRefCcy(string ccyName, CurrencyStatics ccyStatics)
-        //{
-        //    bool testAdd = _CcyDB.AddCcy(ccyName, ccyStatics);
-        //    if (!testAdd)
-        //        throw new Exception($"Add Ref Ccy Error {ccyName}");
-        //    _Ccy = new Currency(ccyName);
-        //    _FXMarket.SetCcyRef(_Ccy);
-        //}
-
-        public void AddNewAsset(string assetName, AssetStatics aSt, double acpValue)
+        public void AddNewAssetCcy(IMarketInput mi, double value)
         {
-            bool testAdd = _CcyDB.AddAsset(assetName, aSt);
-            if (!testAdd)
-                MessageBox.Show($"The new Asset [{assetName}] does already exist.");
+            if (mi.Ccy != null)
+                _FXMarket.AddQuote(mi, value);
             else
-            {
-                AssetCcyPair acp = new AssetCcyPair(new Asset(assetName), aSt.Ccy);
-                _AssetMarket.AddQuote(acp, acpValue);
-            }
+                _AssetMarket.AddQuote(mi, value);
         }
 
-        public void Reset(string ccy, CurrencyStatics cs)
-        {
-            _Data = new List<Category> { };
-            Map.Reset();
-            _FXMarket.Reset();
-            _CcyDB.AddRefCcy(ccy, cs);
-            _AssetMarket.Reset();
-            _Ccy = new Currency(ccy);
-            AddItem(new NodeAddress(NodeType.Category, "TEMP"));
-        }
+        //public void Reset(string ccy, CurrencyStatics cs)
+        //{
+        //    _Data = new List<Category> { };
+        //    Map.Reset();
+        //    _FXMarket.Reset();
+        //    _CcyDB.AddRefCcy(ccy, cs);
+        //    _AssetMarket.Reset();
+        //    _Ccy = new Currency(ccy);
+        //    AddItem(new NodeAddress(NodeType.Category, "TEMP"));
+        //}
 
         #endregion
 
@@ -265,7 +217,7 @@ namespace Core
 
         public override int GetHashCode()
         {
-            int res = _Ccy.GetHashCode() + _CcyDB.GetHashCode();
+            int res = _Ccy.GetHashCode();
             res += _FXMarket.GetHashCode() + _AssetMarket.GetHashCode();
             res += _Map.GetHashCode();
             foreach (Category item in _Data)
@@ -295,31 +247,28 @@ namespace Core
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Currency", _Ccy, typeof(Currency));
-            //info.AddValue("CcyDB", _CcyDB, typeof(CurrencyAssetStaticsDataBase));
             ReorgAccountingData(_Map);
             info.AddValue("Categories", _Data, typeof(List<Category>));
             info.AddValue("FXMarket", _FXMarket, typeof(FXMarket));
             info.AddValue("AssetMarket", _AssetMarket, typeof(AssetMarket));
-            //info.AddValue("Map", _Map, typeof(TreeViewMapping));
         }
 
         public AccountingData(SerializationInfo info, StreamingContext context)
         {
             _Ccy = (Currency)info.GetValue("Currency", typeof(Currency));
-            //_CcyDB = (CurrencyAssetStaticsDataBase)info.GetValue("CcyDB", typeof(CurrencyAssetStaticsDataBase));
             _Data = (List<Category>)info.GetValue("Categories", typeof(List<Category>));
             _FXMarket = (FXMarket)info.GetValue("FXMarket", typeof(FXMarket));
             _AssetMarket = (AssetMarket)info.GetValue("AssetMarket", typeof(AssetMarket));
-            //_Map = (TreeViewMapping)info.GetValue("Map", typeof(TreeViewMapping));
             _Map = new TreeViewMapping(_Data);
         }
 
         #endregion
 
-        public AccountingData(CurrencyAssetStaticsDataBase ccyDB)
+        public AccountingData() { }
+
+        public AccountingData(Currency ccy)
         {
-            _CcyDB = ccyDB;
-            _Ccy = ccyDB.RefCcy;
+            _Ccy = ccy;
             _Data = new List<Category> { };
             _FXMarket = new FXMarket(Ccy);
             _AssetMarket = new AssetMarket();
@@ -379,11 +328,10 @@ namespace Core
                 i++;
                 newName = $"{newNameRef} - {i}";
             }
-            Category cat = new Category(newName, _CcyDB.RefCcy);
+            Category cat = new Category(newName, Ccy);
             cat.AddInstitution("New Institution");
-            cat.AddAccount("New Account", "New Institution");
             _Data.Add(cat);
-            cat.ModifyAmountEventHandler += this.UpdateTotalAmount;
+            //cat.ModifyAmountEventHandler += this.UpdateTotalAmount;
             return cat;
         }
 
@@ -437,95 +385,24 @@ namespace Core
             return res;
         }
 
-        public void UpdateAssetMarket()
-        {
-            _AssetMarket.PopulateWithFXMarket(_FXMarket);
-        }
-
-        public void UpdateTotalAmount(object sender, ModifyAmountEventArgs e)
-        {
-            _TotalValue = 0;
-            foreach (Category item in Categories)
-            {
-                _TotalValue += item.TotalAmount;
-            }
-        }
-
-        public void RefreshTotalAmount(FXMarket fXMarket, AssetMarket assetMarket)
-        {
-            _TotalValue = 0;
-            foreach (Category item in Categories)
-            {
-                item.RefreshTotalAmount(fXMarket, assetMarket);
-                _TotalValue += item.TotalAmount;
-            }
-        }
-
-        public void PrepareForLoading(Currency refCcy)
-        {
-            _Ccy = refCcy;
-            _TotalValue = 0;
-            _AssetMarket.PopulateWithFXMarket(_FXMarket);
-            foreach (Category item in Categories)
-            {
-                item.PrepareForLoading(_Ccy, _FXMarket, _AssetMarket);
-                item.ModifyAmountEventHandler += this.UpdateTotalAmount;
-                _TotalValue += item.TotalAmount;
-            }
-        }
-
         private void ReorgAccountingData(TreeViewMapping tvm)
         {
-            List<Category> res = new List<Category> { };
-            // Reorg each constituents
-            foreach(var itemC in tvm)
-            {
-                Category cat = GetCategory(itemC.Name);
-                foreach (var itemI in itemC.Nodes)
-                {
-                    Institution inst = GetInstitution(itemC.Name, itemI.Name);
-                    inst.ReorgItems(itemI.Nodes.Select(x => x.Name));
-                }
-                cat.ReorgItems(itemC.Nodes.Select(x => x.Name));
-                res.Add(cat.Copy());
-            }
-            _Data = res;
-            _Map = new TreeViewMapping(res);
-        }
-
-        public AccountingData Copy()
-        {
-            List<Category> newData = new List<Category> { };
-            foreach (var cat in _Data)
-            {
-                Category copyCat = cat.Copy();
-                newData.Add(copyCat);
-            }
-                
-
-            FXMarket fxmkt = new FXMarket(_CcyDB.RefCcy);
-            fxmkt.Copy(_FXMarket);
-
-            AssetMarket aMkt = new AssetMarket();
-            aMkt.Copy(_AssetMarket);
-            aMkt.PopulateWithFXMarket(fxmkt);
-
-            AccountingData res = new AccountingData(_CcyDB)
-            {
-                _Ccy = (Currency)_Ccy.Clone(),
-                _TotalValue = _TotalValue,
-                _Data = newData,
-                _FXMarket = fxmkt,
-                _AssetMarket = aMkt,
-                _Map = null
-            };
-
-            res.ReorgAccountingData(_Map);
-
-            foreach (Category cat in newData)
-                cat.ModifyAmountEventHandler += res.UpdateTotalAmount;
-            
-            return res;
+            throw new NotImplementedException();
+            //List<Category> res = new List<Category> { };
+            //// Reorg each constituents
+            //foreach(var itemC in tvm)
+            //{
+            //    Category cat = GetCategory(itemC.Name);
+            //    foreach (var itemI in itemC.Nodes)
+            //    {
+            //        Institution inst = GetInstitution(itemC.Name, itemI.Name);
+            //        inst.ReorgItems(itemI.Nodes.Select(x => x.Name));
+            //    }
+            //    cat.ReorgItems(itemC.Nodes.Select(x => x.Name));
+            //    res.Add(cat.Copy());
+            //}
+            //_Data = res;
+            //_Map = new TreeViewMapping(res);
         }
 
         public SummaryReport GetSummary()
@@ -538,31 +415,64 @@ namespace Core
             return sr;
         }
 
-        public string GetAmountToString(ICcyAsset ICcyAsset, double amount)
+        public string GetAmountToString(ICcyAsset ICcyAsset, CurrencyStatics ccy_statics, double amount)
         {
             if (ICcyAsset.IsCcy())
-                return _CcyDB.GetCcyStatics(ICcyAsset.Ccy).ValueToString(amount);
+                return ccy_statics.ValueToString(amount);
             else
                 return Convert.ToString(amount);
         }
 
-        public double GetQuote(ICcyAsset item, Currency ccy)
-        {
-            if (item.IsCcy())
-                return FXMarket.GetQuote(new CurrencyPair(item.Ccy, ccy));
-            else
-                return AssetMarket.GetQuote(new AssetCcyPair(item.Asset, Ccy));
-        }
+        //public double GetQuote(ICcyAsset item, Currency ccy)
+        //{ 
+        //    if (item.IsCcy())
+        //        return FXMarket.GetQuote(new CurrencyPair(item.Ccy, ccy));
+        //    else
+        //        return AssetMarket.GetQuote(new AssetCcyPair(item.Asset, Ccy));
+        //}
 
         public Price GetValue(NodeAddress na)
         {
             if (na.NodeType == NodeType.All)
-                return new Price(TotalValue, Ccy);
+                return TotalPrice();
             else
             {
-                try { return GetElement(na).GetTotalAmount(Ccy, FXMarket); }
+                try { return GetElement(na).GetTotalAmount(FXMarket, AssetMarket, Ccy); }
                 catch { return new Price(0.0, Ccy); }
             }
+        }
+
+        public object Clone()
+        {
+            List<Category> newData = new List<Category> { };
+            foreach (var cat in _Data)
+            {
+                Category copyCat = (Category)cat.Clone();
+                newData.Add(copyCat);
+            }
+
+            // TODO: Clonable IMarket?
+            FXMarket fxmkt = new FXMarket(FXMarket.CcyRef);
+            fxmkt.Copy(_FXMarket);
+
+            AssetMarket aMkt = new AssetMarket();
+            aMkt.Copy(_AssetMarket);
+
+            AccountingData res = new AccountingData()
+            {
+                _Ccy = (Currency)_Ccy.Clone(),
+                _Data = newData,
+                _FXMarket = fxmkt,
+                _AssetMarket = aMkt,
+                _Map = null
+            };
+
+            res.ReorgAccountingData(_Map);
+
+            //foreach (Category cat in newData)
+            //    cat.ModifyAmountEventHandler += res.UpdateTotalAmount;
+
+            return res;
         }
     }
 }

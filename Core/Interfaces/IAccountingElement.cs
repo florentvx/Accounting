@@ -11,11 +11,12 @@ namespace Core.Interfaces
     {
         string GetName();
         ICcyAsset Ccy { get; }
-        IEnumerable<IAccountingElement> GetItemList();
-        IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme);
+        IAccountingElement GetItem(NodeAddress na);
+        TreeViewMapping GetTreeStructure();
         NodeType GetNodeType();
         IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy, string overrideName);
         IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy);
+        Price GetTotalAmount(FXMarket mkt, AssetMarket aMkt, Currency ccy);
         void Delete(string name); //Delete an item from the ItemList
         SummaryReport GetSummary();
         

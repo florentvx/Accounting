@@ -24,14 +24,28 @@ namespace Core
 
         public string GetName() { return AccountName; }
 
-        public IEnumerable<IAccountingElement> GetItemList()
+        //public IEnumerable<IAccountingElement> GetItemList()
+        //{
+        //    return new List<IAccountingElement> { };
+        //}
+
+        //public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
+        //{
+        //    return new List<IAccountingElement> { };
+        //}
+
+        public IAccountingElement GetItem(NodeAddress na)
         {
-            return new List<IAccountingElement> { };
+            if (na.NodeType == NodeType.Account && na.GetLast() == AccountName)
+                return (Account)this.Clone();
+            throw new KeyNotFoundException($"Node Address not Found: Account: {AccountName} vs NodeAddress {na.GetLast()}");
         }
 
-        public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
+        public TreeViewMapping GetTreeStructure()
         {
-            return new List<IAccountingElement> { };
+            TreeViewMapping tvm = new TreeViewMapping();
+            tvm.AddItem_Simple(AccountName);
+            return tvm;
         }
 
         public NodeType GetNodeType() { return NodeType.Account; }
@@ -49,6 +63,11 @@ namespace Core
         public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy)
         {
             return GetTotalAccount(mkt, aMkt, ccy, "TOTAL_ACCOUNT");
+        }
+
+        public Price GetTotalAmount(FXMarket mkt, AssetMarket aMkt, Currency ccy)
+        {
+            return GetTotalAccount(mkt, aMkt, ccy).Value;
         }
 
         public void Delete(string name)
