@@ -34,31 +34,24 @@ namespace Core
 
         public ICcyAsset Ccy { get { return CcyRef; } }
 
-        //public IEnumerable<IAccountingElement> GetItemList() => _Accounts;
-
-        //public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
-        //{
-        //    return GetAccounts(tvme);
-        //}
-
         public IAccountingElement GetItem(NodeAddress na)
         {
-            if (na.NodeType == NodeType.Institution && na.GetLast() == InstitutionName)
+            if (na.GetLabel(NodeType.Category) == InstitutionName)
+                throw new KeyNotFoundException($"Node Address not Found: Institution: {InstitutionName} vs NodeAddress {na.GetLast()}");
+            if (na.NodeType == NodeType.Institution)
                 return (Institution)this.Clone();
             else if (na.NodeType == NodeType.Account)
-            {
-                if (na.GetParent().GetLast() == InstitutionName)
-                {
-                    return GetAccount(na.GetLast());
-                }
-                throw new KeyNotFoundException($"Node Address not Found: Institution: {InstitutionName} vs NodeAddress {na.GetLast()}");
-            }
+                return GetAccount(na.GetLast());
             throw new KeyNotFoundException($"Node Address not Found: NodeAddress {na}");
         }
 
         public TreeViewMapping GetTreeStructure()
         {
-            throw new NotImplementedException();
+            TreeViewMapping tvm = new TreeViewMapping();
+            tvm.AddItem_Simple(InstitutionName);
+            foreach(Account elemt in Accounts)
+                tvm.AddItem_Simple(elemt.GetTreeStructure(), InstitutionName);
+            return tvm;
         }
 
         public IEnumerable<string> AccountNames => _Accounts.Select(x => x.AccountName);

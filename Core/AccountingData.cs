@@ -118,7 +118,7 @@ namespace Core
             get
             {
                 var data = GetData();
-                IEnumerable<string> nameList = _Map.GetList(new NodeAddress(NodeType.All, ""));
+                IEnumerable<string> nameList = _Map.GetList(new NodeAddress(""));
                 return nameList.Select(x => data[x]);
             }
         }

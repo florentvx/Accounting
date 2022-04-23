@@ -21,6 +21,8 @@ namespace Core
 
         public bool Expand; 
 
+        public int Count { get { return 1 + Nodes.Select(x => x.Count).Sum(); } }
+
         #region IEnumerable
 
         public IEnumerator<TreeViewMappingElement> GetEnumerator()
@@ -178,12 +180,12 @@ namespace Core
         public static TreeViewMappingElement CreateElement(IAccountingElement iNewElmt)
         {
             throw new NotImplementedException();
-            var res = new TreeViewMappingElement(iNewElmt.GetName());
-            foreach (IAccountingElement item in iNewElmt.GetTreeStructure())
-            {
-                res.AddElement(CreateElement(item));
-            }
-            return res;
+            //var res = new TreeViewMappingElement(iNewElmt.GetName());
+            //foreach (IAccountingElement item in iNewElmt.GetTreeStructure())
+            //{
+            //    res.AddElement(CreateElement(item));
+            //}
+            //return res;
         }
 
         internal string Delete(string v)
@@ -298,10 +300,7 @@ namespace Core
 
         #endregion
 
-        internal void Reset()
-        {
-            
-        }
+        public int Count { get { return Map.Count - 1; } }
 
         public TreeViewMapping() { Map = new TreeViewMappingElement("Root"); }
 
@@ -365,6 +364,15 @@ namespace Core
         internal void AddItem_Simple(string item_name)
         {
             Map.AddElement(item_name);
+        }
+
+        internal void AddItem_Simple(TreeViewMapping tvm, string sub_node = null)
+        {
+            
+            if (sub_node == null)
+                foreach (TreeViewMappingElement tvme in tvm.Map.Nodes) { Map.AddElement(tvme); }
+            else
+                foreach (TreeViewMappingElement tvme in tvm.Map.Nodes) { Map.GetElement(sub_node).AddElement(tvme); }
         }
 
         internal NodeAddress DeleteNode(NodeAddress na)

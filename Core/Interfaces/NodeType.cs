@@ -8,11 +8,21 @@ namespace Core.Interfaces
 {
     public enum NodeType
     {
-        All, Category, Institution, Account
+        Account = 4,
+        Institution = 3,
+        Category = 2,
+        All = 1,
     }
 
     static class NodeTypeProperties
     {
+        public static NodeType GetNodeType(int level)
+        {
+            foreach (NodeType nt in Enum.GetValues(typeof(NodeType)))
+            if ((int) nt == level) return nt;
+            throw new NotSupportedException($"Level not recognised: {level}");
+        }
+
         public static NodeType GetNext(this NodeType nt)
         {
             switch (nt)
@@ -33,10 +43,9 @@ namespace Core.Interfaces
     public class NodeAddress: ICloneable
     {
         public static char Separator = '\\';
-        public NodeType _NodeType;
         public List<string> Address;
 
-        public NodeType NodeType { get { return _NodeType; } }
+        public NodeType NodeType { get { return NodeTypeProperties.GetNodeType(Address.Count()); } }
 
         public string Path { 
             get 
@@ -47,14 +56,13 @@ namespace Core.Interfaces
                     res += item + Separator;
                 }
                 if (res.Length == 0)
-                    return res;
+                    throw new NotSupportedException($"Path cannot be null");
                 return res.Substring(0, res.Length - 1);
             } 
         }
 
-        public NodeAddress(NodeType nt, string path)
+        public NodeAddress(string path)
         {
-            _NodeType = nt;
             Address = new List<string> { };
             if (path != null && path != "")
             {
@@ -64,6 +72,11 @@ namespace Core.Interfaces
             }   
         }
 
+        internal NodeAddress(IEnumerable<string> list)
+        {
+            Address = list.ToList();
+        }
+
         public void ChangeAddress(string label)
         {
             Address[Address.Count() - 1] = label;
@@ -71,33 +84,25 @@ namespace Core.Interfaces
 
         public string GetLabelText()
         {
+            NodeType used_nt = NodeType;
             if (NodeType == NodeType.All)
                 return "Root";
-            NodeType nt = NodeType;
-            if (_NodeType == NodeType.Account)
-                nt = NodeType.Institution;
-            string res = Enum.GetName(typeof(NodeType), nt) + " : ";
-            res += Address[0];
-            if (nt == NodeType.Institution)
+            else if (NodeType == NodeType.Account)
+                used_nt = NodeType.Institution;
+            string res = Enum.GetName(typeof(NodeType), used_nt) + " : ";
+            res += Address[1];
+            if (used_nt == NodeType.Institution)
                 res += $" -> {Address[1]}";
             return res;
         }
 
         public NodeAddress GetParent()
         {
-            switch (NodeType)
-            {
-                case NodeType.All:
-                    return null;
-                case NodeType.Category:
-                    return new NodeAddress(NodeType.All, null);
-                case NodeType.Institution:
-                    return new NodeAddress(NodeType.Category, Address[0]);
-                case NodeType.Account:
-                    return new NodeAddress(NodeType.Institution, Address[0] + Separator + Address[1]);
-                default:
-                    return null;
-            }
+            return new NodeAddress(
+                Address .Select((value, index) => new Tuple<int, string>(index, value))
+                        .Where(x => x.Item1 < (int)NodeType - 1)
+                        .Select(x => x.Item2)
+            );
         }
 
         public string GetLast()
@@ -107,22 +112,11 @@ namespace Core.Interfaces
 
         public string GetLabel(NodeType nt)
         {
-            if (NodeType == nt)
+            if ((int)NodeType < (int)nt) return null;
+            else if ((int)NodeType == (int)nt)
                 return GetLast();
-            switch (NodeType)
-            {
-                case NodeType.Institution:
-                    if (nt == NodeType.Category)
-                        return GetParent().GetLast();
-                    break;
-                case NodeType.Account:
-                    if (nt == NodeType.Category)
-                        return GetParent().GetParent().GetLast();
-                    if (nt == NodeType.Institution)
-                        return GetParent().GetLast();
-                    break;
-            }
-            return null;
+            else
+                return Address[Address.Count - ((int)NodeType - (int)nt) - 1];
         }
 
         internal bool IsEqual(NodeAddress na)
@@ -139,13 +133,12 @@ namespace Core.Interfaces
 
         internal void AddLast(string v)
         {
-            _NodeType = NodeType.GetNext();
             Address.Add(v);
         }
 
         public object Clone()
         {
-            return new NodeAddress(_NodeType, (string)Path.Clone());
+            return new NodeAddress((string)Path.Clone());
         }
     }
 }
