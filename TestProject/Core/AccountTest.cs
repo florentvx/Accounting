@@ -10,7 +10,7 @@ using Core.Interfaces;
 using TestProject;
 
 
-namespace Test.Core
+namespace TestProject.Core
 {
     [TestClass]
     public class AccountTests

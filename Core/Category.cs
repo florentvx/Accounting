@@ -60,7 +60,11 @@ namespace Core
 
         public TreeViewMapping GetTreeStructure()
         {
-            return null;
+            TreeViewMapping tvm = new TreeViewMapping();
+            tvm.AddItem_Simple(CategoryName);
+            foreach (Institution elemt in Institutions)
+                tvm.AddItem_Simple(elemt.GetTreeStructure(), CategoryName);
+            return tvm;
         }
 
         public NodeType GetNodeType() { return NodeType.Category; }

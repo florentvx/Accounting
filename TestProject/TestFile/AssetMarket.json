@@ -28,6 +28,20 @@
         }
       },
       "Value": 15000.0
+    },
+    {
+      "Key": {
+        "$type": "Core.Finance.AssetCcyPair, Core",
+        "Asset1": {
+          "$type": "Core.Finance.Asset, Core",
+          "Asset": "AAPL"
+        },
+        "Ccy2": {
+          "$type": "Core.Finance.Currency, Core",
+          "Ccy": "USD"
+        }
+      },
+      "Value": 100.0
     }
   ]
 }

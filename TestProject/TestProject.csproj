@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\AccountTest.cs" />
+    <Compile Include="Core\CategoryTests.cs" />
     <Compile Include="Core\InstitutionTest.cs" />
     <Compile Include="Init.cs" />
     <Compile Include="Serialization.cs" />

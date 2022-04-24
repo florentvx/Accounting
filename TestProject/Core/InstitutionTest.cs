@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestProject;
 
-namespace Test.Core
+namespace TestProject.Core
 {
     [TestClass]
     public class InstitutionTest

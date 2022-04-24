@@ -121,6 +121,7 @@ namespace TestProject
             AssetMarket aMkt = new AssetMarket();
             aMkt.AddQuote(new AssetCcyPair(Asset3(), Ccy1()), 48.5);
             aMkt.AddQuote(new AssetCcyPair(Asset1(), Ccy1()), 15000.0);
+            aMkt.AddQuote(new AssetCcyPair(Asset2(), Ccy2()), 100.0);
             return aMkt;
         }
     }

@@ -233,6 +233,26 @@ namespace Core
                 memo = temp;
             }
         }
+
+        public override string ToString()
+        {
+            string res = Name + "\n";
+            foreach (var item in Nodes)
+            {
+                res += $"--> {item}";
+            }
+            return res;
+        }
+
+        public string Aux_ToString(int level = 0)
+        {
+            string res = Name + "\n";
+            foreach (var item in Nodes)
+            {
+                res += $"{String.Join("-", new string[level])}> {item.Aux_ToString(level+1)}";
+            }
+            return res;
+        }
     }
 
     [Serializable]
@@ -396,6 +416,11 @@ namespace Core
                 TreeViewMappingElement tvme = GetElement(parent);
                 tvme.MoveNode(draggedNode.GetLast());
             }
+        }
+
+        public override string ToString()
+        {
+            return Map.Aux_ToString(1);
         }
     }
 }
