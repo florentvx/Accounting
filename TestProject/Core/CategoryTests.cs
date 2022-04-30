@@ -74,6 +74,15 @@ namespace TestProject.Core
 
         #endregion
 
+        #region ICategory
 
+        [TestMethod]
+        public void Category_CategoryName()
+        {
+            Category cat = Init.CreateCategory2();
+            Assert.IsTrue(cat.CategoryName == cat.GetName());
+        }
+
+        #endregion
     }
 }

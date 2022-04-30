@@ -69,9 +69,13 @@ namespace Core
 
         public NodeType GetNodeType() { return NodeType.Category; }
 
-        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy, string name)
+        public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency ccy, string name)
         {
-            return TotalInstitution(mkt, aMkt, convCcy.Ccy, name);
+            Price total = new Price(0, ccy);
+            foreach (var item in Institutions)
+                total += item.GetTotalAccount(mkt, aMkt, ccy).Value;
+            Account acc = new Account(name, total);
+            return acc;
         }
 
         public IAccount GetTotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy)
@@ -120,25 +124,6 @@ namespace Core
         {
             get { return _CategoryName; }
             set { _CategoryName = value; }
-        }
-
-        public IEnumerable<IInstitution> GetInstitutions(TreeViewMappingElement tvme)
-        {
-            return tvme.Nodes.Select(x => InstitutionsDictionary[x.Name]);
-        }
-
-        public IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency ccy, string overrideName)
-        {
-            Price total = new Price(0, ccy);
-            foreach (var item in Institutions)
-                total += item.GetTotalAccount(mkt, aMkt, ccy).Value;
-            Account acc = new Account(overrideName, total);
-            return acc;
-        }
-
-        public IAccount TotalInstitution(FXMarket mkt, AssetMarket aMkt, Currency convCcy)
-        {
-            return TotalInstitution(mkt, aMkt, convCcy, "Total");
         }
 
         #endregion

@@ -115,10 +115,10 @@ namespace Core
 
         public IEnumerable<Account> Accounts { get { return _Accounts; } }
 
-        public IEnumerable<Account> GetAccounts(TreeViewMappingElement tvme)
-        {
-            return tvme.Nodes.Select(x => GetAccount(x.Name));
-        }
+        //public IEnumerable<Account> GetAccounts(TreeViewMappingElement tvme)
+        //{
+        //    return tvme.Nodes.Select(x => GetAccount(x.Name));
+        //}
 
         public IAccount TotalAccount(FXMarket mkt, AssetMarket aMkt, Currency convCcy)
         {

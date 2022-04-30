@@ -127,7 +127,7 @@ namespace Core
         {
             Price total = new Price();
             foreach (var item in _Data)
-                total += item.TotalInstitution(_FXMarket, _AssetMarket, Ccy).Value;
+                total += item.GetTotalAccount(_FXMarket, _AssetMarket, Ccy).Value;
             return total;
         }
 
