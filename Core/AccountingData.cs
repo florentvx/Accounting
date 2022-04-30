@@ -131,25 +131,25 @@ namespace Core
             return total;
         }
 
-        public bool ChangeName(string before, string after, NodeAddress nodeTag)
+        public bool ChangeName(NodeAddress na, string after)
         {
             bool test = false;
             var data = GetData();
-            if (nodeTag.NodeType == NodeType.Category)
+            if (na.NodeType == NodeType.Category)
             {
                 if (!data.ContainsKey(after))
                 {
-                    Category cat = GetCategory(before);
+                    Category cat = GetCategory(na.GetLast());
                     cat.CategoryName = after;
                     test = true;
                 }
             }
             else
             {
-                test = GetCategory(nodeTag.Address[0]).ChangeName(before, after, nodeTag);
+                test = GetCategory(na.Address[0]).ChangeName(na, after);
             }
             if (test)
-                _Map.ChangeName(nodeTag, after);
+                _Map.ChangeName(na, after);
             return test;
         }
 

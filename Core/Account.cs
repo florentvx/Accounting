@@ -24,16 +24,6 @@ namespace Core
 
         public string GetName() { return AccountName; }
 
-        //public IEnumerable<IAccountingElement> GetItemList()
-        //{
-        //    return new List<IAccountingElement> { };
-        //}
-
-        //public IEnumerable<IAccountingElement> GetItemList(TreeViewMappingElement tvme)
-        //{
-        //    return new List<IAccountingElement> { };
-        //}
-
         public IAccountingElement GetItem(NodeAddress na)
         {
             if (na.NodeType == NodeType.Account && na.GetLast() == AccountName)
@@ -80,9 +70,18 @@ namespace Core
             return new SummaryReport(Ccy, Amount);
         }
 
-        public object Clone()
+        public bool ChangeName(NodeAddress na, string after)
         {
-            return new Account(AccountName, (Price)Value.Clone());
+            if (na.NodeType == NodeType.Account)
+                if (na.GetLast() == AccountName)
+                {
+                    AccountName = after;
+                    return true;
+                }
+                else
+                    return false;
+            else
+                throw new InvalidOperationException();
         }
 
         #endregion
@@ -185,6 +184,11 @@ namespace Core
         {
             _AccountName = name;
             _Value = (Price)price.Clone();
+        }
+
+        public object Clone()
+        {
+            return new Account(AccountName, (Price)Value.Clone());
         }
     }
 }

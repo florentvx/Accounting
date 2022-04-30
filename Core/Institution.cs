@@ -243,15 +243,26 @@ namespace Core
             return AddAccount(newName);
         }
 
-        public bool ChangeName(string before, string after)
+        public bool ChangeName(NodeAddress na, string after)
         {
-            if (!AccountNames.Contains(after))
+            switch (na.NodeType)
             {
-                var acc = GetAccount(before);
-                acc.AccountName = after;
-                return true;
+                case NodeType.Account:
+                    if (!AccountNames.Contains(after))
+                    {
+                        GetAccount(na.GetLast()).ChangeName(na, after);
+                        return true;
+                    }
+                    return false;
+                case NodeType.Institution:
+                    if (na.GetLast() == InstitutionName)
+                    {
+                        InstitutionName = na.GetLast();
+                        return true;
+                    }
+                    return false;
             }
-            return false;
+            throw new NotSupportedException("Invalid NodeAddress");
         }
 
         //internal void ReorgItems(IEnumerable<string> enumerable)

@@ -19,6 +19,7 @@ namespace Core.Interfaces
         Price GetTotalAmount(FXMarket mkt, AssetMarket aMkt, Currency ccy);
         void Delete(string name); //Delete an item from the ItemList
         SummaryReport GetSummary();
+        bool ChangeName(NodeAddress na, string after);
         
     }
 }

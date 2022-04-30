@@ -209,6 +209,13 @@ namespace Core
             get { return _Institutions.ToList<IInstitution>(); }
         }
 
+        public IEnumerable<string> InstitutionNames => Institutions.Select(x => x.InstitutionName);
+
+        public bool  InstitutionExists(string name)
+        {
+            return InstitutionsDictionary.ContainsKey(name);
+        }
+
         public Institution GetInstitution(string name)
         {
             return InstitutionsDictionary[name];
@@ -247,21 +254,21 @@ namespace Core
             return newInstit;
         }
 
-        public bool ChangeName(string before, string after, NodeAddress nodeTag)
+        public bool ChangeName(NodeAddress na, string after)
         {
             bool test = false;
-            switch (nodeTag.NodeType)
+            switch (na.NodeType)
             {
                 case NodeType.Institution:
-                    if (InstitutionsDictionary.ContainsKey(before) && !InstitutionsDictionary.ContainsKey(after))
+                    if (InstitutionExists(na.GetLast()) && !InstitutionsDictionary.ContainsKey(after))
                     {
-                        Institution instit_before = GetInstitution(before);
+                        Institution instit_before = GetInstitution(na.GetLast());
                         instit_before.InstitutionName = after;
                         test = true;
                     }
                     break;
                 case NodeType.Account:
-                    test = GetInstitution(nodeTag.Address[1]).ChangeName(before, after);
+                    test = GetInstitution(na.GetLabel(NodeType.Institution)).ChangeName(na, after);
                     break;
                 default:
                     throw new InvalidOperationException();

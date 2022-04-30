@@ -121,7 +121,7 @@ namespace TestProject.Core
         public void Institution_ChangeName()
         {
             Institution instit = Init.CreateInstitution2();
-            instit.ChangeName("Stocks", "Schtonks");
+            instit.ChangeName(new NodeAddress("Root\\Cateogry\\Institution2\\Stocks"), "Schtonks");
             var names = instit.AccountNames.ToList();
             Assert.IsTrue(names[0] == "Checking2" && names[1] == "Schtonks");
         }

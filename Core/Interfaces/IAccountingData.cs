@@ -18,7 +18,7 @@ namespace Core.Interfaces
         IEnumerable<ICategory> Categories { get; }
         ICategory GetFirstCategory();
         Price TotalPrice();
-        bool ChangeName(string before, string after, NodeAddress nodeType);
+        bool ChangeName(NodeAddress na, string after);
         //void Reset(string ccyName, CurrencyStatics ccyStatics);
     }
 }

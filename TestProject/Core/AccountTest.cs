@@ -16,7 +16,7 @@ namespace TestProject.Core
     public class AccountTests
     { 
         [TestMethod]
-        public void CcyRef()
+        public void Account_CcyRef()
         {
             Account acc_ccy = Init.CreateAccountCurrency1();
             bool test1 = acc_ccy.Ccy.Equals(Init.Ccy1());
@@ -155,6 +155,14 @@ namespace TestProject.Core
             AssetMarket aMkt = Init.CreateAssetMarket();
             Price tot = acc.GetTotalAmount(Init.Ccy1(), fxMkt, aMkt);
             Assert.IsTrue(tot == acc.Value);
+        }
+
+        [TestMethod]
+        public void Account_ChangeName()
+        {
+            Account acc = Init.CreateAccountCurrency1();
+            acc.ChangeName(new NodeAddress("Root\\Category1\\Institution1\\Checking"), "Blabla");
+            Assert.IsTrue(acc.AccountName == "Blabla");
         }
 
 

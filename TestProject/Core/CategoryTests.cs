@@ -84,5 +84,18 @@ namespace TestProject.Core
         }
 
         #endregion
+
+        [TestMethod]
+        public void Category_ChangeName()
+        {
+            Category cat = Init.CreateCategory1();
+            cat.ChangeName(new NodeAddress("Root\\Category1\\Institution1"), "MyBad");
+            var names = cat.InstitutionNames.ToList();
+            bool test1 = names[0] == "MyBad" && names[1] == "Institution2";
+            cat.ChangeName(new NodeAddress("Root\\Category1\\MyBad\\Checking"), "Compte");
+            var acc_names = cat.GetInstitution("MyBad").AccountNames.ToList();
+            bool test2 = acc_names[0] == "Compte" && acc_names[1] == "Wallet";
+            Assert.IsTrue(test1 && test2);
+        }
     }
 }
